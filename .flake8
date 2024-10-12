@@ -1,0 +1,8 @@
+[flake8]
+
+; Ruff defaults to double quotes so let's stick with that:
+inline-quotes = double
+
+ignore = C812, C816, W503
+
+max-line-length = 88

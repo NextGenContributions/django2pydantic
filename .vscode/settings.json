@@ -1,0 +1,72 @@
+{
+    "files.autoSave": "onFocusChange",
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "always",
+            "source.organizeImports": "always"
+        }
+    },
+    "flake8.importStrategy": "fromEnvironment",
+    "pylint.importStrategy": "fromEnvironment",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.inlayHints.callArgumentNames": "all",
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.pytestParameters": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.typeEvaluation.enableReachabilityAnalysis": true,
+    "python.analysis.typeEvaluation.strictDictionaryInference": true,
+    "python.analysis.typeEvaluation.strictListInference": true,
+    "python.analysis.typeEvaluation.strictSetInference": true,
+    "mypy-type-checker.importStrategy": "fromEnvironment",
+    "mypy-type-checker.preferDaemon": true,
+    "python.testing.pytestEnabled": true,
+    "flake8.severity": {
+        "E": "Information",
+        "F": "Information",
+        "W": "Information"
+    },
+    "pylint.severity": {
+        "error": "Information",
+        "fatal": "Information",
+        "warning": "Information"
+    },
+    "mypy-type-checker.severity": {
+        "error": "Information"
+    },
+    "isort.check": true,
+    "isort.importStrategy": "fromEnvironment",
+    "isort.severity": {
+        "W": "Information"
+    },
+    "pylint.args": [
+        "--load-plugins=pylint_django",
+        "--django-settings-module=tests.settings"
+    ],
+    "testing.coverageToolbarEnabled": true,
+    "testing.alwaysRevealTestOnStateChange": true,
+    "testing.automaticallyOpenPeekView": "failureAnywhere",
+    "testing.automaticallyOpenPeekViewDuringAutoRun": true,
+    "testing.coverageBarThresholds": {
+        "red": 50,
+        "yellow": 90,
+        "green": 100
+    },
+    "testing.defaultGutterClickAction": "debug",
+    "testing.showAllMessages": true,
+    "python.analysis.packageIndexDepths": [
+        {
+            "name": "pydantic",
+            "depth": 6
+        },
+        {
+            "name": "django",
+            "depth": 6
+        },
+    ],
+    "github.copilot.enable": {
+        "markdown": true
+    }
+}

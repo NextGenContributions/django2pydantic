@@ -1,0 +1,5 @@
+target-version = "py312"
+
+[lint]
+select = ["ALL"]
+external = ["WPS", "C", "W"]

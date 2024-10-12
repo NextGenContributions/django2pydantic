@@ -1,0 +1,79 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Tests",
+            "detail": "Automatically run tests on changed code.",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "ptw --clear --ext .py --runner \"pytest --testmon-forceselect --cov-append --cov-report=lcov:lcov.info --cov-report=xml:coverage.xml --no-header --no-summary --instafail --disable-warnings --tb=native -s -vvv tests\"",
+            "isBackground": true,
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "tests",
+                "revealProblems": "onProblem"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": [
+                {
+                    "owner": "external",
+                    "source": "pytest",
+                    "base": "$python",
+                    "applyTo": "allDocuments",
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^(?:=+ test session starts =+|Change detected: \\S+)$",
+                        "endsPattern": "^=+ (?:\\d+ passed|\\d+ failed).* =+$"
+                    }
+                },
+                {
+                    /*
+                    Pattern to match errors in non-site-packages files from Python native exceptions.
+
+                    Note: VSCode does not support (yet) multiline patterns, so the error message is rather meaningless without full traceback.
+                    */
+                    "owner": "external",
+                    "source": "pytest-tb-native",
+                    "applyTo": "allDocuments",
+                    "fileLocation": "autoDetect",
+                    "severity": "error",
+                    "pattern": [
+                        {
+                            "regexp": "^\\s+File \"(?!.*\\/site-packages\\/)(.*?)\", line (\\d+), in (.*)$",
+                            "file": 1,
+                            "line": 2
+                        },
+                        {
+                            "regexp": "([\\s\\S]*)",
+                            "message": 1
+                        },
+                        {
+                            "regexp": "^(\\w+Error):\\s+(.*)$",
+                            "message": 1,
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "^(?:=+ test session starts =+|Change detected: \\S+)$",
+                        "endsPattern": "^=+ (?:\\d+ passed|\\d+ failed).* =+$"
+                    }
+                },
+            ],
+        },
+    ]
+}

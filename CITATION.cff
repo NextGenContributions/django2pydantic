@@ -1,0 +1,21 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: superschema
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Jukka
+    family-names: Hassinen
+    email: jukka.hassinen@gmail.com
+repository-code: 'https://github.com/jhassine/superschema'
+abstract: Convert Django models to Pydantic models/schema
+keywords:
+  - Django
+  - Pydantic
+  - model
+  - schema
+license: MIT

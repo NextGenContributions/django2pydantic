@@ -1,0 +1,56 @@
+[importlinter]
+root_package = superschema
+include_external_packages = True
+
+
+[importlinter:contract:layers]
+name = Lower layers shall not import from higher layers
+type = layers
+
+containers =
+  superschema
+
+layers =
+  handlers
+  registry
+  schema
+
+ignore_imports =
+  superschema.schema -> superschema.registry
+
+  superschema.registry -> superschema.handlers.base
+  superschema.schema -> superschema.registry
+  superschema.schema -> superschema.handlers
+  superschema.registry -> superschema.handlers.base
+
+
+[importlinter:contract:tests-restrictions]
+name = Source code shall not import anything from tests
+type = forbidden
+
+source_modules =
+  superschema
+
+forbidden_modules =
+  tests
+
+
+[importlinter:contract:independence-contract]
+name = Handlers shall be independent
+type = independence
+modules =
+    superschema.handlers.auto
+    superschema.handlers.base
+    superschema.handlers.boolean
+    superschema.handlers.file
+    superschema.handlers.json
+    superschema.handlers.network
+    superschema.handlers.numbers
+    superschema.handlers.property
+    superschema.handlers.relational
+    superschema.handlers.text
+    superschema.handlers.time
+ignore_imports =
+    superschema.handlers.* -> superschema.handlers.base
+    superschema.handlers.relational -> superschema.registry
+    superschema.registry -> superschema.handlers.base
