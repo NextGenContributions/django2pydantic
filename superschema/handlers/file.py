@@ -3,6 +3,7 @@
 from typing import override
 
 from django.db import models
+from pydantic import FilePath
 
 from superschema.handlers.base import DjangoFieldHandler
 
@@ -30,7 +31,7 @@ class FilePathFieldHandler(DjangoFieldHandler[models.FilePathField[str]]):
 
     @override
     def get_pydantic_type_raw(self) -> type[str]:
-        return str
+        return FilePath
 
 
 class ImageFieldHandler(DjangoFieldHandler[models.ImageField]):

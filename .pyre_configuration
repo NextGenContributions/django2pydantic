@@ -1,0 +1,8 @@
+{
+  "site_package_search_strategy": "all",
+  "source_directories": [
+    "."
+  ],
+  "strict": true,
+  "python_version": "3.12"
+}

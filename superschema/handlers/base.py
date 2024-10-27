@@ -18,6 +18,14 @@ from typing import (
 from uuid import UUID
 
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.core.validators import (
+    MaxLengthValidator,
+    MaxValueValidator,
+    MinLengthValidator,
+    MinValueValidator,
+    RegexValidator,
+    StepValueValidator,
+)
 from django.db import models
 from django.utils.encoding import force_str
 from pydantic import Field
@@ -32,13 +40,14 @@ SupportedParentFields = (
     | models.ForeignObjectRel
     | GenericForeignKey
     | Callable[[], type]
+    | property
 )
 
 TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
 
 
 @runtime_checkable
-class PydanticConverter(Generic[TFieldType_co], Protocol):
+class PydanticConverter(Protocol, Generic[TFieldType_co]):
     """Define the interface for a Pydantic field converter."""
 
     def __init__(self, field_obj: TFieldType_co) -> None:
@@ -171,6 +180,11 @@ class FieldTypeHandler[T: SupportedParentFields](ABC):
         """Return whether the field is deprecated."""
         return False
 
+    @property
+    def multiple_of(self) -> int | float | None:
+        """Return the multiple of the field."""
+        return None
+
     @abstractmethod
     def get_pydantic_type(self) -> IntEnum | Enum | UnionType | type:
         """Return the Pydantic type of the field."""
@@ -193,6 +207,7 @@ class FieldTypeHandler[T: SupportedParentFields](ABC):
             decimal_places=self.decimal_places,
             min_length=self.min_length,
             max_length=self.max_length,
+            multiple_of=self.multiple_of,
             deprecated=self.deprecated,
         )
 
@@ -205,7 +220,7 @@ class FieldTypeHandler[T: SupportedParentFields](ABC):
 TDjangoField = TypeVar("TDjangoField", bound=models.Field[Any, Any])
 
 
-class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T]):
+class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T], ABC):
     """Base class for handling Django fields.
 
     Implementations should override the `field` class method to return the Django field class they handle.
@@ -274,6 +289,68 @@ class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T]):
                 return [self.field_obj.default]
             if callable(self.field_obj.default):
                 return [self.field_obj.default()]
+        return None
+
+    @property
+    @override
+    def ge(self) -> int | None:
+        # check if the field has MinValueValidator
+        if self.field_obj.validators:
+            for validator in self.field_obj.validators:
+                if isinstance(validator, MinValueValidator):
+                    return cast(int, validator.limit_value)
+        return None
+
+    @property
+    @override
+    def le(self) -> int | None:
+        if self.field_obj.validators:
+            for validator in self.field_obj.validators:
+                if isinstance(validator, MaxValueValidator):
+                    return cast(int, validator.limit_value)
+
+        return None
+
+    @property
+    @override
+    def multiple_of(self) -> int | None:
+        if self.field_obj.validators:
+            for validator in self.field_obj.validators:
+                if isinstance(validator, StepValueValidator):
+                    if not getattr(validator, "offset", None):
+                        return cast(int, validator.limit_value)
+        return None
+
+    @property
+    @override
+    def max_length(self) -> int | None:
+        """Return the max length of the field if it has a MaxLengthValidator."""
+        for validator in self.field_obj.validators:
+            if isinstance(validator, MaxLengthValidator):
+                if callable(validator.limit_value):
+                    return cast(int, validator.limit_value())
+                return cast(int, validator.limit_value)
+        return None
+
+    @property
+    @override
+    def min_length(self) -> int | None:
+        """Return the min length of the field if it has a MinLengthValidator."""
+        for validator in self.field_obj.validators:
+            if isinstance(validator, MinLengthValidator):
+                if callable(validator.limit_value):
+                    return cast(int, validator.limit_value())
+                return cast(int, validator.limit_value)
+        return None
+
+    @property
+    @override
+    def pattern(self) -> re.Pattern[str] | str | None:
+        """Return the pattern of the field if it has a RegexValidator."""
+        # Check if the Django field has any RegexValidator
+        for validator in self.field_obj.validators:
+            if isinstance(validator, RegexValidator):
+                return validator.regex
         return None
 
     @abstractmethod

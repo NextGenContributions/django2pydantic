@@ -1,7 +1,7 @@
 """Tooling to convert Django models and fields to Pydantic native models."""
 
 from collections.abc import Callable
-from typing import Any, ClassVar, Self, TypeVar, override
+from typing import Any, ClassVar, TypeVar, override
 from uuid import UUID
 
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -14,7 +14,7 @@ SupportedParentFields = (
     models.Field[Any, Any]
     | models.ForeignObjectRel
     | GenericForeignKey
-    | Callable[[], type]
+    | Callable[[], type[Any]]
 )
 
 TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
@@ -28,7 +28,7 @@ Undefined = PydanticUndefinedType
 class FieldTypeRegistry:
     """Registry for Django field type handlers."""
 
-    _instance: ClassVar[Self | None] = None
+    _instance: "ClassVar[FieldTypeRegistry | None]" = None
 
     @override
     def __init__(self) -> None:
@@ -39,7 +39,7 @@ class FieldTypeRegistry:
         ] = {}
 
     @classmethod
-    def instance(cls) -> Self:
+    def instance(cls) -> "FieldTypeRegistry":
         """Return the singleton instance of the registry."""
         if cls._instance is None:
             cls._instance = cls()

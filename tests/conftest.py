@@ -7,12 +7,12 @@ from django.conf import settings
 django_stubs_ext.monkeypatch()
 
 
-def pytest_configure(config):
+def pytest_configure(config) -> None:
     settings.configure(
         ALLOWED_HOSTS=["*"],
         DEBUG_PROPAGATE_EXCEPTIONS=True,
         DATABASES={
-            "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+            "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
         },
         SITE_ID=1,
         SECRET_KEY="not very secret in tests",

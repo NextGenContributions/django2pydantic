@@ -74,6 +74,11 @@ class Book(models.Model):
         app_label = "tests"
         default_related_name = "books"
 
+    @property
+    def author_names(self) -> str:
+        """Return a comma separated list of author names."""
+        return ", ".join([author.name for author in self.authors.all()])
+
 
 class Library(models.Model):
     name = models.CharField(max_length=100)
@@ -137,6 +142,7 @@ class BookSchema(SuperSchema):
             "authors": {"name": Infer},
             "publisher": {"name": Infer},
             "book_copies": {"library": Infer},  # note: here we use a reverse relation
+            "author_names": Infer,
         }
 
 

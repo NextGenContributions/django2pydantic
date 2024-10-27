@@ -15,5 +15,6 @@ class SuperSchema(BaseModel, metaclass=SuperSchemaResolver):
     class Meta:
         """Pydantic configuration."""
 
-        models: Model
-        fields: ClassVar[ModelFields]
+        name: str | None = None
+        models: Model | None = None
+        fields: ClassVar[ModelFields | None] = None

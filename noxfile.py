@@ -6,10 +6,10 @@ See: https://nox.thea.codes/en/stable/config.html
 import nox
 
 
-@nox.session
+@nox.session(python=["3.12", "3.13"], reuse_venv=True)
 def tests(session: nox.Session) -> None:
     """Run the test suite."""
-    session.install("pytest")
+    session.run("poetry", "install", "--only=test", external=True)
     session.run("pytest")
 
 

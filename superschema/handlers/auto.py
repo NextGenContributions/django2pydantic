@@ -71,6 +71,16 @@ class BigAutoFieldHandler(DjangoFieldHandler[models.BigAutoField]):
     def le(self) -> int | None:
         return 9223372036854775807
 
+    @property
+    @override
+    def examples(self) -> list[int]:
+        if self.ge is not None and self.le is not None:
+            return [self.ge, self.le]
+        if self.ge is not None:
+            return [self.ge]
+        if self.le is not None:
+            return [self.le]
+
     @override
     def get_pydantic_type_raw(self) -> type[int]:
         return int

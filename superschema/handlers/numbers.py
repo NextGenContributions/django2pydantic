@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import override
 
-from django.db import models
+from django.db import connection, models
 
 from superschema.handlers.base import DjangoFieldHandler
 
@@ -17,11 +17,12 @@ class IntegerFieldHandler(DjangoFieldHandler[models.IntegerField[int]]):
     @property
     @override
     def ge(self) -> int | None:
-        return -2147483648
+        return max(connection.ops.integer_field_range("IntegerField")[0], super().ge)
 
     @property
+    @override
     def le(self) -> int | None:
-        return 2147483647
+        return min(connection.ops.integer_field_range("IntegerField")[1], super().le)
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -39,12 +40,16 @@ class SmallIntegerFieldHandler(DjangoFieldHandler[models.SmallIntegerField[int]]
     @property
     @override
     def ge(self) -> int | None:
-        return -32768
+        return max(
+            connection.ops.integer_field_range("SmallIntegerField")[0], super().ge
+        )
 
     @property
     @override
     def le(self) -> int | None:
-        return 32767
+        return min(
+            connection.ops.integer_field_range("SmallIntegerField")[1], super().le
+        )
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -67,12 +72,18 @@ class PositiveSmallIntegerFieldHandler(
     @property
     @override
     def ge(self) -> int | None:
-        return 0
+        return max(
+            connection.ops.integer_field_range("PositiveSmallIntegerField")[0],
+            super().ge,
+        )
 
     @property
     @override
     def le(self) -> int | None:
-        return 32767
+        return min(
+            connection.ops.integer_field_range("PositiveSmallIntegerField")[1],
+            super().le,
+        )
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -90,12 +101,16 @@ class PositiveIntegerFieldHandler(DjangoFieldHandler[models.PositiveIntegerField
     @property
     @override
     def ge(self) -> int | None:
-        return 0
+        return max(
+            connection.ops.integer_field_range("PositiveIntegerField")[0], super().ge
+        )
 
     @property
     @override
     def le(self) -> int | None:
-        return 2147483647
+        return min(
+            connection.ops.integer_field_range("PositiveIntegerField")[1], super().le
+        )
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -113,12 +128,12 @@ class BigIntegerFieldHandler(DjangoFieldHandler[models.BigIntegerField[int]]):
     @property
     @override
     def ge(self) -> int | None:
-        return -9223372036854775808
+        return max(connection.ops.integer_field_range("BigIntegerField")[0], super().ge)
 
     @property
     @override
     def le(self) -> int | None:
-        return 9223372036854775807
+        return min(connection.ops.integer_field_range("BigIntegerField")[1], super().le)
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -138,12 +153,16 @@ class PositiveBigIntegerFieldHandler(
     @property
     @override
     def ge(self) -> int | None:
-        return 0
+        return min(
+            connection.ops.integer_field_range("PositiveBigIntegerField")[0], super().ge
+        )
 
     @property
     @override
     def le(self) -> int | None:
-        return 9223372036854775807
+        return max(
+            connection.ops.integer_field_range("PositiveBigIntegerField")[1], super().le
+        )
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:

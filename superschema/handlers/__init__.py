@@ -26,7 +26,11 @@ from superschema.handlers.numbers import (
     SmallIntegerFieldHandler,
 )
 from superschema.handlers.property import PropertyHandler
-from superschema.handlers.relational import ForeignKeyHandler
+from superschema.handlers.relational import (
+    ForeignKeyHandler,
+    ManyToManyFieldHandler,
+    OneToOneFieldHandler,
+)
 from superschema.handlers.text import (
     CharFieldHandler,
     EmailFieldHandler,
@@ -67,6 +71,8 @@ __all__: list[str] = [
     "AutoFieldHandler",
     "BigAutoFieldHandler",
     "ForeignKeyHandler",
+    "OneToOneFieldHandler",
+    "ManyToManyFieldHandler",
     "PropertyHandler",
     "JSONFieldHandler",
     "BinaryFieldHandler",

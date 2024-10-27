@@ -2,10 +2,10 @@
 
 import re
 import uuid
-from typing import Annotated, override
+from typing import Annotated, cast, override
 from uuid import UUID
 
-from django.core.validators import RegexValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from pydantic import UUID1, UUID3, UUID4, UUID5, AnyUrl, EmailStr
 
@@ -24,6 +24,17 @@ class CharFieldHandler(DjangoFieldHandler[models.CharField[str]]):
     @override
     def max_length(self) -> int | None:
         return self.field_obj.max_length
+
+    @property
+    @override
+    def min_length(self) -> int | None:
+        """Return the min length of the field if it has a MinLengthValidator."""
+        for validator in self.field_obj.validators:
+            if isinstance(validator, MinLengthValidator):
+                if callable(validator.limit_value):
+                    return cast(int, validator.limit_value())
+                return cast(int, validator.limit_value)
+        return None
 
     @property
     @override
@@ -122,6 +133,11 @@ class UrlFieldHandler(DjangoFieldHandler[models.URLField[str]]):
     @override
     def max_length(self) -> int | None:
         return self.field_obj.max_length or 200
+
+    @property
+    @override
+    def pattern(self) -> None:
+        return None
 
     @override
     def get_pydantic_type_raw(self) -> type[AnyUrl]:

@@ -1,10 +1,11 @@
 """Handlers for relational fields."""
 
-from typing import Any, override
+from typing import Annotated, Any, override
 
 from django.db import models
 from django.db.models.base import ModelBase
 from django.db.models.fields.related import RelatedField
+from pydantic.fields import FieldInfo
 
 from superschema.handlers.base import DjangoFieldHandler
 from superschema.registry import FieldTypeRegistry
@@ -89,3 +90,49 @@ class OneToOneFieldHandler(DjangoFieldHandler[models.OneToOneField[models.Model]
         return (
             FieldTypeRegistry.instance().get_handler(target_field).get_pydantic_type()
         )
+
+
+class ManyToManyFieldHandler(
+    DjangoFieldHandler[models.ManyToManyField[models.Model, models.Model]],
+):
+    """Handler for ManyToMany fields."""
+
+    @override
+    @classmethod
+    def field(cls) -> type[models.ManyToManyField[models.Model, models.Model]]:
+        return models.ManyToManyField
+
+    def _get_target_field(self) -> models.Field[Any, Any]:
+        if hasattr(self.field_obj, "to_field") and isinstance(
+            self.field_obj.to_field,
+            ModelBase,
+        ):
+            target_field = self.field_obj.related_model._meta.get_field(
+                self.field_obj.to_field,
+            )
+        else:
+            target_field = self.field_obj.related_model._meta.pk
+        if not target_field:
+            msg = f"Related model {self.field_obj.related_model} does not have a primary key field."
+            raise ValueError(
+                msg,
+            )  # This should never happen, but just in case, we raise an error here.
+        return target_field
+
+    @override
+    def get_pydantic_type_raw(self):
+        return (
+            FieldTypeRegistry.instance()
+            .get_handler(self._get_target_field())
+            .get_pydantic_type()
+        )
+
+    @override
+    def get_pydantic_type(self) -> type[list[Annotated[Any, Any]]]:
+        """Return the Pydantic type of the field."""
+        field_info: FieldInfo = (
+            FieldTypeRegistry.instance()
+            .get_handler(self._get_target_field())
+            .get_pydantic_field()
+        )
+        return list[Annotated[self.get_pydantic_type_raw(), field_info]]

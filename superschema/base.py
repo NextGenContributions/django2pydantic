@@ -1,14 +1,15 @@
 """Tooling to convert Django models and fields to Pydantic native models."""
 
 from collections.abc import Callable
-from enum import Enum
+from enum import Enum, IntEnum
+from types import UnionType
 from typing import Any, Optional, TypeVar, override
 from uuid import UUID
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.exceptions import FieldDoesNotExist
 from django.db import models
-from pydantic import BaseModel, create_model
+from pydantic import BaseModel, ConfigDict, create_model
 from pydantic._internal._model_construction import ModelMetaclass
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
@@ -40,10 +41,19 @@ ApiFields = set[
 ]
 
 
+def has_property(cls: type, property_name: str) -> bool:
+    return hasattr(cls, property_name) and isinstance(
+        getattr(cls, property_name),
+        property,
+    )
+
+
 def create_pydantic_model(
     django_model: type[models.Model],
     field_type_registry: FieldTypeRegistry,
     included_fields: ModelFields,
+    model_name: str | None = None,
+    config: ConfigDict | None = None,
 ) -> type[BaseModel]:
     """Create a Pydantic model from a Django model.
 
@@ -67,22 +77,29 @@ def create_pydantic_model(
     """
     pydantic_fields: dict[
         str,
-        tuple[type[BaseModel | list[BaseModel]] | type | Enum, FieldInfo],
+        tuple[
+            type[BaseModel | list[BaseModel]] | type | Enum | IntEnum | UnionType,
+            FieldInfo,
+        ],
     ] = {}
 
     errors: list[str] = []
 
     for field_name, field_def in included_fields.items():
-        try:
-            django_field = django_model._meta.get_field(  # noqa: SLF001, WPS437
-                field_name=field_name,
-            )
-        except FieldDoesNotExist:
-            errors.append(
-                f"The fields definition includes field '{field_name}' "
-                f"which is not found in the Django model '{django_model.__name__}'.",
-            )
-            continue
+        # Check if the field is a property function:
+        if has_property(django_model, field_name):
+            django_field = getattr(django_model, field_name)
+        else:
+            try:
+                django_field = django_model._meta.get_field(  # noqa: SLF001, WPS437
+                    field_name=field_name,
+                )
+            except FieldDoesNotExist:
+                errors.append(
+                    f"The fields definition includes field '{field_name}' "
+                    f"which is not found in the Django model '{django_model.__name__}'.",
+                )
+                continue
 
         if field_def is Infer:
             type_handler = field_type_registry.get_handler(django_field)
@@ -127,7 +144,6 @@ def create_pydantic_model(
                 ),
             )
         elif isinstance(field_def, dict):
-            print("field_def", field_def)
             related_django_model_name = field_name
             related_model_fields = field_def
 
@@ -148,6 +164,7 @@ def create_pydantic_model(
                 related_django_model,
                 field_type_registry,
                 related_model_fields,
+                model_name=f"{model_name}_{related_django_model_name}",
             )
 
             default = PydanticUndefined
@@ -192,15 +209,6 @@ def create_pydantic_model(
                 )
                 continue
 
-            print(
-                "field_name",
-                field_name,
-                "field_type",
-                field_type,
-                "django_field",
-                django_field,
-            )
-
             pydantic_fields[related_django_model_name] = (
                 field_type,
                 FieldInfo(
@@ -218,11 +226,21 @@ def create_pydantic_model(
             )
 
     if errors:
-        raise AttributeError("Error: ".join(errors))
+        msg = (
+            f"Error creating Pydantic model from '{django_model.__name__}' Django model:"
+            "\n\t❌ "
+            "\n\t❌ ".join(errors)
+        )
+        raise AttributeError(msg)
 
     # Finally, create the Pydantic model:
     # https://docs.pydantic.dev/2.9/concepts/models/#dynamic-model-creation
-    return create_model(f"{django_model.__name__}Schema", **pydantic_fields)
+    model_name = model_name or f"{django_model.__name__}Schema"
+    return create_model(
+        model_name,
+        __config__={"from_attributes": True},
+        **pydantic_fields,
+    )
 
 
 Bases = tuple[type[BaseModel]]
@@ -263,8 +281,11 @@ class SuperSchemaResolver(ModelMetaclass):
             msg = f"model field is required in Meta class for {name}"
             raise ValueError(msg)
 
+        model_name = getattr(namespace["Meta"], "name", None)
         return create_pydantic_model(
             model_class,
             field_type_registry,
             included_fields=namespace["Meta"].fields,
+            model_name=model_name,
+            config=namespace.get("model_config", None),
         )
