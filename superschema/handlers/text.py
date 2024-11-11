@@ -23,6 +23,8 @@ class CharFieldHandler(DjangoFieldHandler[models.CharField[str]]):
     @property
     @override
     def max_length(self) -> int | None:
+        if self.field_obj.choices:
+            return None
         return self.field_obj.max_length
 
     @property

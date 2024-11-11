@@ -9,19 +9,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --no-cache-dir -U pip setuptools wheel
-RUN pip install --no-cache-dir poetry
+RUN pip install --no-cache-dir uv
 
-# Install pyenv for testing with different python versions
-ENV PYENV_ROOT="$HOME/.pyenv"
-ENV PATH="$PYENV_ROOT/bin:$PATH"
-RUN curl https://pyenv.run | bash
-RUN eval "$(pyenv init -)"
-RUN pyenv install 3.13
-RUN pyenv local 3.13
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
+ENV UV_SYSTEM_PYTHON=true
+ENV UV_BREAK_SYSTEM_PACKAGES=true
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
 
-WORKDIR /app
-
-RUN --mount=type=bind,source=./pyproject.toml,target=/app/pyproject.toml \
-    --mount=type=bind,source=./poetry.lock,target=/app/poetry.lock \
-    poetry install --no-root
+# Install the project's dependencies using the lockfile and settings
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project
 

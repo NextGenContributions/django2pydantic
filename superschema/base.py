@@ -9,12 +9,13 @@ from uuid import UUID
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.exceptions import FieldDoesNotExist
 from django.db import models
-from pydantic import BaseModel, ConfigDict, create_model
+from pydantic import BaseModel, create_model
 from pydantic._internal._model_construction import ModelMetaclass
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 from superschema.defaults import field_type_registry
+from superschema.mixin import BaseMixins
 from superschema.registry import FieldTypeRegistry
 from superschema.types import Infer, InferExcept, ModelFields
 
@@ -52,8 +53,8 @@ def create_pydantic_model(
     django_model: type[models.Model],
     field_type_registry: FieldTypeRegistry,
     included_fields: ModelFields,
+    bases: tuple[type[BaseModel], ...] | None = None,
     model_name: str | None = None,
-    config: ConfigDict | None = None,
 ) -> type[BaseModel]:
     """Create a Pydantic model from a Django model.
 
@@ -165,6 +166,7 @@ def create_pydantic_model(
                 field_type_registry,
                 related_model_fields,
                 model_name=f"{model_name}_{related_django_model_name}",
+                bases=bases,
             )
 
             default = PydanticUndefined
@@ -238,7 +240,7 @@ def create_pydantic_model(
     model_name = model_name or f"{django_model.__name__}Schema"
     return create_model(
         model_name,
-        __config__={"from_attributes": True},
+        __base__=bases,
         **pydantic_fields,
     )
 
@@ -258,7 +260,7 @@ class SuperSchemaResolver(ModelMetaclass):
         bases: Bases,
         namespace: Namespace,
         **kwargs: Kwargs,
-    ) -> type:
+    ) -> type[BaseModel]:
         """Create a new SuperSchema class."""
         if name == "SuperSchema":
             return super().__new__(cls, name, bases, namespace, **kwargs)
@@ -282,10 +284,11 @@ class SuperSchemaResolver(ModelMetaclass):
             raise ValueError(msg)
 
         model_name = getattr(namespace["Meta"], "name", None)
+
         return create_pydantic_model(
             model_class,
             field_type_registry,
             included_fields=namespace["Meta"].fields,
             model_name=model_name,
-            config=namespace.get("model_config", None),
+            bases=(BaseMixins, BaseModel),
         )
