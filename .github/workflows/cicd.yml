@@ -7,6 +7,7 @@ on:
 
 jobs:
   tests:
+    name: Run tests and checks
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +22,7 @@ jobs:
         run: |
           docker run --volume $(pwd):/app --workdir /app --rm django2pydantic nox -s noop
 
+
   release:
     # If main branch is updated, we want to release the package.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -34,18 +36,6 @@ jobs:
       contents: write
 
     steps:
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-      - name: Install pypa/build
-        run: >-
-          python3 -m
-          pip install
-          build
-          --user
-
       # Note: we need to checkout the repository at the workflow sha in case during the workflow
       # the branch was updated. To keep PSR working with the configured release branches,
       # we force a checkout of the desired release branch but at the workflow sha HEAD.
@@ -54,6 +44,18 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install pypa/build
+        run: >-
+          python3 -m
+          pip install
+          build
+          --user
 
       - name: Setup | Force correct release branch on workflow sha
         run: |
