@@ -9,7 +9,7 @@ from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from pydantic import UUID1, UUID3, UUID4, UUID5, AnyUrl, EmailStr
 
-from superschema.handlers.base import DjangoFieldHandler
+from django2pydantic.handlers.base import DjangoFieldHandler
 
 
 class CharFieldHandler(DjangoFieldHandler[models.CharField[str]]):

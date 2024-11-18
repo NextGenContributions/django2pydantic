@@ -5,7 +5,7 @@ from typing import Annotated, override
 from django.db import models
 from pydantic import Json
 
-from superschema.handlers.base import DjangoFieldHandler
+from django2pydantic.handlers.base import DjangoFieldHandler
 
 JSONValue = str | int | float | bool | None | list["JSONValue"] | dict[str, "JSONValue"]
 

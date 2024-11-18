@@ -1,21 +1,21 @@
 """All field type handlers."""
 
-from superschema.handlers.auto import (
+from django2pydantic.handlers.auto import (
     AutoFieldHandler,
     BigAutoFieldHandler,
     SmallAutoFieldHandler,
 )
-from superschema.handlers.base import FieldTypeHandler
-from superschema.handlers.boolean import BooleanFieldHandler
-from superschema.handlers.file import (
+from django2pydantic.handlers.base import FieldTypeHandler
+from django2pydantic.handlers.boolean import BooleanFieldHandler
+from django2pydantic.handlers.file import (
     BinaryFieldHandler,
     FileFieldHandler,
     FilePathFieldHandler,
     ImageFieldHandler,
 )
-from superschema.handlers.json import JSONFieldHandler
-from superschema.handlers.network import GenericIpAddressFieldHandler
-from superschema.handlers.numbers import (
+from django2pydantic.handlers.json import JSONFieldHandler
+from django2pydantic.handlers.network import GenericIpAddressFieldHandler
+from django2pydantic.handlers.numbers import (
     BigIntegerFieldHandler,
     DecimalFieldHandler,
     FloatFieldHandler,
@@ -25,13 +25,13 @@ from superschema.handlers.numbers import (
     PositiveSmallIntegerFieldHandler,
     SmallIntegerFieldHandler,
 )
-from superschema.handlers.property import PropertyHandler
-from superschema.handlers.relational import (
+from django2pydantic.handlers.property import PropertyHandler
+from django2pydantic.handlers.relational import (
     ForeignKeyHandler,
     ManyToManyFieldHandler,
     OneToOneFieldHandler,
 )
-from superschema.handlers.text import (
+from django2pydantic.handlers.text import (
     CharFieldHandler,
     EmailFieldHandler,
     SlugFieldHandler,
@@ -39,7 +39,7 @@ from superschema.handlers.text import (
     UrlFieldHandler,
     UUIDFieldHandler,
 )
-from superschema.handlers.time import (
+from django2pydantic.handlers.time import (
     DateFieldHandler,
     DateTimeFieldHandler,
     DurationFieldHandler,

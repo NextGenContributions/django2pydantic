@@ -5,8 +5,8 @@ from typing import Any, ClassVar
 import pytest
 from django.db import models
 
-from superschema.schema import SuperSchema
-from superschema.types import Infer, ModelFields
+from django2pydantic.schema import django2pydantic
+from django2pydantic.types import Infer, ModelFields
 from tests.utils import add_property_method, debug_json, get_openapi_equivalent
 
 BasicTypes = [
@@ -35,10 +35,10 @@ def test_django_model_property_methods_are_supported(return_type: Any) -> None:
         value="test",
     )
 
-    class SchemaA(SuperSchema):
+    class SchemaA(django2pydantic):
         """SchemaA class."""
 
-        class Meta(SuperSchema.Meta):
+        class Meta(django2pydantic.Meta):
             """Meta class."""
 
             model = ModelA

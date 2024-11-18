@@ -9,8 +9,8 @@ import pydantic
 from django.db import models
 from rich import print_json
 
-from superschema.schema import SuperSchema
-from superschema.types import Infer, MetaFields, ModelFields
+from django2pydantic.schema import django2pydantic
+from django2pydantic.types import Infer, MetaFields, ModelFields
 
 DjangoField = models.Field[Any, Any]
 
@@ -55,7 +55,7 @@ def pydantic_schema_from_field(field: DjangoField) -> type[pydantic.BaseModel]:
 
     return type(
         "Schema",
-        (SuperSchema,),
+        (django2pydantic,),
         {
             "Meta": meta_class,
         },

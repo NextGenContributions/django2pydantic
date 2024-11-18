@@ -1,4 +1,4 @@
-"""Public types for superschema."""
+"""Public types for django2pydantic."""
 
 from typing import TypedDict, Union, override
 

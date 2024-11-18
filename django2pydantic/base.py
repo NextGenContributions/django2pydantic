@@ -14,10 +14,10 @@ from pydantic._internal._model_construction import ModelMetaclass
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from superschema.defaults import field_type_registry
-from superschema.mixin import BaseMixins
-from superschema.registry import FieldTypeRegistry
-from superschema.types import Infer, InferExcept, ModelFields
+from django2pydantic.defaults import field_type_registry
+from django2pydantic.mixin import BaseMixins
+from django2pydantic.registry import FieldTypeRegistry
+from django2pydantic.types import Infer, InferExcept, ModelFields
 
 SupportedParentFields = (
     models.Field[Any, Any]
@@ -251,7 +251,7 @@ Kwargs = dict[str, Any]
 
 
 class SuperSchemaResolver(ModelMetaclass):
-    """Metaclass for SuperSchema."""
+    """Metaclass for django2pydantic."""
 
     @override
     def __new__(  # pylint: disable=W0222,C0204
@@ -261,8 +261,8 @@ class SuperSchemaResolver(ModelMetaclass):
         namespace: Namespace,
         **kwargs: Kwargs,
     ) -> type[BaseModel]:
-        """Create a new SuperSchema class."""
-        if name == "SuperSchema":
+        """Create a new django2pydantic class."""
+        if name == "django2pydantic":
             return super().__new__(cls, name, bases, namespace, **kwargs)
 
         if "Meta" not in namespace:

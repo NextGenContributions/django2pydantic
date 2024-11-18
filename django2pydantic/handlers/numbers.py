@@ -3,7 +3,7 @@ from typing import override
 
 from django.db import connection, models
 
-from superschema.handlers.base import DjangoFieldHandler
+from django2pydantic.handlers.base import DjangoFieldHandler
 
 
 class IntegerFieldHandler(DjangoFieldHandler[models.IntegerField[int]]):
@@ -41,14 +41,16 @@ class SmallIntegerFieldHandler(DjangoFieldHandler[models.SmallIntegerField[int]]
     @override
     def ge(self) -> int | None:
         return max(
-            connection.ops.integer_field_range("SmallIntegerField")[0], super().ge
+            connection.ops.integer_field_range("SmallIntegerField")[0],
+            super().ge,
         )
 
     @property
     @override
     def le(self) -> int | None:
         return min(
-            connection.ops.integer_field_range("SmallIntegerField")[1], super().le
+            connection.ops.integer_field_range("SmallIntegerField")[1],
+            super().le,
         )
 
     @override
@@ -102,14 +104,16 @@ class PositiveIntegerFieldHandler(DjangoFieldHandler[models.PositiveIntegerField
     @override
     def ge(self) -> int | None:
         return max(
-            connection.ops.integer_field_range("PositiveIntegerField")[0], super().ge
+            connection.ops.integer_field_range("PositiveIntegerField")[0],
+            super().ge,
         )
 
     @property
     @override
     def le(self) -> int | None:
         return min(
-            connection.ops.integer_field_range("PositiveIntegerField")[1], super().le
+            connection.ops.integer_field_range("PositiveIntegerField")[1],
+            super().le,
         )
 
     @override
@@ -154,14 +158,16 @@ class PositiveBigIntegerFieldHandler(
     @override
     def ge(self) -> int | None:
         return min(
-            connection.ops.integer_field_range("PositiveBigIntegerField")[0], super().ge
+            connection.ops.integer_field_range("PositiveBigIntegerField")[0],
+            super().ge,
         )
 
     @property
     @override
     def le(self) -> int | None:
         return max(
-            connection.ops.integer_field_range("PositiveBigIntegerField")[1], super().le
+            connection.ops.integer_field_range("PositiveBigIntegerField")[1],
+            super().le,
         )
 
     @override

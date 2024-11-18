@@ -1,5 +1,5 @@
 [importlinter]
-root_package = superschema
+root_package = django2pydantic
 include_external_packages = True
 
 
@@ -8,7 +8,7 @@ name = Lower layers shall not import from higher layers
 type = layers
 
 containers =
-  superschema
+  django2pydantic
 
 layers =
   handlers
@@ -16,12 +16,7 @@ layers =
   schema
 
 ignore_imports =
-  superschema.schema -> superschema.registry
-
-  superschema.registry -> superschema.handlers.base
-  superschema.schema -> superschema.registry
-  superschema.schema -> superschema.handlers
-  superschema.registry -> superschema.handlers.base
+  django2pydantic.registry -> django2pydantic.handlers.base
 
 
 [importlinter:contract:tests-restrictions]
@@ -29,7 +24,7 @@ name = Source code shall not import anything from tests
 type = forbidden
 
 source_modules =
-  superschema
+  django2pydantic
 
 forbidden_modules =
   tests
@@ -39,18 +34,18 @@ forbidden_modules =
 name = Handlers shall be independent
 type = independence
 modules =
-    superschema.handlers.auto
-    superschema.handlers.base
-    superschema.handlers.boolean
-    superschema.handlers.file
-    superschema.handlers.json
-    superschema.handlers.network
-    superschema.handlers.numbers
-    superschema.handlers.property
-    superschema.handlers.relational
-    superschema.handlers.text
-    superschema.handlers.time
+    django2pydantic.handlers.auto
+    django2pydantic.handlers.base
+    django2pydantic.handlers.boolean
+    django2pydantic.handlers.file
+    django2pydantic.handlers.json
+    django2pydantic.handlers.network
+    django2pydantic.handlers.numbers
+    django2pydantic.handlers.property
+    django2pydantic.handlers.relational
+    django2pydantic.handlers.text
+    django2pydantic.handlers.time
 ignore_imports =
-    superschema.handlers.* -> superschema.handlers.base
-    superschema.handlers.relational -> superschema.registry
-    superschema.registry -> superschema.handlers.base
+    django2pydantic.handlers.* -> django2pydantic.handlers.base
+    django2pydantic.handlers.relational -> django2pydantic.registry
+    django2pydantic.registry -> django2pydantic.handlers.base

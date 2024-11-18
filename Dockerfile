@@ -2,7 +2,6 @@ FROM python:3.12-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV POETRY_VIRTUALENVS_CREATE=0
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     watchman \

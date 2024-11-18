@@ -5,7 +5,7 @@ from typing import cast, override
 from pydantic import Field
 from pydantic.fields import FieldInfo
 
-from superschema.handlers.base import FieldTypeHandler
+from django2pydantic.handlers.base import FieldTypeHandler
 
 ReturnType = str
 

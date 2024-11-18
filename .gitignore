@@ -446,7 +446,7 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,windows,visualstudiocode,python,django,pycharm+all
 
-.testmondata
+.testmondata*
 .import_linter_cache
 lcov.info
 debug.json

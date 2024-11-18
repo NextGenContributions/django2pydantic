@@ -5,7 +5,7 @@ from typing import override
 from django.db import models
 from pydantic import FilePath
 
-from superschema.handlers.base import DjangoFieldHandler
+from django2pydantic.handlers.base import DjangoFieldHandler
 
 
 class FileFieldHandler(DjangoFieldHandler[models.FileField]):

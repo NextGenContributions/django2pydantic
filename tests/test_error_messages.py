@@ -5,8 +5,8 @@ from typing import ClassVar
 import pytest
 from django.db import models
 
-from superschema.schema import SuperSchema
-from superschema.types import Infer, ModelFields
+from django2pydantic.schema import django2pydantic
+from django2pydantic.types import Infer, ModelFields
 
 
 def test_defing_a_non_existing_field_raises_exception() -> None:
@@ -16,10 +16,10 @@ def test_defing_a_non_existing_field_raises_exception() -> None:
         class ModelA(models.Model):  # noqa: DJ008
             id = models.AutoField(primary_key=True)
 
-        class SchemaA(SuperSchema):
+        class SchemaA(django2pydantic):
             """SchemaA class."""
 
-            class Meta(SuperSchema.Meta):
+            class Meta(django2pydantic.Meta):
                 """Meta class."""
 
                 model = ModelA

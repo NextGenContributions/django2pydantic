@@ -7,8 +7,8 @@ from django.db.models.base import ModelBase
 from django.db.models.fields.related import RelatedField
 from pydantic.fields import FieldInfo
 
-from superschema.handlers.base import DjangoFieldHandler
-from superschema.registry import FieldTypeRegistry
+from django2pydantic.handlers.base import DjangoFieldHandler
+from django2pydantic.registry import FieldTypeRegistry
 
 
 class RelatedFieldHandler(DjangoFieldHandler[RelatedField[Any, Any]]):

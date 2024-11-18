@@ -5,8 +5,8 @@ from typing import ClassVar
 from django.db import models
 from pydantic.v1.fields import ModelField
 
-from superschema.schema import SuperSchema
-from superschema.types import Infer
+from django2pydantic.schema import django2pydantic
+from django2pydantic.types import Infer
 from tests.utils import debug_json
 
 
@@ -16,10 +16,10 @@ def test_implicit_id_fields_works() -> None:
     class ModelA(models.Model):
         name = models.CharField(max_length=100)
 
-    class SchemaA(SuperSchema):
+    class SchemaA(django2pydantic):
         """SchemaA class."""
 
-        class Meta(SuperSchema.Meta):
+        class Meta(django2pydantic.Meta):
             """Meta class."""
 
             model = ModelA
@@ -41,10 +41,10 @@ def test_explicit_id_fields_works() -> None:
         id = models.AutoField(primary_key=True)
         name = models.CharField(max_length=100)
 
-    class SchemaA(SuperSchema):
+    class SchemaA(django2pydantic):
         """SchemaA class."""
 
-        class Meta(SuperSchema.Meta):
+        class Meta(django2pydantic.Meta):
             """Meta class."""
 
             model = ModelA

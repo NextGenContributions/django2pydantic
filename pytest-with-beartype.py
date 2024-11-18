@@ -25,7 +25,7 @@ import pytest
 from beartype import BeartypeConf
 from beartype.claw import beartype_package
 
-type_check_instrumented_packages: list[str] = ["superschema", "tests"]
+type_check_instrumented_packages: list[str] = ["django2pydantic", "tests"]
 
 for package in type_check_instrumented_packages:
     beartype_package(package_name=package, conf=BeartypeConf())

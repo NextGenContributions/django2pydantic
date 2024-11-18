@@ -3,12 +3,12 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from pydantic import BaseModel, ValidationInfo, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
 
-from superschema.getter import DjangoGetter
+from django2pydantic.getter import DjangoGetter
 
 if TYPE_CHECKING:
-    from superschema import SuperSchema
+    from django2pydantic import django2pydantic
 
-SVar = TypeVar("SVar", bound="SuperSchema")
+SVar = TypeVar("SVar", bound="django2pydantic")
 
 
 class BaseMixins(BaseModel):

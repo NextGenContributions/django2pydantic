@@ -8,7 +8,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from pydantic_core import PydanticUndefinedType
 
-from superschema.handlers.base import PydanticConverter
+from django2pydantic.handlers.base import PydanticConverter
 
 SupportedParentFields = (
     models.Field[Any, Any]

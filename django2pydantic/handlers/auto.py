@@ -4,7 +4,7 @@ from typing import override
 
 from django.db import models
 
-from superschema.handlers.base import DjangoFieldHandler
+from django2pydantic.handlers.base import DjangoFieldHandler
 
 
 class SmallAutoFieldHandler(DjangoFieldHandler[models.SmallAutoField]):

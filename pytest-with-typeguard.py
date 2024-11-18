@@ -22,7 +22,7 @@ So this wrapper script provides the workaround for this issue.
 import pytest
 from typeguard import install_import_hook
 
-type_check_instrumented_packages: list[str] = ["superschema", "tests"]
+type_check_instrumented_packages: list[str] = ["django2pydantic", "tests"]
 
 install_import_hook(packages=type_check_instrumented_packages)
 

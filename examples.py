@@ -123,14 +123,14 @@ from typing import ClassVar
 
 from rich import print_json
 
-from superschema.schema import SuperSchema
-from superschema.types import Infer, ModelFields
+from django2pydantic.schema import django2pydantic
+from django2pydantic.types import Infer, ModelFields
 
 
-class BookSchema(SuperSchema):
+class BookSchema(django2pydantic):
     """Book schema example with nested fields."""
 
-    class Meta(SuperSchema.Meta):
+    class Meta(django2pydantic.Meta):
         """Here we define the model and the fields we want to infer."""
 
         model = Book

@@ -1,7 +1,7 @@
-"""Default field type handlers for superschema."""
+"""Default field type handlers for django2pydantic."""
 
-from superschema import handlers
-from superschema.registry import FieldTypeRegistry
+from django2pydantic import handlers
+from django2pydantic.registry import FieldTypeRegistry
 
 field_type_registry: FieldTypeRegistry = FieldTypeRegistry.instance()
 field_type_registry.register(handlers.CharFieldHandler)

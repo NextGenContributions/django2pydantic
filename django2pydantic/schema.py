@@ -6,17 +6,17 @@ from django.db.models import Model
 from pydantic import BaseModel, ValidationInfo, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
 
-from superschema.base import SuperSchemaResolver
-from superschema.getter import DjangoGetter
-from superschema.types import ModelFields
+from django2pydantic.base import SuperSchemaResolver
+from django2pydantic.getter import DjangoGetter
+from django2pydantic.types import ModelFields
 
 S = TypeVar("S", bound=BaseModel)
 
 DictStrAny = dict[str, Any]
 
 
-class SuperSchema(BaseModel, metaclass=SuperSchemaResolver):
-    """SuperSchema class."""
+class django2pydantic(BaseModel, metaclass=SuperSchemaResolver):
+    """django2pydantic class."""
 
     # model_config = ConfigDict(from_attributes=True)
 

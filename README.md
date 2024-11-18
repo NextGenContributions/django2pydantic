@@ -1,6 +1,6 @@
 # What
 
-SuperSchema is a library that allows to define Pydantic schemas based on Django database models.
+django2pydantic is a library that allows to define Pydantic schemas based on Django database models.
 
 Similar libraries:
 - [Djantic](https://jordaneremieff.github.io/djantic/)
@@ -9,7 +9,7 @@ Similar libraries:
 
 # Why
 
-SuperSchema is the most complete Pydantic schemas based on Django models.
+django2pydantic is the most complete Pydantic schemas based on Django models.
 
 # Key features
 
