@@ -1,3 +1,7 @@
+# Why
+
+django2pydantic is the most complete Pydantic schemas based on Django models.
+
 # What
 
 django2pydantic is a library that allows to define Pydantic schemas based on Django database models.
@@ -6,10 +10,6 @@ Similar libraries:
 - [Djantic](https://jordaneremieff.github.io/djantic/)
 - [Django Ninja Schema](https://django-ninja.dev/guides/response/django-pydantic/)
 - [Ninja Schema](https://github.com/eadwinCode/ninja-schema)
-
-# Why
-
-django2pydantic is the most complete Pydantic schemas based on Django models.
 
 # Key features
 
@@ -20,6 +20,6 @@ django2pydantic is the most complete Pydantic schemas based on Django models.
 - Supports defining nested relations
 - Provides as complete OpenAPI schema details as possible
 
-# How
+# How to use
 
 [See usage example here.](examples.ipynb)
