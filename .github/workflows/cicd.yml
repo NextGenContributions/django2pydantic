@@ -21,12 +21,20 @@ jobs:
         run: |
           docker run --volume $(pwd):/app --workdir /app --rm django2pydantic nox -s noop
 
-  build:
-    name: Build distribution 📦
+  release:
+    # If main branch is updated, we want to release the package.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - tests
+    concurrency: release
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: write
+
     steps:
-      - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -37,28 +45,7 @@ jobs:
           pip install
           build
           --user
-      - name: Build a binary wheel and a source tarball
-        run: python3 -m build
-      - name: Store the distribution packages
-        uses: actions/upload-artifact@v4
-        with:
-          path: dist/
-          name: python-package-distributions
 
-  release:
-    # If main branch is updated, we want to release the package.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - tests
-      - build
-    concurrency: release
-    runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write
-      contents: write
-
-    steps:
       # Note: we need to checkout the repository at the workflow sha in case during the workflow
       # the branch was updated. To keep PSR working with the configured release branches,
       # we force a checkout of the desired release branch but at the workflow sha HEAD.
@@ -80,6 +67,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           git_committer_name: "github-actions"
           git_committer_email: "actions@users.noreply.github.com"
+
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          path: dist/
+          name: python-package-distributions
 
       - name: Publish | Upload to GitHub Release Assets
         uses: python-semantic-release/publish-action@v9.14.0
