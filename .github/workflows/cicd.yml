@@ -37,6 +37,9 @@ jobs:
 
     continue-on-error: true
 
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+
     steps:
       # Note: we need to checkout the repository at the workflow sha in case during the workflow
       # the branch was updated. To keep PSR working with the configured release branches,
@@ -93,7 +96,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
-    if: ${{ success() }}
+    if: ${{ needs.release.outputs.released == 'true' }}
     needs:
       - release
     runs-on: ubuntu-latest
