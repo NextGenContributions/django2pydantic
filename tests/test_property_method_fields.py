@@ -5,7 +5,7 @@ from typing import Any, ClassVar
 import pytest
 from django.db import models
 
-from django2pydantic.schema import django2pydantic
+from django2pydantic.schema import Schema
 from django2pydantic.types import Infer, ModelFields
 from tests.utils import add_property_method, debug_json, get_openapi_equivalent
 
@@ -35,10 +35,10 @@ def test_django_model_property_methods_are_supported(return_type: Any) -> None:
         value="test",
     )
 
-    class SchemaA(django2pydantic):
+    class SchemaA(Schema):
         """SchemaA class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelA

@@ -261,8 +261,8 @@ class SuperSchemaResolver(ModelMetaclass):
         namespace: Namespace,
         **kwargs: Kwargs,
     ) -> type[BaseModel]:
-        """Create a new django2pydantic class."""
-        if name == "django2pydantic":
+        """Create a new Schema class."""
+        if name == "Schema":  # TODO: detect more reliably if this is the base class
             return super().__new__(cls, name, bases, namespace, **kwargs)
 
         if "Meta" not in namespace:
@@ -270,7 +270,7 @@ class SuperSchemaResolver(ModelMetaclass):
             raise ValueError(msg)
 
         if getattr(namespace["Meta"], "model", None) is None:
-            msg = f"model class is required in Meta class for {name}"
+            msg = f"'model' attribute is required in Meta class for {name}"
             raise ValueError(msg)
 
         model_class = namespace["Meta"].model

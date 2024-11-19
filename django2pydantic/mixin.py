@@ -30,6 +30,5 @@ class BaseMixins(BaseModel):
         info: ValidationInfo,
     ) -> SVar:
         """Run the root validator."""
-        print("-----------Root Validator-----------")
         values = DjangoGetter(values, cls, info.context)
         return handler(values)

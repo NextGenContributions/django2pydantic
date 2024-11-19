@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from hypothesis import given
 from hypothesis import strategies as st
 
-from django2pydantic.schema import django2pydantic
+from django2pydantic.schema import Schema
 from django2pydantic.types import Infer, ModelFields
 from tests.utils import debug_json, get_openapi_schema_from_field
 
@@ -246,10 +246,10 @@ def test_schema_subclassing_works() -> None:
         id = models.AutoField(primary_key=True)
         name = models.CharField(max_length=100)
 
-    class SchemaA(django2pydantic):
+    class SchemaA(Schema):
         """SchemaA class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelA

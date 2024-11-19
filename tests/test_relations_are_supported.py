@@ -3,7 +3,7 @@ from typing import ClassVar
 
 from django.db import models
 
-from django2pydantic.schema import django2pydantic
+from django2pydantic.schema import Schema
 from django2pydantic.types import Infer, ModelFields
 from tests.utils import debug_json, django_model_factory, get_openapi_schema_from_field
 
@@ -40,10 +40,10 @@ def test_foreign_key_field() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.ForeignKey(ModelA, on_delete=models.CASCADE)
 
-    class SchemaB(django2pydantic):
+    class SchemaB(Schema):
         """SchemaB class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -75,10 +75,10 @@ def test_foreign_key_field_with_to_field_works() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.ForeignKey(ModelA, on_delete=models.CASCADE, to_field="var")
 
-    class SchemaB(django2pydantic):
+    class SchemaB(Schema):
         """SchemaB class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -110,10 +110,10 @@ def test_many_to_many_field_works() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.ManyToManyField(ModelA)
 
-    class SchemaB(django2pydantic):
+    class SchemaB(Schema):
         """SchemaB class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -151,10 +151,10 @@ def test_one_to_one_field_works() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.OneToOneField(ModelA, on_delete=models.CASCADE)
 
-    class SchemaB(django2pydantic):
+    class SchemaB(Schema):
         """SchemaB class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -189,10 +189,10 @@ def test_many_to_one_relations_work() -> None:
         class Meta:
             default_related_name = "rel_b"
 
-    class SchemaA(django2pydantic):
+    class SchemaA(Schema):
         """SchemaA class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -227,10 +227,10 @@ def test_many_to_many_reverse_relations_work() -> None:
         class Meta:
             default_related_name = "rel_b"
 
-    class SchemaA(django2pydantic):
+    class SchemaA(Schema):
         """SchemaA class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelA
@@ -265,10 +265,10 @@ def test_one_to_one_reverse_relations_work() -> None:
         class Meta:
             default_related_name = "rel_b"
 
-    class SchemaA(django2pydantic):
+    class SchemaA(Schema):
         """SchemaA class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -300,10 +300,10 @@ def test_relational_field_usage_by_id_works() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.ForeignKey(ModelA, on_delete=models.CASCADE)
 
-    class SchemaB(django2pydantic):
+    class SchemaB(Schema):
         """SchemaB class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB
@@ -327,10 +327,10 @@ def test_symmetrical_many_to_many_fields_are_supported() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.ManyToManyField("self", symmetrical=True)
 
-    class SchemaA(django2pydantic):
+    class SchemaA(Schema):
         """SchemaA class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelA
@@ -362,10 +362,10 @@ def test_many_to_many_relations_provide_an_array_of_ids() -> None:
         name = models.CharField(max_length=100)
         rel_a = models.ManyToManyField(ModelA)
 
-    class SchemaB(django2pydantic):
+    class SchemaB(Schema):
         """SchemaB class."""
 
-        class Meta(django2pydantic.Meta):
+        class Meta(Schema.Meta):
             """Meta class."""
 
             model = ModelB

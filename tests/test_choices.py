@@ -80,7 +80,6 @@ def test_field_integer_enum_choices_are_set_as_enum() -> None:
     openapi_schema = get_openapi_schema_from_field(
         models.IntegerField(choices=Choices.choices),
     )
-    # print(openapi_schema)
     debug_json(openapi_schema)
     assert openapi_schema["properties"]["field"]["enum"] == Choices.values
     assert openapi_schema["properties"]["field"]["type"] == "integer"
