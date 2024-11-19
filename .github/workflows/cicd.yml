@@ -35,6 +35,8 @@ jobs:
       id-token: write
       contents: write
 
+    continue-on-error: true
+
     steps:
       # Note: we need to checkout the repository at the workflow sha in case during the workflow
       # the branch was updated. To keep PSR working with the configured release branches,
