@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.0.4 (2024-11-20)
+
+### Bug Fixes
+
+- Temporarily stop using publish-pypi.yml reusable workflow
+  ([`e371d3c`](https://github.com/NextGenContributions/django2pydantic/commit/e371d3cb0e4d4577251b5e51641faee3c4e41228))
+
+
 ## v0.0.3 (2024-11-20)
 
 ### Bug Fixes
