@@ -21,11 +21,29 @@ jobs:
       contents: write
 
   publish-to-testpypi:
-    uses: NextGenContributions/cicd-pipeline/.github/workflows/publish-pypi.yml@main
-    with:
-      project_name: django2pydantic
+    # TODO(phuongfi91): Revisit this once Reusable Workflow is supported for Trusted Publishing
+    #  Ref: https://github.com/pypi/warehouse/issues/11096
+    #  Workflow: NextGenContributions/cicd-pipeline/.github/workflows/publish-pypi.yml@main
+    name: Publish Python 🐍 distribution 📦 to TestPyPI
+    runs-on: ubuntu-latest
     if: ${{ needs.release.outputs.released == 'true' }}
     needs:
       - release
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    environment:
+      name: testpypi
+      url: ${{ format('https://test.pypi.org/p/{0}', 'django2pydantic') }}
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Publish distribution 📦 to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
