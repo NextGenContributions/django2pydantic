@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.0.3 (2024-11-20)
+
+### Bug Fixes
+
+- Test pipeline by bumping version
+  ([`9f449c2`](https://github.com/NextGenContributions/django2pydantic/commit/9f449c262a270956c453308738521c5884311f29))
+
+
 ## v0.0.2 (2024-11-19)
 
 ### Bug Fixes
