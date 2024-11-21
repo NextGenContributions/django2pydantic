@@ -97,6 +97,7 @@ version_toml = [
 ]
 version_variables = [
     "django2pydantic/__init__.py:__version__",
+    "uv.lock:\"django2pydantic\"\\nversion",
 ]
 
 [tool.semantic_release.branches.main]
