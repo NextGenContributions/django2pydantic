@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.0.5 (2024-11-21)
+
+### Bug Fixes
+
+- Required dependencies
+  ([`aedab64`](https://github.com/NextGenContributions/django2pydantic/commit/aedab64c61c288b3d4057007716aff835d1da5dc))
+
+- Semantic release version_variables for uv.lock
+  ([`5d13179`](https://github.com/NextGenContributions/django2pydantic/commit/5d1317923a0f831a82349e9e535f97f414220eba))
+
+
 ## v0.0.4 (2024-11-20)
 
 ### Bug Fixes
