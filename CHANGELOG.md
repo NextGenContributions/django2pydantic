@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.1 (2024-11-21)
+
+### Bug Fixes
+
+- Bump version to skip published v0.1.0 package
+  ([`20715a2`](https://github.com/NextGenContributions/django2pydantic/commit/20715a2ccaed13662117492c7ef6ba1a681dee3f))
+
+
 ## v0.1.0 (2024-11-21)
 
 

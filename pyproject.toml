@@ -1,6 +1,6 @@
 [project]
 name = "django2pydantic"
-version = "0.1.0"
+version = "0.1.1"
 description = "Converting Django models to Pydantic models"
 readme = "README.md"
 requires-python = "==3.12.*"
