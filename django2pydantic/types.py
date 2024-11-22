@@ -24,17 +24,20 @@ class InferExcept:
         self.args: dict[str, _InferExceptArgs] = kwargs
 
 
-ModelFields = dict[
-    str,
-    Union[
-        type[Infer],
-        InferExcept,
-        FieldInfo,
-        type[BaseModel],
-        list[type[BaseModel]],
-        "ModelFields",
-    ],
-]
+ModelFields = (
+    dict[
+        str,
+        Union[
+            type[Infer],
+            InferExcept,
+            FieldInfo,
+            type[BaseModel],
+            list[type[BaseModel]],
+            "ModelFields",
+        ],
+    ]
+    | None
+)
 
 
 class MetaFields(TypedDict):
