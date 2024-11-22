@@ -41,8 +41,8 @@ Documentation = "https://github.com/NextGenContributions/django2pydantic/blob/ma
 Repository = "https://github.com/NextGenContributions/django2pydantic.git"
 Issues = "https://github.com/NextGenContributions/django2pydantic/issues"
 Changelog = "https://github.com/NextGenContributions/django2pydantic/blob/main/CHANGELOG.md"
-ReleaseNotes = "https://github.com/NextGenContributions/django2pydantic/releases"
-Funding = "https://github.com/NextGenContributions/django2pydantic/blob/main/.github/FUNDING.yml"
+"Release Notes" = "https://github.com/NextGenContributions/django2pydantic/releases"
+Funding = "https://github.com/sponsors/NextGenContributions"
 
 [build-system]
 requires = ["hatchling"]
