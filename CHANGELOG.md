@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v0.1.2 (2024-11-29)
+
+### Bug Fixes
+
+- Added pyproject.toml back
+  ([`26b2cc0`](https://github.com/NextGenContributions/django2pydantic/commit/26b2cc0733488b8902aa717dd1ff666092d7b675))
+
+- Some default naming of models/related model schemas
+  ([`b9fcb76`](https://github.com/NextGenContributions/django2pydantic/commit/b9fcb76944a9a5a8b8e28d13cfd473652da90a3e))
+
+Other changes: - documented the use of @property methods as field (related to Support for @property
+  decorated Django model methods #1) - some other documentation improvements - removed some obsolete
+  files
+
+
 ## v0.1.1 (2024-11-21)
 
 ### Bug Fixes
