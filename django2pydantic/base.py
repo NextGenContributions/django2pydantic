@@ -76,6 +76,8 @@ def create_pydantic_model(
         type[BaseModel]: The Pydantic model.
 
     """
+    model_name = model_name or f"{django_model.__name__}Schema"
+
     pydantic_fields: dict[
         str,
         tuple[
@@ -237,7 +239,6 @@ def create_pydantic_model(
 
     # Finally, create the Pydantic model:
     # https://docs.pydantic.dev/2.9/concepts/models/#dynamic-model-creation
-    model_name = model_name or f"{django_model.__name__}Schema"
     return create_model(
         model_name,
         __base__=bases,
@@ -283,7 +284,11 @@ class SuperSchemaResolver(ModelMetaclass):
             msg = f"model field is required in Meta class for {name}"
             raise ValueError(msg)
 
-        model_name = getattr(namespace["Meta"], "name", None)
+        model_name = getattr(
+            namespace["Meta"],
+            "name",
+            f"{model_class.__name__}Schema",
+        )
 
         return create_pydantic_model(
             model_class,

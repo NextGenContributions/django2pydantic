@@ -14,3 +14,5 @@ exclude_also =
     if typing.TYPE_CHECKING:
     class .*\bProtocol\):
     @(abc\.)?abstractmethod
+    @(pytest\.|pytest\.mark.\.)?skip
+    @(pytest\.|pytest\.mark.\.)?xfail
