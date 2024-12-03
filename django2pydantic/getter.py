@@ -57,7 +57,6 @@ class DjangoGetter(DjangoGetterMixin):
         for k, v in self._obj.items():
             if k.startswith(f"{key}__"):
                 values[k[len(key) + 2 :]] = v
-            # if k is property object of the self._obj
 
         return values
 
