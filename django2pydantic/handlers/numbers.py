@@ -194,8 +194,8 @@ class DecimalFieldHandler(DjangoFieldHandler[models.DecimalField[Decimal]]):
         return self.field_obj.decimal_places
 
     @override
-    def get_pydantic_type_raw(self) -> type[float]:
-        return float
+    def get_pydantic_type_raw(self) -> type[Decimal]:
+        return Decimal
 
 
 class FloatFieldHandler(DjangoFieldHandler[models.FloatField[float]]):
