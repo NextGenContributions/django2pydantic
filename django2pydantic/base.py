@@ -10,7 +10,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.exceptions import FieldDoesNotExist
 from django.db import models
 from pydantic import BaseModel, create_model
-from pydantic._internal._model_construction import ModelMetaclass
+from pydantic._internal._model_construction import ModelMetaclass  # noqa: WPS436
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
@@ -43,13 +43,14 @@ ApiFields = set[
 
 
 def has_property(cls: type, property_name: str) -> bool:
+    """Check if a class has a property."""
     return hasattr(cls, property_name) and isinstance(
         getattr(cls, property_name),
         property,
     )
 
 
-def create_pydantic_model(
+def create_pydantic_model(  # noqa: C901, D417, PLR0912, PLR0915, WPS210, WPS231 NOSONAR
     django_model: type[models.Model],
     field_type_registry: FieldTypeRegistry,
     included_fields: ModelFields,
@@ -76,6 +77,10 @@ def create_pydantic_model(
         type[BaseModel]: The Pydantic model.
 
     """
+    if included_fields is None:
+        msg = "included_fields is required"
+        raise ValueError(msg)
+
     model_name = model_name or f"{django_model.__name__}Schema"
 
     pydantic_fields: dict[
@@ -243,7 +248,7 @@ def create_pydantic_model(
         model_name,
         __base__=bases,
         **pydantic_fields,
-    )
+    )  # pyright: ignore[reportCallIssue]
 
 
 Bases = tuple[type[BaseModel]]

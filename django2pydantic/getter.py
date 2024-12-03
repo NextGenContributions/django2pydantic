@@ -40,7 +40,7 @@ class DjangoGetterMixin:
 class DjangoGetter(DjangoGetterMixin):
     """Getter for Pydantic related Django models."""
 
-    __slots__ = ("_obj", "_schema_cls", "_context")
+    __slots__ = ("_context", "_obj", "_schema_cls")
 
     def _get_prefetched_values(self, key: str) -> Result:
         """Get the prefetched values.
@@ -57,6 +57,7 @@ class DjangoGetter(DjangoGetterMixin):
         for k, v in self._obj.items():
             if k.startswith(f"{key}__"):
                 values[k[len(key) + 2 :]] = v
+            # if k is property object of the self._obj
 
         return values
 
@@ -78,7 +79,6 @@ class DjangoGetter(DjangoGetterMixin):
         if isinstance(self._obj, dict):
             if key not in self._obj:
                 return self._get_prefetched_values(key)
-                raise AttributeError(key)
             value = self._obj[key]
         else:
             try:

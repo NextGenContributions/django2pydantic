@@ -28,7 +28,7 @@ class Schema(BaseModel, metaclass=SuperSchemaResolver):
         """Pydantic configuration."""
 
         name: str | None = None
-        model: Model | None = None
+        model: type[Model] | None = None
         fields: ClassVar[ModelFields | None] = None
 
     @model_validator(mode="wrap")
