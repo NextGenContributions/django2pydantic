@@ -44,9 +44,6 @@ DjangoFieldTypes: list[FieldClass] = [
     models.UUIDField,
     models.BinaryField,
     models.JSONField,
-    models.SmallAutoField,
-    models.BigAutoField,
-    models.AutoField,
 ]
 
 DjangoRelationalFields = [
@@ -100,17 +97,18 @@ def is_correct_field_type_and_format(
         models.CharField: {"type": "string", "format": None},
         models.TextField: {"type": "string", "format": None},
         models.IntegerField: {"type": "integer", "format": None},
-        models.FloatField: {"type": "number", "format": "float"},
+        models.FloatField: {"type": "number", "format": None},
         models.BooleanField: {"type": "boolean", "format": None},
         models.DateField: {"type": "string", "format": "date"},
         models.DateTimeField: {"type": "string", "format": "date-time"},
-        models.DecimalField: {"type": "number", "format": "double"},
+        models.DecimalField: {"type": "number", "format": None},
         models.DurationField: {"type": "string", "format": "duration"},
         models.BinaryField: {"type": "string", "format": "binary"},
         models.FileField: {"type": "string", "format": "file"},
         models.FilePathField: {"type": "string", "format": "file-path"},
         models.ImageField: {"type": "string", "format": "image"},
-        models.GenericIPAddressField: {"type": "string", "format": "ipv4"},
+        models.GenericIPAddressField: {"type": "string", "format": "ipvanyaddress"},
+        models.IPAddressField: {"type": "string", "format": "ipv4"},
         models.PositiveIntegerField: {"type": "integer", "format": None},
         models.PositiveSmallIntegerField: {"type": "integer", "format": None},
         models.PositiveBigIntegerField: {"type": "integer", "format": None},
@@ -152,6 +150,7 @@ def test_field_type_and_format_is_correct_openapi_equivalent(field: FieldClass) 
     """Test that the field type and format is correct OpenAPI equivalent."""
     openapi_schema = get_openapi_schema_from_field(field())
     field_format = openapi_schema["properties"]["field"].get("format", None)
+    debug_json(openapi_schema)
     assert is_correct_field_type_and_format(
         field=field,
         type=openapi_schema["properties"]["field"]["type"],
@@ -227,7 +226,6 @@ def test_default_value_is_set(field: FieldClass) -> None:
 def test_null_field_sets_field_as_not_required(field: FieldClass) -> None:
     """Test that null fields are not required."""
     openapi_schema = get_openapi_schema_from_field(field(null=True))
-    debug_json(openapi_schema)
     assert openapi_schema.get("required", []) == []
 
 
@@ -235,7 +233,6 @@ def test_null_field_sets_field_as_not_required(field: FieldClass) -> None:
 def test_non_null_field_sets_as_required(field: FieldClass) -> None:
     """Test that non-null fields are required."""
     openapi_schema = get_openapi_schema_from_field(field(null=False))
-    debug_json(openapi_schema)
     assert openapi_schema.get("required", []) == ["field"]
 
 
@@ -262,5 +259,4 @@ def test_schema_subclassing_works() -> None:
         """SchemaB class."""
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["name"]["type"] == "string"

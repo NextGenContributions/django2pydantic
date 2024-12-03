@@ -3,14 +3,13 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from tests.utils import debug_json, get_openapi_schema_from_field
+from tests.utils import get_openapi_schema_from_field
 
 
 def test_field_tuple_choices_are_set_as_enum() -> None:
     """Test that field choices are set as enum."""
     choices = [("a", "A"), ("b", "B"), ("c", "C")]
     openapi_schema = get_openapi_schema_from_field(models.CharField(choices=choices))
-    debug_json(openapi_schema)
     assert openapi_schema["$defs"]["FieldEnum"]["enum"] == [
         choice[0] for choice in choices
     ]
@@ -29,7 +28,6 @@ def test_field_enum_choices_are_set_as_enum() -> None:
     openapi_schema = get_openapi_schema_from_field(
         models.CharField(choices=Choices.choices),
     )
-    debug_json(openapi_schema)
     assert openapi_schema["$defs"]["FieldEnum"]["enum"] == Choices.values
     assert openapi_schema["properties"]["field"]["$ref"] == "#/$defs/FieldEnum"
     assert openapi_schema["$defs"]["FieldEnum"]["type"] == "string"
@@ -46,7 +44,6 @@ def test_field_enum_choices_with_label_are_set_as_enum() -> None:
     openapi_schema = get_openapi_schema_from_field(
         models.CharField(choices=Choices.choices),
     )
-    debug_json(openapi_schema)
     assert openapi_schema["$defs"]["FieldEnum"]["enum"] == Choices.values
     assert openapi_schema["properties"]["field"]["$ref"] == "#/$defs/FieldEnum"
     assert openapi_schema["$defs"]["FieldEnum"]["type"] == "string"
@@ -63,7 +60,6 @@ def test_field_enum_choices_with_translated_label_are_set_as_enum() -> None:
     openapi_schema = get_openapi_schema_from_field(
         models.CharField(choices=Choices.choices),
     )
-    debug_json(openapi_schema)
     assert openapi_schema["$defs"]["FieldEnum"]["enum"] == Choices.values
     assert openapi_schema["properties"]["field"]["$ref"] == "#/$defs/FieldEnum"
     assert openapi_schema["$defs"]["FieldEnum"]["type"] == "string"
@@ -80,6 +76,5 @@ def test_field_integer_enum_choices_are_set_as_enum() -> None:
     openapi_schema = get_openapi_schema_from_field(
         models.IntegerField(choices=Choices.choices),
     )
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["field"]["enum"] == Choices.values
     assert openapi_schema["properties"]["field"]["type"] == "integer"

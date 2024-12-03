@@ -7,7 +7,6 @@ from pydantic.v1.fields import ModelField
 
 from django2pydantic.schema import Schema
 from django2pydantic.types import Infer
-from tests.utils import debug_json
 
 
 def test_implicit_id_fields_works() -> None:
@@ -29,7 +28,6 @@ def test_implicit_id_fields_works() -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["id"]["type"] == "integer"
     assert openapi_schema["properties"]["name"]["type"] == "string"
 
@@ -54,6 +52,5 @@ def test_explicit_id_fields_works() -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["id"]["type"] == "integer"
     assert openapi_schema["properties"]["name"]["type"] == "string"

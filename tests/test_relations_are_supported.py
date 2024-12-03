@@ -5,7 +5,7 @@ from django.db import models
 
 from django2pydantic.schema import Schema
 from django2pydantic.types import Infer, ModelFields
-from tests.utils import debug_json, django_model_factory, get_openapi_schema_from_field
+from tests.utils import django_model_factory, get_openapi_schema_from_field
 
 
 def test_foreign_key_field_to_primary_key_is_supported() -> None:
@@ -31,11 +31,11 @@ def test_foreign_key_field_with_to_field_is_supported() -> None:
 def test_foreign_key_field() -> None:
     """Test that models can have nested models."""
 
-    class ModelA(models.Model):
+    class ModelAA(models.Model):
         id = models.AutoField(primary_key=True)
         var = models.CharField(max_length=100)
 
-    class ModelB(models.Model):
+    class ModelBB(models.Model):
         id = models.AutoField(primary_key=True)
         name = models.CharField(max_length=100)
         rel_a = models.ForeignKey(ModelA, on_delete=models.CASCADE)
@@ -46,7 +46,7 @@ def test_foreign_key_field() -> None:
         class Meta(Schema.Meta):
             """Meta class."""
 
-            model = ModelB
+            model = ModelBB
             fields: ClassVar[ModelFields] = {
                 "id": Infer,
                 "name": Infer,
@@ -57,7 +57,6 @@ def test_foreign_key_field() -> None:
             }
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_a"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["var"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -92,7 +91,6 @@ def test_foreign_key_field_with_to_field_works() -> None:
             }
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_a"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["var"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -127,7 +125,6 @@ def test_many_to_many_field_works() -> None:
             }
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["rel_a"]["type"] == "array"
     assert (
         openapi_schema["properties"]["rel_a"]["items"]["properties"]["id"]["type"]
@@ -168,7 +165,6 @@ def test_one_to_one_field_works() -> None:
             }
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_a"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["var"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -206,7 +202,6 @@ def test_many_to_one_relations_work() -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_b"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["name"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -244,7 +239,6 @@ def test_many_to_many_reverse_relations_work() -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_b"]["items"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["name"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -282,7 +276,6 @@ def test_one_to_one_reverse_relations_work() -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_b"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["name"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -314,7 +307,6 @@ def test_relational_field_usage_by_id_works() -> None:
             }
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["rel_a_id"]["type"] == "string"
     assert openapi_schema["properties"]["rel_a_id"]["format"] == "uuid4"
 
@@ -344,7 +336,6 @@ def test_symmetrical_many_to_many_fields_are_supported() -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     ref = openapi_schema["properties"]["rel_a"]["items"]["$ref"].split("/")[-1]
     assert openapi_schema["$defs"][ref]["properties"]["name"]["type"] == "string"
     assert openapi_schema["$defs"][ref]["properties"]["id"]["type"] == "integer"
@@ -353,11 +344,11 @@ def test_symmetrical_many_to_many_fields_are_supported() -> None:
 def test_many_to_many_relations_provide_an_array_of_ids() -> None:
     """Test that many to many relations are represented as arrays."""
 
-    class ModelA(models.Model):
+    class ModelA1(models.Model):
         id = models.AutoField(primary_key=True)
         name = models.CharField(max_length=100)
 
-    class ModelB(models.Model):
+    class ModelB1(models.Model):
         id = models.AutoField(primary_key=True)
         name = models.CharField(max_length=100)
         rel_a = models.ManyToManyField(ModelA)
@@ -368,7 +359,7 @@ def test_many_to_many_relations_provide_an_array_of_ids() -> None:
         class Meta(Schema.Meta):
             """Meta class."""
 
-            model = ModelB
+            model = ModelB1
             fields: ClassVar[ModelFields] = {
                 "id": Infer,
                 "name": Infer,
@@ -376,6 +367,5 @@ def test_many_to_many_relations_provide_an_array_of_ids() -> None:
             }
 
     openapi_schema = SchemaB.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"]["rel_a"]["type"] == "array"
     assert openapi_schema["properties"]["rel_a"]["items"]["type"] == "integer"

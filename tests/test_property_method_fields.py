@@ -7,7 +7,7 @@ from django.db import models
 
 from django2pydantic.schema import Schema
 from django2pydantic.types import Infer, ModelFields
-from tests.utils import add_property_method, debug_json, get_openapi_equivalent
+from tests.utils import add_property_method, get_openapi_equivalent
 
 BasicTypes = [
     int,
@@ -47,7 +47,6 @@ def test_django_model_property_methods_are_supported(return_type: Any) -> None:
             }
 
     openapi_schema = SchemaA.model_json_schema()
-    debug_json(openapi_schema)
     assert openapi_schema["properties"][property_name][
         "type"
     ] == get_openapi_equivalent(python_native_type=return_type)
