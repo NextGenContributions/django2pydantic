@@ -18,7 +18,7 @@ class BaseMixins(BaseModel):
         "from_attributes": True,
         "arbitrary_types_allowed": True,
         "use_enum_values": True,
-        "validate_default": True,
+        "validate_default": False,
     }
 
     @model_validator(mode="wrap")
