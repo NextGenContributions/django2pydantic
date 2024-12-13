@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.0 (2024-12-13)
+
+### Features
+
+- Support optional fields ([#5](https://github.com/NextGenContributions/django2pydantic/pull/5),
+  [`a1b7a3c`](https://github.com/NextGenContributions/django2pydantic/commit/a1b7a3c49c53a0cdb98d9dd09ea9a819d6c4da00))
+
+
 ## v0.1.3 (2024-12-03)
 
 ### Bug Fixes

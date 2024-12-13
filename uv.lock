@@ -407,7 +407,7 @@ wheels = [
 
 [[package]]
 name = "django2pydantic"
-version = "0.1.3"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "django" },
