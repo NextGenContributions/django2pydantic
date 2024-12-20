@@ -211,7 +211,11 @@ def test_field_description_is_set_from_lazy_translated_verbose_name_if_no_help_t
     ].strip().lower().strip().replace("\r", "").replace(
         "\n",
         "",
-    ) == verbose_name.strip().lower().strip().replace("\r", "").replace("\n", "")
+    ) == verbose_name.strip().lower().strip().replace(
+        "\r", ""
+    ).replace(
+        "\n", ""
+    )
 
 
 @pytest.mark.parametrize("field", DjangoFieldTypes)
