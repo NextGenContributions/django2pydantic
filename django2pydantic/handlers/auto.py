@@ -7,12 +7,12 @@ from django.db import models
 from django2pydantic.handlers.base import DjangoFieldHandler
 
 
-class SmallAutoFieldHandler(DjangoFieldHandler[models.SmallAutoField]):
+class SmallAutoFieldHandler(DjangoFieldHandler[models.SmallAutoField[int, int]]):
     """Handler for Small Auto fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.SmallAutoField]:
+    @override
+    def field(cls) -> type[models.SmallAutoField[int, int]]:
         return models.SmallAutoField
 
     @property
@@ -30,12 +30,12 @@ class SmallAutoFieldHandler(DjangoFieldHandler[models.SmallAutoField]):
         return int
 
 
-class AutoFieldHandler(DjangoFieldHandler[models.AutoField]):
+class AutoFieldHandler(DjangoFieldHandler[models.AutoField[int, int]]):
     """Handler for Auto fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.AutoField]:
+    @override
+    def field(cls) -> type[models.AutoField[int, int]]:
         return models.AutoField
 
     @property
@@ -53,12 +53,12 @@ class AutoFieldHandler(DjangoFieldHandler[models.AutoField]):
         return int
 
 
-class BigAutoFieldHandler(DjangoFieldHandler[models.BigAutoField]):
+class BigAutoFieldHandler(DjangoFieldHandler[models.BigAutoField[int, int]]):
     """Handler for Big Auto fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.BigAutoField]:
+    @override
+    def field(cls) -> type[models.BigAutoField[int, int]]:
         return models.BigAutoField
 
     @property
@@ -80,6 +80,7 @@ class BigAutoFieldHandler(DjangoFieldHandler[models.BigAutoField]):
             return [self.ge]
         if self.le is not None:
             return [self.le]
+        return []
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:

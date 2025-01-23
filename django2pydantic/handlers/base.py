@@ -6,9 +6,10 @@ from collections.abc import Callable
 from enum import Enum, IntEnum
 from types import UnionType
 from typing import (
+    Annotated,
     Any,
     Generic,
-    Optional,
+    Optional,  # pyright: ignore[reportDeprecated]
     Protocol,
     TypeVar,
     cast,
@@ -17,7 +18,6 @@ from typing import (
 )
 from uuid import UUID
 
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.validators import (
     MaxLengthValidator,
     MaxValueValidator,
@@ -27,27 +27,20 @@ from django.core.validators import (
     StepValueValidator,
 )
 from django.db import models
+from django.db.models.fields.related import RelatedField
 from django.utils.encoding import force_str
 from pydantic import Field
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined, PydanticUndefinedType
 
+from django2pydantic.types import GetType, SetType, TFieldType_co
+
 CallableOutput = TypeVar("CallableOutput", int, str, bool, UUID, float)
 DefaultCallable = Callable[..., CallableOutput]
 
-SupportedParentFields = (
-    models.Field[Any, Any]
-    | models.ForeignObjectRel
-    | GenericForeignKey
-    | Callable[[], type]
-    | property
-)
-
-TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
-
 
 @runtime_checkable
-class PydanticConverter(Protocol, Generic[TFieldType_co]):
+class PydanticConverter(Protocol[TFieldType_co]):
     """Define the interface for a Pydantic field converter."""
 
     def __init__(self, field_obj: TFieldType_co) -> None:
@@ -68,7 +61,7 @@ class PydanticConverter(Protocol, Generic[TFieldType_co]):
         """
         return NotImplemented
 
-    def get_pydantic_type(self) -> IntEnum | Enum | UnionType | type:
+    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
         """Return the type of the field.
 
         Returns:
@@ -87,17 +80,21 @@ class PydanticConverter(Protocol, Generic[TFieldType_co]):
         return NotImplemented
 
 
-class FieldTypeHandler[T: SupportedParentFields](ABC):
+class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co], ABC):  # noqa: WPS214 - Found too many methods
     """Abstract base class for handling Django model fields."""
 
+    field_obj: TFieldType_co
+
     @override
-    def __init__(self, field_obj: T) -> None:
-        super().__init__()
-        self.field_obj: T = field_obj
+    def __init__(self, field_obj: TFieldType_co) -> None:
+        """Initialize the field handler."""
+        super().__init__(field_obj)
+        self.field_obj = field_obj
 
     @classmethod
     @abstractmethod
-    def field(cls) -> type[T]:
+    @override
+    def field(cls) -> type[TFieldType_co]:
         """Return the type of the field."""
 
     @property
@@ -186,10 +183,12 @@ class FieldTypeHandler[T: SupportedParentFields](ABC):
         return None
 
     @abstractmethod
-    def get_pydantic_type(self) -> IntEnum | Enum | UnionType | type:
+    @override
+    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
         """Return the Pydantic type of the field."""
         return type
 
+    @override
     def get_pydantic_field(self) -> FieldInfo:
         """Return the Pydantic field information."""
         pydantic_field = Field(
@@ -217,20 +216,30 @@ class FieldTypeHandler[T: SupportedParentFields](ABC):
         )  # Pydantic seems have marked Field as Any although it is FieldInfo
 
 
-TDjangoField = TypeVar("TDjangoField", bound=models.Field[Any, Any])
+TDjangoMainParentFields = (
+    models.Field[SetType, GetType] | RelatedField[models.Model, models.Model]
+)
+
+TDjangoField_co = TypeVar(
+    "TDjangoField_co",
+    bound=TDjangoMainParentFields,
+    covariant=True,
+)
 
 
-class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T], ABC):
+class DjangoFieldHandler(  # noqa: WPS214
+    Generic[TDjangoField_co], FieldTypeHandler[TDjangoField_co], ABC
+):
     """Base class for handling Django fields.
 
     Implementations should override the `field` class method to return the Django field class they handle.
     """
 
-    @override
     @classmethod
-    def field(cls) -> type[T]:
+    @override
+    def field(cls) -> type[TDjangoField_co]:
         """Return the type of the field."""
-        return models.Field
+        return models.Field[SetType, GetType]
 
     @property
     def is_required(self) -> bool:
@@ -242,7 +251,7 @@ class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T], ABC):
     def title(self) -> str | None:
         """Return the title of the field."""
         if getattr(self.field_obj, "verbose_name", None):
-            return force_str(self.field_obj.verbose_name.title())
+            return force_str(self.field_obj.verbose_name)
         if getattr(self.field_obj, "name", None):
             return self.field_obj.name
         if getattr(self.field_obj, "attname", None):
@@ -256,7 +265,7 @@ class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T], ABC):
         if self.field_obj.help_text:
             return force_str(self.field_obj.help_text).strip()
         if self.field_obj.verbose_name:
-            return force_str(self.field_obj.verbose_name.title()).strip()
+            return force_str(self.field_obj.verbose_name).strip()
         return None
 
     @property
@@ -354,11 +363,13 @@ class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T], ABC):
         return None
 
     @abstractmethod
-    def get_pydantic_type_raw(self) -> type:
+    def get_pydantic_type_raw(
+        self,
+    ) -> type[object] | UnionType | Annotated[SetType, GetType]:
         """Return the type of the field."""
 
     @override
-    def get_pydantic_type(self) -> IntEnum | Enum | UnionType | type:
+    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
         """Return the Pydantic type of the field.
 
         If the field has choices, return an Enum/IntEnum type. Otherwise, return the raw type.
@@ -367,17 +378,23 @@ class DjangoFieldHandler[T: models.Field[Any, Any]](FieldTypeHandler[T], ABC):
             ch = self.field_obj.get_choices(include_blank=False)
             # We need to reverse the choices tuples to make the enum work correctly:
             named_choices = [(force_str(c[1]), c[0]) for c in ch]
+
+            # We need to create a unique name for the Enum type:
+            model_name = self.field_obj.model.__name__
+            field_name = self.field_obj.name.title().replace("_", "")
+            enum_name = f"{model_name}{field_name}Enum"
+
             # If all choices are integers, we can use IntEnum:
             if all(isinstance(c[0], int) for c in ch):
                 return IntEnum(
-                    f"{self.field_obj.name.title().replace('_', '')}Enum",
+                    enum_name,
                     named_choices,
                     module=__name__,
                 )
 
             # Otherwise, we use a regular Enum:
             return Enum(
-                f"{self.field_obj.name.title().replace('_', '')}Enum",
+                enum_name,
                 named_choices,
                 module=__name__,
             )

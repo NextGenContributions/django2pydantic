@@ -7,12 +7,12 @@ from django.db import models
 from django2pydantic.handlers.base import DjangoFieldHandler
 
 
-class BooleanFieldHandler(DjangoFieldHandler[models.BooleanField[bool]]):
+class BooleanFieldHandler(DjangoFieldHandler[models.BooleanField[bool, bool]]):
     """Handler for Boolean fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.BooleanField[bool]]:
+    @override
+    def field(cls) -> type[models.BooleanField[bool, bool]]:
         return models.BooleanField
 
     @override

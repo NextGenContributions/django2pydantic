@@ -168,7 +168,7 @@ def test_field_description_is_set_from_lazy_translated_help_text(
     field: FieldClass,
     help_text: str,
 ) -> None:
-    """Test that the field description is set from the help text if it exists."""
+    """Test that the OpenAPI field description is set from the Django field's help text if it exists."""
     openapi_schema = get_openapi_schema_from_field(field(help_text=_(help_text)))
     assert openapi_schema["properties"]["field"]["description"].strip().replace(
         "\r",

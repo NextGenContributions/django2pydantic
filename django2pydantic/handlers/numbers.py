@@ -6,12 +6,12 @@ from django.db import connection, models
 from django2pydantic.handlers.base import DjangoFieldHandler
 
 
-class IntegerFieldHandler(DjangoFieldHandler[models.IntegerField[int]]):
+class IntegerFieldHandler(DjangoFieldHandler[models.IntegerField[int, int]]):
     """Handler for Integer fields."""
 
     @override
     @classmethod
-    def field(cls) -> type[models.IntegerField[int]]:
+    def field(cls) -> type[models.IntegerField[int, int]]:
         return models.IntegerField
 
     @property
@@ -29,12 +29,12 @@ class IntegerFieldHandler(DjangoFieldHandler[models.IntegerField[int]]):
         return int
 
 
-class SmallIntegerFieldHandler(DjangoFieldHandler[models.SmallIntegerField[int]]):
+class SmallIntegerFieldHandler(DjangoFieldHandler[models.SmallIntegerField[int, int]]):
     """Handler for Small Integer fields."""
 
     @override
     @classmethod
-    def field(cls) -> type[models.SmallIntegerField[int]]:
+    def field(cls) -> type[models.SmallIntegerField[int, int]]:
         return models.SmallIntegerField
 
     @property
@@ -59,7 +59,7 @@ class SmallIntegerFieldHandler(DjangoFieldHandler[models.SmallIntegerField[int]]
 
 
 class PositiveSmallIntegerFieldHandler(
-    DjangoFieldHandler[models.PositiveSmallIntegerField[int]],
+    DjangoFieldHandler[models.PositiveSmallIntegerField[int, int]],
 ):
     """Handler for Positive Small Integer fields.
 
@@ -68,7 +68,7 @@ class PositiveSmallIntegerFieldHandler(
 
     @override
     @classmethod
-    def field(cls) -> type[models.PositiveSmallIntegerField[int]]:
+    def field(cls) -> type[models.PositiveSmallIntegerField[int, int]]:
         return models.PositiveSmallIntegerField
 
     @property
@@ -92,12 +92,14 @@ class PositiveSmallIntegerFieldHandler(
         return int
 
 
-class PositiveIntegerFieldHandler(DjangoFieldHandler[models.PositiveIntegerField[int]]):
+class PositiveIntegerFieldHandler(
+    DjangoFieldHandler[models.PositiveIntegerField[int, int]]
+):
     """Handler for Positive Integer fields."""
 
     @override
     @classmethod
-    def field(cls) -> type[models.PositiveIntegerField[int]]:
+    def field(cls) -> type[models.PositiveIntegerField[int, int]]:
         return models.PositiveIntegerField
 
     @property
@@ -121,12 +123,12 @@ class PositiveIntegerFieldHandler(DjangoFieldHandler[models.PositiveIntegerField
         return int
 
 
-class BigIntegerFieldHandler(DjangoFieldHandler[models.BigIntegerField[int]]):
+class BigIntegerFieldHandler(DjangoFieldHandler[models.BigIntegerField[int, int]]):
     """Handler for Big Integer fields."""
 
     @override
     @classmethod
-    def field(cls) -> type[models.BigIntegerField[int]]:
+    def field(cls) -> type[models.BigIntegerField[int, int]]:
         return models.BigIntegerField
 
     @property
@@ -145,13 +147,13 @@ class BigIntegerFieldHandler(DjangoFieldHandler[models.BigIntegerField[int]]):
 
 
 class PositiveBigIntegerFieldHandler(
-    DjangoFieldHandler[models.PositiveBigIntegerField[int]],
+    DjangoFieldHandler[models.PositiveBigIntegerField[int, int]],
 ):
     """Handler for Positive Big Integer fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.PositiveBigIntegerField[int]]:
+    @override
+    def field(cls) -> type[models.PositiveBigIntegerField[int, int]]:
         return models.PositiveBigIntegerField
 
     @property
@@ -175,12 +177,12 @@ class PositiveBigIntegerFieldHandler(
         return int
 
 
-class DecimalFieldHandler(DjangoFieldHandler[models.DecimalField[Decimal]]):
+class DecimalFieldHandler(DjangoFieldHandler[models.DecimalField[Decimal, Decimal]]):
     """Handler for Decimal fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.DecimalField[Decimal]]:
+    @override
+    def field(cls) -> type[models.DecimalField[Decimal, Decimal]]:
         return models.DecimalField
 
     @property
@@ -198,12 +200,12 @@ class DecimalFieldHandler(DjangoFieldHandler[models.DecimalField[Decimal]]):
         return Decimal
 
 
-class FloatFieldHandler(DjangoFieldHandler[models.FloatField[float]]):
+class FloatFieldHandler(DjangoFieldHandler[models.FloatField[float, float]]):
     """Handler for Float fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.FloatField[float]]:
+    @override
+    def field(cls) -> type[models.FloatField[float, float]]:
         return models.FloatField
 
     @override

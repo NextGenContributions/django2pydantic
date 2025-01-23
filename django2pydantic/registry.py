@@ -1,23 +1,13 @@
 """Tooling to convert Django models and fields to Pydantic native models."""
 
 from collections.abc import Callable
-from typing import Any, ClassVar, TypeVar, override
+from typing import ClassVar, TypeVar, override
 from uuid import UUID
 
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.db import models
 from pydantic_core import PydanticUndefinedType
 
 from django2pydantic.handlers.base import PydanticConverter
-
-SupportedParentFields = (
-    models.Field[Any, Any]
-    | models.ForeignObjectRel
-    | GenericForeignKey
-    | Callable[[], type[Any]]
-)
-
-TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
+from django2pydantic.types import SupportedParentFields
 
 CallableOutput = TypeVar("CallableOutput", int, str, bool, UUID, float)
 DefaultCallable = Callable[..., CallableOutput]
@@ -59,7 +49,7 @@ class FieldTypeRegistry:
         """Get the handler for a Django field."""
         # Primarily use a handler that is registered for the exact Django field class:
         for django_field_class, type_handler in self.handlers.items():
-            if type(field) is django_field_class:
+            if type(field) is django_field_class:  # noqa: WPS516
                 return type_handler(field)
 
         # Secondary, use a handler that is registered for a superclass of the Django field class:

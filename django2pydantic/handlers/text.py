@@ -10,14 +10,15 @@ from django.db import models
 from pydantic import UUID1, UUID3, UUID4, UUID5, AnyUrl, EmailStr
 
 from django2pydantic.handlers.base import DjangoFieldHandler
+from django2pydantic.types import GetType, SetType
 
 
-class CharFieldHandler(DjangoFieldHandler[models.CharField[str]]):
+class CharFieldHandler(DjangoFieldHandler[models.CharField[SetType, GetType]]):
     """Handler for Char fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.CharField[str]]:
+    @override
+    def field(cls) -> type[models.CharField[SetType, GetType]]:
         return models.CharField
 
     @property
@@ -49,16 +50,16 @@ class CharFieldHandler(DjangoFieldHandler[models.CharField[str]]):
         return None
 
     @override
-    def get_pydantic_type_raw(self) -> type:
+    def get_pydantic_type_raw(self) -> type[str]:
         return str
 
 
-class TextFieldHandler(DjangoFieldHandler[models.TextField[str]]):
+class TextFieldHandler(DjangoFieldHandler[models.TextField[SetType, GetType]]):
     """Handler for Text fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.TextField[str]]:
+    @override
+    def field(cls) -> type[models.TextField[SetType, GetType]]:
         return models.TextField
 
     @override
@@ -66,12 +67,12 @@ class TextFieldHandler(DjangoFieldHandler[models.TextField[str]]):
         return str
 
 
-class SlugFieldHandler(DjangoFieldHandler[models.SlugField[str]]):
+class SlugFieldHandler(DjangoFieldHandler[models.SlugField[SetType, GetType]]):
     """Handler for Slug fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.SlugField[str]]:
+    @override
+    def field(cls) -> type[models.SlugField[SetType, GetType]]:
         return models.SlugField
 
     @property
@@ -84,16 +85,16 @@ class SlugFieldHandler(DjangoFieldHandler[models.SlugField[str]]):
         return str
 
 
-class UUIDFieldHandler(DjangoFieldHandler[models.UUIDField[UUID]]):
+class UUIDFieldHandler(DjangoFieldHandler[models.UUIDField[SetType, GetType]]):
     """Handler for UUID fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.UUIDField[UUID]]:
+    @override
+    def field(cls) -> type[models.UUIDField[UUID, UUID]]:
         return models.UUIDField
 
     @override
-    def get_pydantic_type_raw(self) -> type[Annotated] | UUID:
+    def get_pydantic_type_raw(self) -> type[Annotated[SetType, GetType]] | UUID:
         # Find out the uuid version from the Django field by examining the default value function:
         if self.field_obj.default is uuid.uuid1:
             return UUID1
@@ -111,8 +112,8 @@ class UUIDFieldHandler(DjangoFieldHandler[models.UUIDField[UUID]]):
 class EmailFieldHandler(DjangoFieldHandler[models.EmailField[str, str]]):
     """Handler for email fields."""
 
-    @override
     @classmethod
+    @override
     def field(cls) -> type[models.EmailField[str, str]]:
         """Return the type of the field."""
         return models.EmailField
@@ -123,12 +124,12 @@ class EmailFieldHandler(DjangoFieldHandler[models.EmailField[str, str]]):
         return EmailStr
 
 
-class UrlFieldHandler(DjangoFieldHandler[models.URLField[str]]):
+class UrlFieldHandler(DjangoFieldHandler[models.URLField[str, str]]):
     """Handler for URL fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.URLField[str]]:
+    @override
+    def field(cls) -> type[models.URLField[str, str]]:
         return models.URLField
 
     @property
