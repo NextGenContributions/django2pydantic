@@ -1,0 +1,42 @@
+engines:
+  bandit:
+    enabled: true
+  hadolint:
+    enabled: true
+  prospector:
+    enabled: true
+  pylintpython3:
+    enabled: true
+  jacksonlinter:
+    enabled: true
+  markdownlint:
+    enabled: true
+  semgrep:
+    enabled: true
+  shellcheck:
+    enabled: true
+  spectral:
+    enabled: true
+  duplication:
+    minTokenMatch: 50
+    skipLexicalErrors: true
+    ignoreLiterals: true
+    ignoreIdentifiers: true
+    ignoreAnnotations: true
+    ignoreUsings: true
+    exclude_paths:
+      - test_*.py
+      - tests/**
+exclude_paths:
+  - '*.egg'
+  - '*.egg-info/**'
+  - .eggs/**
+  - .git/**
+  - .tox/**
+  - .venv/**
+  - __pycache__/**
+  - bin/**
+  - build/**
+  - dist/**
+  - test_*.py
+  - tests/**

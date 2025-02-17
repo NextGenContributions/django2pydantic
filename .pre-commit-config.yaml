@@ -1,0 +1,33 @@
+exclude: ^docs/|/migrations/|devcontainer.json
+fail_fast: false
+default_stages:
+  - pre-commit
+repos:
+  - repo: https://github.com/NextGenContributions/nitpick
+    rev: 1c41efbb3713116eaad1a6485c2c5286fb6d91a7
+    hooks:
+      - id: nitpick-check
+      - id: nitpick-fix
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: detect-private-key
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: ruff
+        args:
+          - --fix
+      - id: ruff-format
+  - repo: https://github.com/ComPWA/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
+      - id: taplo-lint
