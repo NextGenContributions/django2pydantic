@@ -1,16 +1,29 @@
+exclude_patterns = [
+    "*.egg",
+    "*.egg-info/**",
+    ".eggs/**",
+    ".git/**",
+    ".tox/**",
+    ".venv/**",
+    "__pycache__/**",
+    "bin/**",
+    "build/**",
+    "dist/**",
+]
+test_patterns = ["test_*.py", "tests/**"]
 version = 1
 
 [[analyzers]]
+enabled = true
 name = "python"
 
-  [analyzers.meta]
-  runtime_version = "3.x.x"
+[analyzers.meta]
+cyclomatic_complexity_threshold = "medium"
+max_line_length = 88
+runtime_version = "3.x.x"
+skip_doc_coverage = ["init", "magic", "module"]
+type_checker = "mypy"
 
 [[transformers]]
+enabled = true
 name = "ruff"
-
-[[transformers]]
-name = "isort"
-
-[[transformers]]
-name = "black"
