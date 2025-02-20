@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v0.2.0 (2024-12-13)
+
+### Features
+
+- Support optional fields ([#5](https://github.com/NextGenContributions/django2pydantic/pull/5),
+  [`a1b7a3c`](https://github.com/NextGenContributions/django2pydantic/commit/a1b7a3c49c53a0cdb98d9dd09ea9a819d6c4da00))
+
+
+## v0.1.3 (2024-12-03)
+
+### Bug Fixes
+
+- Related model inheritance fixes and string format reference support
+  ([`fe97eaf`](https://github.com/NextGenContributions/django2pydantic/commit/fe97eaf67209d530589c4eacee245d7d5b0c6e97))
+
+- Decimalfield fix?
+  ([`db3e1ba`](https://github.com/NextGenContributions/django2pydantic/commit/db3e1bae28c79223399490cc0be7df0c1a217f20))
+
+- Jsonfield fix?
+  ([`79e1d08`](https://github.com/NextGenContributions/django2pydantic/commit/79e1d083a7bb3683183ab6832e599bd1ac8d77c4))
+
+
 ## v0.1.2 (2024-11-29)
 
 ### Bug Fixes

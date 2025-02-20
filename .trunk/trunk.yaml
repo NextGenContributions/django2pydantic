@@ -1,0 +1,44 @@
+version: '0.1'
+cli:
+  version: 1.22.9
+plugins:
+  sources:
+    - id: trunk
+      ref: v1.6.7
+      uri: https://github.com/trunk-io/plugins
+runtimes:
+  enabled:
+    - python@>=3.10.8
+lint:
+  enabled:
+    - actionlint@1.7.7
+    - bandit@1.8.2
+    - git-diff-check
+    - markdownlint@0.44.0
+    - mypy@1.14.1
+    - osv-scanner@1.9.2
+    - prettier@3.4.2
+    - pylint@3.3.4
+    - renovate@39.141.0
+    - ruff@0.9.3
+    - shellcheck@0.10.0
+    - shfmt@3.6.0
+    - taplo@0.9.3
+    - trufflehog@3.88.3
+    - yamllint@1.35.1
+  ignore:
+    - linters:
+        - ALL
+      paths:
+        - '*.egg'
+        - '*.egg-info/**'
+        - .eggs/**
+        - .git/**
+        - .tox/**
+        - .venv/**
+        - __pycache__/**
+        - bin/**
+        - build/**
+        - dist/**
+        - test_*.py
+        - tests/**

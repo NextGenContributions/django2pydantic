@@ -17,14 +17,14 @@ class BaseMixins(BaseModel):
         "from_attributes": True,
         "arbitrary_types_allowed": True,
         "use_enum_values": True,
-        "validate_default": True,
+        "validate_default": False,
     }
 
     @model_validator(mode="wrap")
     @classmethod
     def _run_root_validator(
         cls,
-        values: Any,
+        values: Any,  # noqa: ANN401
         handler: ModelWrapValidatorHandler[SVar],
         info: ValidationInfo,
     ) -> SVar:

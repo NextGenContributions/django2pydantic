@@ -58,6 +58,10 @@ class DjangoGetter(DjangoGetterMixin):
             if k.startswith(f"{key}__"):
                 values[k[len(key) + 2 :]] = v
 
+        # If values is empty, bubble up AttributeError as there's no value for the key
+        if not values:
+            raise AttributeError(key)
+
         return values
 
     def __init__(self, obj: Any, schema_cls: Any, context: Any = None) -> None:

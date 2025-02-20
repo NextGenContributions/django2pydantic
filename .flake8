@@ -1,8 +1,28 @@
 [flake8]
-
-; Ruff defaults to double quotes so let's stick with that:
-inline-quotes = double
-
-ignore = C812, C816, W503
-
+format = wemake
+show-source = True
+statistics = False
+doctests = True
+enable-extensions = G
 max-line-length = 88
+max-complexity = 6
+exclude = .git,__pycache__,.venv,.eggs,*.egg
+ignore = D100,D104,D106,D401,X100,W504
+inline-quotes = double
+extend-ignore = WPS110,WPS111,WPS114,WPS332,WPS410,WPS602,WPS300,WPS426,W503,W504,WPS122,WPS412,WPS102,WPS324
+max-module-members = 9
+max-module-expressions = 9
+max-function-expressions = 9
+max-local-variables = 9
+max-arguments = 9
+max-returns = 9
+max-methods = 9
+max-attributes = 9
+max-annotation-complexity = 4
+max-import-from-members = 9
+max-tuple-unpack-length = 9
+max-raises = 5
+max-string-usages = 4
+max-try-body-length = 9
+per-file-ignores =
+  tests/*.py:WPS116,WPS118,WPS218,WPS432
