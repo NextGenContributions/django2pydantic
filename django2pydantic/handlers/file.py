@@ -11,8 +11,8 @@ from django2pydantic.handlers.base import DjangoFieldHandler
 class FileFieldHandler(DjangoFieldHandler[models.FileField]):
     """Handler for File fields."""
 
-    @override
     @classmethod
+    @override
     def field(cls) -> type[models.FileField]:
         return models.FileField
 
@@ -21,12 +21,12 @@ class FileFieldHandler(DjangoFieldHandler[models.FileField]):
         return str
 
 
-class FilePathFieldHandler(DjangoFieldHandler[models.FilePathField[str]]):
+class FilePathFieldHandler(DjangoFieldHandler[models.FilePathField[str, str]]):
     """Handler for FilePath fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.FilePathField[str]]:
+    @override
+    def field(cls) -> type[models.FilePathField[str, str]]:
         return models.FilePathField
 
     @override
@@ -37,8 +37,8 @@ class FilePathFieldHandler(DjangoFieldHandler[models.FilePathField[str]]):
 class ImageFieldHandler(DjangoFieldHandler[models.ImageField]):
     """Handler for Image fields."""
 
-    @override
     @classmethod
+    @override
     def field(cls) -> type[models.ImageField]:
         return models.ImageField
 
@@ -52,12 +52,12 @@ class ImageFieldHandler(DjangoFieldHandler[models.ImageField]):
         return str
 
 
-class BinaryFieldHandler(DjangoFieldHandler[models.BinaryField[bytes]]):
+class BinaryFieldHandler(DjangoFieldHandler[models.BinaryField[bytes, bytes]]):
     """Handler for Binary fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.BinaryField[bytes]]:
+    @override
+    def field(cls) -> type[models.BinaryField[bytes, bytes]]:
         return models.BinaryField
 
     @property

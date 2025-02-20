@@ -1,33 +1,43 @@
 """Handlers for relational fields."""
 
 from abc import ABC
-from typing import Annotated, Any, override
+from typing import TYPE_CHECKING, Annotated, Any, Generic, TypeVar, override
 
 from django.apps import apps
 from django.db import models
 from django.db.models.base import ModelBase
 from django.db.models.fields.related import RelatedField
-from pydantic.fields import FieldInfo
 
 from django2pydantic.handlers.base import DjangoFieldHandler
-from django2pydantic.registry import FieldTypeRegistry
+from django2pydantic.types import GetType, SetType
+
+if TYPE_CHECKING:
+    from pydantic.fields import FieldInfo
+
+TDjangoRelatedField_co = TypeVar(
+    "TDjangoRelatedField_co",
+    bound=RelatedField[models.Model, models.Model],
+    covariant=True,
+)
 
 
-class RelatedFieldHandler[TDjangoModel: RelatedField[Any, Any]](
-    DjangoFieldHandler[TDjangoModel], ABC
+class RelatedFieldHandler(
+    Generic[TDjangoRelatedField_co], DjangoFieldHandler[TDjangoRelatedField_co], ABC
 ):
     """Base handler for Related fields."""
 
     @override
     def get_pydantic_type_raw(self):
         """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
         return (
             FieldTypeRegistry.instance()
             .get_handler(self._get_target_field())
             .get_pydantic_type()
         )
 
-    def _get_target_field(self) -> models.Field[Any, Any]:
+    def _get_target_field(self) -> models.Field[SetType, GetType]:
         """Return the target field of the relation."""
         if getattr(self.field_obj, "to_field", False) and isinstance(
             self.field_obj.to_field,
@@ -100,21 +110,25 @@ class RelatedFieldHandler[TDjangoModel: RelatedField[Any, Any]](
         return None
 
 
-class ForeignKeyHandler(RelatedFieldHandler[models.ForeignKey[models.Model]]):
+class ForeignKeyHandler(
+    RelatedFieldHandler[models.ForeignKey[models.Model, models.Model]]
+):
     """Handler for ForeignKey fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.ForeignKey[models.Model]]:
+    @override
+    def field(cls) -> type[models.ForeignKey[models.Model, models.Model]]:
         return models.ForeignKey
 
 
-class OneToOneFieldHandler(RelatedFieldHandler[models.OneToOneField[models.Model]]):
+class OneToOneFieldHandler(
+    RelatedFieldHandler[models.OneToOneField[models.Model, models.Model]]
+):
     """Handler for OneToOne fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.OneToOneField[models.Model]]:
+    @override
+    def field(cls) -> type[models.OneToOneField[models.Model, models.Model]]:
         return models.OneToOneField
 
 
@@ -123,14 +137,16 @@ class ManyToManyFieldHandler(
 ):
     """Handler for ManyToMany fields."""
 
-    @override
     @classmethod
+    @override
     def field(cls) -> type[models.ManyToManyField[models.Model, models.Model]]:
         return models.ManyToManyField
 
     @override
     def get_pydantic_type(self) -> type[list[Annotated[Any, Any]]]:
         """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
         field_info: FieldInfo = (
             FieldTypeRegistry.instance()
             .get_handler(self._get_target_field())

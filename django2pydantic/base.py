@@ -1,48 +1,30 @@
 """Tooling to convert Django models and fields to Pydantic native models."""
 
-from collections.abc import Callable
 from enum import Enum, IntEnum
 from types import UnionType
-from typing import Any, Optional, TypeVar, override
-from uuid import UUID
+from typing import Optional
 
-from django.contrib.contenttypes.fields import GenericForeignKey
+from beartype import beartype
 from django.core.exceptions import FieldDoesNotExist
 from django.db import models
 from pydantic import BaseModel, create_model
-from pydantic._internal._model_construction import ModelMetaclass  # noqa: WPS436
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
-from django2pydantic.defaults import field_type_registry
-from django2pydantic.mixin import BaseMixins
 from django2pydantic.registry import FieldTypeRegistry
 from django2pydantic.types import Infer, InferExcept, ModelFields
 
-SupportedParentFields = (
-    models.Field[Any, Any]
-    | models.ForeignObjectRel
-    | GenericForeignKey
-    | Callable[[], type]
-)
-
-CallableOutput = TypeVar("CallableOutput", int, str, bool, UUID, float)
-DefaultCallable = Callable[..., CallableOutput]
-
-
-DjangoModelFieldName = str
-RelatedModelFields = tuple[str, set[str]]
-RelatedModelListFieldsSchema = tuple[str, type[list[BaseModel]]]
-RelatedModelFieldsSchema = tuple[str, type[BaseModel]]
-ApiFields = set[
-    DjangoModelFieldName
-    | RelatedModelFields
-    | RelatedModelListFieldsSchema
-    | RelatedModelFieldsSchema
+type PydanticFields = dict[
+    str,
+    tuple[
+        type[BaseModel | list[BaseModel] | object] | Enum | IntEnum | UnionType,
+        FieldInfo,
+    ],
 ]
 
 
-def has_property(cls: type, property_name: str) -> bool:
+@beartype
+def has_property(cls: type[object], property_name: str) -> bool:
     """Check if a class has a property."""
     return hasattr(cls, property_name) and isinstance(
         getattr(cls, property_name),
@@ -50,50 +32,47 @@ def has_property(cls: type, property_name: str) -> bool:
     )
 
 
-def create_pydantic_model(  # noqa: C901, D417, PLR0912, PLR0915, WPS210, WPS231 NOSONAR
+def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOSONAR
     django_model: type[models.Model],
     field_type_registry: FieldTypeRegistry,
-    included_fields: ModelFields,
+    fields: ModelFields,
     bases: tuple[type[BaseModel], ...] | None = None,
     model_name: str | None = None,
 ) -> type[BaseModel]:
     """Create a Pydantic model from a Django model.
 
-    included_fields: ModelFields = {
-        "id": InferExcept(title="some name"),
-        "name": Infer,
-        "description": Field(None, title="some name"),
-        "organization": {"id": Infer, "name": Infer},
-        "applications": [BaseModel],
-        "account": BaseModel,
-    }
-
     Args:
         django_model (type[models.Model]): The Django model class.
         field_type_registry (FieldTypeRegistry): The field type registry.
-        included_fields (ApiFields): The included fields.
+        fields (ModelFields): The included fields.
+        bases (tuple[type[BaseModel], ...], optional): The base classes for the Pydantic model. Defaults to None.
+        model_name (str, optional): The name of the Pydantic model. Defaults to None.
 
     Returns:
         type[BaseModel]: The Pydantic model.
 
+    Raises:
+        ValueError: If included_fields is None.
+        AttributeError: If there are errors creating the Pydantic model.
     """
-    if included_fields is None:
-        msg = "included_fields is required"
-        raise ValueError(msg)
-
     model_name = model_name or f"{django_model.__name__}Schema"
 
-    pydantic_fields: dict[
-        str,
-        tuple[
-            type[BaseModel | list[BaseModel]] | type | Enum | IntEnum | UnionType,
-            FieldInfo,
-        ],
-    ] = {}
+    pydantic_fields: PydanticFields = {}
 
     errors: list[str] = []
 
-    for field_name, field_def in included_fields.items():
+    for field in fields:
+        if isinstance(field, str):
+            field_name = field
+            field_def = Infer
+        else:
+            field_name, field_def = field
+
+        pydantic_fields[field_name] = (
+            Infer,
+            FieldInfo(title=field_name, description=field_name),
+        )
+
         # Check if the field is a property function:
         if has_property(django_model, field_name):
             django_field = getattr(django_model, field_name)
@@ -112,8 +91,7 @@ def create_pydantic_model(  # noqa: C901, D417, PLR0912, PLR0915, WPS210, WPS231
         if field_def is Infer:
             type_handler = field_type_registry.get_handler(django_field)
             python_type = type_handler.get_pydantic_type()
-            pydantic_field_info: FieldInfo = type_handler.get_pydantic_field()
-
+            pydantic_field_info = type_handler.get_pydantic_field()
             pydantic_fields[field_name] = (python_type, pydantic_field_info)
         elif isinstance(field_def, InferExcept):
             type_handler = field_type_registry.get_handler(django_field)
@@ -229,9 +207,8 @@ def create_pydantic_model(  # noqa: C901, D417, PLR0912, PLR0915, WPS210, WPS231
         else:
             errors.append(
                 f"Invalid field definition for '{field_name}' "
-                f"in the Django model '{django_model.__name__}'. Did not match any of the expected types."
-                f"The field definition was: {field_def}"
-                f"Expected one of: Infer, InferExcept, pydantic.BaseModel, list[pydantic.BaseModel], dict[str, str]",
+                f"which does not exists in the Django model '{django_model.__name__}'. "
+                f"The field definition was: {field_def} "
             )
 
     if errors:
@@ -249,56 +226,3 @@ def create_pydantic_model(  # noqa: C901, D417, PLR0912, PLR0915, WPS210, WPS231
         __base__=bases,
         **pydantic_fields,
     )  # pyright: ignore[reportCallIssue]
-
-
-Bases = tuple[type[BaseModel]]
-Namespace = dict[str, Any]
-Kwargs = dict[str, Any]
-
-
-class SuperSchemaResolver(ModelMetaclass):
-    """Metaclass for django2pydantic."""
-
-    @override
-    def __new__(  # pylint: disable=W0222,C0204
-        cls: type,
-        name: str,
-        bases: Bases,
-        namespace: Namespace,
-        **kwargs: Kwargs,
-    ) -> type[BaseModel]:
-        """Create a new Schema class."""
-        if name == "Schema":  # TODO: detect more reliably if this is the base class
-            return super().__new__(cls, name, bases, namespace, **kwargs)
-
-        if "Meta" not in namespace:
-            msg = f"Meta class is required for {name}"
-            raise ValueError(msg)
-
-        if getattr(namespace["Meta"], "model", None) is None:
-            msg = f"'model' attribute is required in Meta class for {name}"
-            raise ValueError(msg)
-
-        model_class = namespace["Meta"].model
-        if not issubclass(model_class, models.Model):
-            msg = f"model_class must be a Django model, got {model_class}"
-            raise TypeError(msg)
-
-        # Check that included fields are present in the model Meta class
-        if getattr(namespace["Meta"], "fields", None) is None:
-            msg = f"model field is required in Meta class for {name}"
-            raise ValueError(msg)
-
-        model_name = getattr(
-            namespace["Meta"],
-            "name",
-            f"{model_class.__name__}Schema",
-        )
-
-        return create_pydantic_model(
-            model_class,
-            field_type_registry,
-            included_fields=namespace["Meta"].fields,
-            model_name=model_name,
-            bases=(BaseMixins, BaseModel),
-        )

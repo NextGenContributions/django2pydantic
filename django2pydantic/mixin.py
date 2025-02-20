@@ -1,20 +1,19 @@
-from typing import TYPE_CHECKING, Any, TypeVar
+"""Mixin class for Pydantic models."""
 
-from pydantic import BaseModel, ValidationInfo, model_validator
+from typing import Any, ClassVar, TypeVar
+
+from pydantic import BaseModel, ConfigDict, ValidationInfo, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
 
 from django2pydantic.getter import DjangoGetter
 
-if TYPE_CHECKING:
-    from django2pydantic import django2pydantic
-
-SVar = TypeVar("SVar", bound="django2pydantic")
+SVar = TypeVar("SVar")
 
 
 class BaseMixins(BaseModel):
     """Base Mixins class."""
 
-    model_config = {
+    model_config: ClassVar[ConfigDict] = {
         "from_attributes": True,
         "arbitrary_types_allowed": True,
         "use_enum_values": True,
@@ -25,7 +24,7 @@ class BaseMixins(BaseModel):
     @classmethod
     def _run_root_validator(
         cls,
-        values: Any,
+        values: Any,  # noqa: ANN401
         handler: ModelWrapValidatorHandler[SVar],
         info: ValidationInfo,
     ) -> SVar:

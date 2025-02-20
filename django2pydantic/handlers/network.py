@@ -9,13 +9,13 @@ from django2pydantic.handlers.base import DjangoFieldHandler
 
 
 class GenericIpAddressFieldHandler(
-    DjangoFieldHandler[models.GenericIPAddressField[str]],
+    DjangoFieldHandler[models.GenericIPAddressField[str, str]],
 ):
     """Handler for Generic IP Address fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.GenericIPAddressField[str]]:
+    @override
+    def field(cls) -> type[models.GenericIPAddressField[str, str]]:
         return models.GenericIPAddressField
 
     @override

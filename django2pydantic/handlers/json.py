@@ -1,24 +1,24 @@
 """Handler for JSON fields."""
 
-from typing import override
+from typing import Annotated, override, reveal_type
 
 from django.db import models
+from pydantic import Json
 
 from django2pydantic.handlers.base import DjangoFieldHandler
+from django2pydantic.types import GetType, SetType
 
-JSONValue = str | int | float | bool | None | list["JSONValue"] | dict[str, "JSONValue"]
 
-
-class JSONFieldHandler(DjangoFieldHandler[models.JSONField[JSONValue]]):
+class JSONFieldHandler(DjangoFieldHandler[models.JSONField[SetType, GetType]]):
     """Handler for JSON fields."""
 
-    @override
     @classmethod
+    @override
     def field(cls) -> type[models.JSONField]:
         return models.JSONField
 
     @override
     def get_pydantic_type_raw(
         self,
-    ) -> type[dict]:
-        return dict
+    ):
+        return Json

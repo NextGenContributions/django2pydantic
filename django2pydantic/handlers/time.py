@@ -8,12 +8,14 @@ from django.db import models
 from django2pydantic.handlers.base import DjangoFieldHandler
 
 
-class TimeFieldHandler(DjangoFieldHandler[models.TimeField[datetime.time]]):
+class TimeFieldHandler(
+    DjangoFieldHandler[models.TimeField[datetime.time, datetime.time]]
+):
     """Handler for Time fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.TimeField[datetime.time]]:
+    @override
+    def field(cls) -> type[models.TimeField[datetime.time, datetime.time]]:
         return models.TimeField
 
     @override
@@ -21,12 +23,14 @@ class TimeFieldHandler(DjangoFieldHandler[models.TimeField[datetime.time]]):
         return datetime.time
 
 
-class DateFieldHandler(DjangoFieldHandler[models.DateField[datetime.date]]):
+class DateFieldHandler(
+    DjangoFieldHandler[models.DateField[datetime.date, datetime.date]]
+):
     """Handler for Date fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.DateField[datetime.date]]:
+    @override
+    def field(cls) -> type[models.DateField[datetime.date, datetime.date]]:
         return models.DateField
 
     @override
@@ -34,12 +38,14 @@ class DateFieldHandler(DjangoFieldHandler[models.DateField[datetime.date]]):
         return datetime.date
 
 
-class DateTimeFieldHandler(DjangoFieldHandler[models.DateTimeField[datetime.datetime]]):
+class DateTimeFieldHandler(
+    DjangoFieldHandler[models.DateTimeField[datetime.datetime, datetime.date]]
+):
     """Handler for DateTime fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.DateTimeField[datetime.datetime]]:
+    @override
+    def field(cls) -> type[models.DateTimeField[datetime.datetime, datetime.date]]:
         return models.DateTimeField
 
     @override
@@ -48,13 +54,15 @@ class DateTimeFieldHandler(DjangoFieldHandler[models.DateTimeField[datetime.date
 
 
 class DurationFieldHandler(
-    DjangoFieldHandler[models.DurationField[datetime.timedelta]],
+    DjangoFieldHandler[models.DurationField[datetime.timedelta, datetime.timedelta]],
 ):
     """Handler for Duration fields."""
 
-    @override
     @classmethod
-    def field(cls) -> type[models.DurationField[datetime.timedelta]]:
+    @override
+    def field(
+        cls,
+    ) -> type[models.DurationField[datetime.timedelta, datetime.timedelta]]:
         return models.DurationField
 
     @override
