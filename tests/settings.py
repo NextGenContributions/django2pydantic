@@ -1,10 +1,5 @@
 """Django settings file for the tests."""
 
-import django_stubs_ext
-from django.db import models
-
-django_stubs_ext.monkeypatch(extra_classes=[models.BinaryField, models.JSONField])
-
 ALLOWED_HOSTS = ["*"]
 DEBUG_PROPAGATE_EXCEPTIONS = True
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
