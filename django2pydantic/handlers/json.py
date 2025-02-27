@@ -1,6 +1,6 @@
 """Handler for JSON fields."""
 
-from typing import Annotated, override, reveal_type
+from typing import override
 
 from django.db import models
 from pydantic import Json
