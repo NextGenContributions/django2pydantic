@@ -65,7 +65,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
     errors: list[str] = []
 
     if fields is None:
-        msg = "The included_fields argument is required."
+        msg = "The 'fields' argument is required."
         raise ValueError(msg)
 
     # for field_name, field_def in fields.items():
@@ -213,7 +213,7 @@ def _get_django_field(
     except FieldDoesNotExist as e:
         msg = (
             f"The fields definition includes field '{field_name}' which "
-            f"is not found in the Django model '{django_model.__name__}'.",
+            f"is not found in the Django model '{django_model.__name__}'."
         )
         raise ValueError(msg) from e
 
