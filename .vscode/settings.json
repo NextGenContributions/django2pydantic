@@ -1,4 +1,29 @@
 {
+    // "github.copilot.chat.reviewSelection.instructions": [
+    //     {
+    //         "file": "docs/copilot-review-instructions.md"
+    //     }
+    // ],
+    // "github.copilot.chat.codeGeneration.instructions": [
+    //     {
+    //         "file": "docs/copilot-code-generation-instructions.md"
+    //     }
+    // ],
+    // "github.copilot.chat.commitMessageGeneration.instructions": [
+    //     {
+    //         "file": "docs/copilot-commit-message-instructions.md"
+    //     }
+    // ],
+    // "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
+    //     {
+    //         "file": "docs/copilot-pull-request-description-instructions.md"
+    //     }
+    // ],
+    // "github.copilot.chat.testGeneration.instructions": [
+    //     {
+    //         "file": "docs/copilot-test-instructions.md"
+    //     }
+    // ],
     "files.autoSave": "onFocusChange",
     "[python]": {
         "editor.formatOnSave": true,
@@ -68,5 +93,8 @@
     ],
     "github.copilot.enable": {
         "markdown": true
-    }
+    },
+    "cSpell.words": [
+        "NOSONAR"
+    ]
 }

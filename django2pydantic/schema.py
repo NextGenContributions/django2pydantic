@@ -15,6 +15,7 @@ from django2pydantic.registry import FieldTypeRegistry
 from django2pydantic.types import (
     DictStrAny,
     ModelFields,
+    ModelFieldsCompact,
     TDjangoModel_co,
 )
 
@@ -96,7 +97,7 @@ class SchemaConfig(Generic[TDjangoModel_co]):
     model: type[TDjangoModel_co]
     """Django model class."""
 
-    fields: ModelFields
+    fields: ModelFields | ModelFieldsCompact
     """Model's fields to be included in the schema."""
 
     field_type_registry: FieldTypeRegistry | None = None
