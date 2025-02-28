@@ -42,7 +42,7 @@ def test_django_model_property_methods_are_supported(return_type: Any) -> None:
             model=ModelA,
             fields={
                 property_name: Infer,
-            }
+            },
         )
 
     openapi_schema = SchemaA.model_json_schema()

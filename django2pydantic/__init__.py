@@ -8,5 +8,12 @@ from django2pydantic.types import Infer, InferExcept, ModelFields, ModelFieldsCo
 
 django_stubs_ext.monkeypatch()
 
-__all__ = ["BaseSchema", "FieldTypeRegistry", "Infer", "InferExcept", "ModelFields", "ModelFieldsCompact"]
+__all__ = [
+    "BaseSchema",
+    "FieldTypeRegistry",
+    "Infer",
+    "InferExcept",
+    "ModelFields",
+    "ModelFieldsCompact",
+]
 __version__ = "0.2.0"
