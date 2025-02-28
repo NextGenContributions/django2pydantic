@@ -114,6 +114,7 @@ type SupportedParentFields = Union[  # pyright: ignore[reportDeprecated] # noqa:
     models.Field[SetType, GetType],
     RelatedField[models.Model, models.Model],
     GenericForeignKey,
+    models.ForeignObjectRel,
     Callable[[], type[object]],
     property,
     type[property],

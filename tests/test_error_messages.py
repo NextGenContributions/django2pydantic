@@ -1,12 +1,10 @@
 """Test error messages."""
 
-from typing import ClassVar
-
 import pytest
 from django.db import models
 
-from django2pydantic.schema import Schema
-from django2pydantic.types import Infer, ModelFields
+from django2pydantic.schema import BaseSchema, SchemaConfig
+from django2pydantic.types import Infer
 
 
 def test_defing_a_non_existing_field_raises_exception() -> None:
@@ -14,15 +12,14 @@ def test_defing_a_non_existing_field_raises_exception() -> None:
     with pytest.raises(AttributeError):  # noqa: PT012
 
         class ModelA(models.Model):  # noqa: DJ008
-            id = models.AutoField(primary_key=True)
+            id = models.AutoField[int, int](primary_key=True)
 
-        class SchemaA(Schema):
+        class SchemaA(BaseSchema[ModelA]):
             """SchemaA class."""
 
-            class Meta(Schema.Meta):
-                """Meta class."""
-
-                model = ModelA
-                fields: ClassVar[ModelFields] = {
+            config = SchemaConfig(
+                model=ModelA,
+                fields={
                     "non_existing_field": Infer,
-                }
+                },
+            )

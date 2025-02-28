@@ -3,14 +3,13 @@
 import json
 from pathlib import Path
 from random import randint
-from typing import Any
+from typing import Any, cast
 
 import pydantic
 from django.db import models
-from rich import print_json
 
-from django2pydantic.schema import Schema
-from django2pydantic.types import Infer, MetaFields, ModelFields
+from django2pydantic.schema import BaseSchema, SchemaConfig
+from django2pydantic.types import Infer, ModelFields
 
 DjangoField = models.Field[Any, Any]
 
@@ -20,7 +19,7 @@ JSONValue = str | int | float | bool | None | list["JSONValue"] | dict[str, "JSO
 def debug_json(json_data: JSONValue) -> None:  # pragma: no cover
     """Print pretty the JSON value with indentation."""
     json_str: str = json.dumps(json_data)
-    print_json(data=json_str, indent=4)
+    # print_json(data=json_str, indent=4)
     with Path("debug.json").open("w") as file:
         file.write(json_str)
 
@@ -47,18 +46,20 @@ def pydantic_schema_from_field(field: DjangoField) -> type[pydantic.BaseModel]:
     field_name = "field"
     model: type[models.Model] = django_model_factory(fields={field_name: field})
     fields_def: ModelFields = {field_name: Infer}
-    meta_class_attrs: MetaFields = {
-        "model": model,
-        "fields": fields_def,
-    }
-    meta_class = type("Meta", (), dict(meta_class_attrs))
+    meta_class_attrs: SchemaConfig = SchemaConfig(
+        model=model,
+        fields=fields_def,
+    )
 
-    return type(
-        "TestSchema",
-        (Schema,),
-        {
-            "Meta": meta_class,
-        },
+    return cast(
+        type[pydantic.BaseModel],
+        type(
+            "TestSchema",
+            (BaseSchema,),
+            {
+                "config": meta_class_attrs,
+            },
+        ),
     )
 
 
