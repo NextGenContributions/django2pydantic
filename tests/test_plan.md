@@ -1,0 +1,319 @@
+# Django2Pydantic Test Plan
+
+## 0. Testing Strategies
+
+### 0.1 Parameterized Tests
+Parameterized tests allow running the same test logic with different inputs. The following areas are excellent candidates for parameterized testing:
+- Field type validations with different inputs
+- Schema generation with various model configurations
+- Field constraints with boundary values
+- Model validations with valid/invalid data samples
+
+### 0.2 Property-Based Testing with Hypothesis
+Hypothesis allows testing against a wide range of automatically generated inputs. These areas benefit most from property-based testing:
+- Testing numeric field validations across ranges
+- Text field pattern validation with generated strings
+- JSON field validation with complex nested structures
+- Date/time field handling with various formats and edge cases
+- Testing model serialization/deserialization with generated data
+
+## 1. Basic Schema Generation
+
+### 1.0 General
+- test_should_generate_valid_schema_when_model_has_simple_fields
+- test_should_use_custom_field_definitions_when_using_infer_except
+- test_should_include_field_metadata_when_title_and_description_exist
+- test_should_generate_openapi_schema_when_model_is_processed
+
+### 1.1 Using Parameterized Tests
+- test_should_infer_correct_field_types_when_using_infer
+- test_should_apply_schema_naming_when_config_is_provided 
+- test_should_validate_model_when_data_is_provided
+
+### 1.2 Using Hypothesis
+- test_should_validate_model_when_data_is_provided (with generated data)
+- test_should_convert_model_to_dict_when_instance_exists (with generated instances)
+
+## 2. Field Type Support
+### 2.1 Text Fields
+
+#### 2.1.0 General
+- test_should_handle_long_text_when_text_field_is_used
+- test_should_validate_uuid_when_uuid_field_is_used
+- test_should_enforce_min_length_when_char_field_is_used
+- test_should_enforce_uniqueness_when_text_field_has_unique_constraint
+
+#### 2.1.1 Using Parameterized Tests
+- test_should_enforce_max_length_when_char_field_is_used
+- test_should_validate_email_when_email_field_is_used
+- test_should_validate_url_when_url_field_is_used
+- test_should_validate_slug_when_slug_field_is_used
+
+#### 2.1.2 Using Hypothesis
+- test_should_validate_pattern_when_field_has_regex_validator
+- test_should_enforce_length_constraints_when_text_field_is_used
+- test_should_validate_email_when_email_field_is_used (with edge cases)
+
+### 2.2 Numeric Fields
+
+#### 2.2.0 General
+- test_should_reject_negative_values_when_using_positive_integer_field
+- test_should_handle_small_integers_when_using_small_integer_field
+- test_should_handle_large_integers_when_using_big_integer_field
+- test_should_handle_auto_fields_when_model_is_converted
+- test_should_validate_digits_when_decimal_field_has_constraints
+- test_should_raise_error_when_max_value_is_less_than_min_value
+
+#### 2.2.1 Using Parameterized Tests
+- test_should_enforce_constraints_when_integer_field_has_min_max_values
+- test_should_maintain_precision_when_using_float_field
+- test_should_maintain_precision_and_scale_when_using_decimal_field
+
+#### 2.2.2 Using Hypothesis
+- test_should_round_correctly_when_using_decimal_field
+- test_should_enforce_range_when_custom_validator_is_used
+- test_should_reject_negative_values_when_field_requires_positive_numbers
+
+### 2.3 Boolean Fields
+
+#### 2.3.0 General
+- test_should_use_defaults_when_boolean_field_has_default_value
+- test_should_validate_choices_when_using_custom_boolean_field
+
+#### 2.3.1 Using Parameterized Tests
+- test_should_handle_boolean_values_when_using_boolean_field
+- test_should_handle_nullable_values_when_using_null_boolean_field
+
+#### 2.3.2 Using Hypothesis
+- test_should_handle_alternative_values_when_using_non_standard_boolean_inputs
+
+### 2.4 Date/Time Fields
+
+#### 2.4.0 General
+- test_should_handle_intervals_when_using_duration_field
+- test_should_update_timestamps_when_using_auto_now_fields
+- test_should_handle_precision_when_using_microseconds
+
+#### 2.4.1 Using Parameterized Tests
+- test_should_format_correctly_when_using_date_field
+- test_should_format_correctly_when_using_time_field
+- test_should_handle_timezones_when_using_datetime_field
+
+#### 2.4.2 Using Hypothesis
+- test_should_handle_timezone_awareness_when_processing_datetime
+- test_should_format_correctly_when_using_custom_date_formats
+- test_should_validate_range_when_using_date_validators
+
+### 2.5 File Fields
+
+#### 2.5.0 General
+- test_should_handle_uploads_when_using_file_field
+- test_should_handle_images_when_using_image_field
+- test_should_handle_paths_when_using_filepath_field
+- test_should_use_correct_path_when_upload_to_is_specified
+- test_should_validate_size_when_file_size_validator_exists
+- test_should_validate_extension_when_file_extension_validator_exists
+- test_should_work_correctly_when_using_custom_storage_backend
+- test_should_validate_content_when_content_type_validator_exists
+
+### 2.6 JSON Fields
+
+#### 2.6.0 General
+- test_should_validate_correctly_when_using_json_field
+- test_should_use_custom_encoders_when_using_json_field
+- test_should_handle_defaults_when_using_json_field_with_default
+
+#### 2.6.1 Using Parameterized Tests
+- test_should_serialize_correctly_when_using_json_field
+
+#### 2.6.2 Using Hypothesis
+- test_should_handle_complex_structures_when_using_nested_json
+- test_should_validate_schema_when_using_json_schema
+
+### 2.7 Network Fields
+
+#### 2.7.0 General
+- test_should_handle_custom_formats_when_using_network_fields
+- test_should_compress_ipv6_addresses_when_using_ipv6_field
+
+#### 2.7.1 Using Parameterized Tests
+- test_should_validate_ip_address_when_using_generic_ip_address_field
+- test_should_validate_ipv4_and_ipv6_when_using_ip_address_field
+
+#### 2.7.2 Using Hypothesis
+- test_should_validate_protocol_when_using_network_fields
+
+## 3. Relationship Fields
+### 3.1 Foreign Key Relations
+
+#### 3.1.0 General
+- test_should_convert_correctly_when_using_foreign_key_field
+- test_should_resolve_references_when_using_string_references
+- test_should_handle_reverse_relations_when_using_foreign_key
+- test_should_reflect_on_delete_behavior_when_using_foreign_key
+- test_should_handle_multiple_foreign_keys_when_using_same_model
+- test_should_handle_recursive_relationships_when_using_limit_choices_to
+- test_should_validate_custom_related_fields_when_using_foreign_key
+
+#### 3.1.1 Using Parameterized Tests
+- test_should_handle_null_values_when_using_nullable_foreign_key
+- test_should_generate_schema_correctly_when_using_related_name
+
+### 3.2 One-to-One Relations
+
+#### 3.2.0 General
+- test_should_convert_correctly_when_using_one_to_one_field
+- test_should_handle_null_values_when_using_nullable_one_to_one
+- test_should_handle_reverse_relations_when_using_one_to_one
+- test_should_resolve_references_when_using_string_references
+- test_should_handle_parent_link_behavior_when_using_one_to_one
+- test_should_handle_bidirectional_relationships_when_using_one_to_one
+- test_should_handle_custom_related_names_when_using_one_to_one
+- test_should_handle_abstract_base_class_when_using_one_to_one
+
+### 3.3 Many-to-Many Relations
+
+#### 3.3.0 General
+- test_should_convert_correctly_when_using_many_to_many_field
+- test_should_handle_through_models_when_using_many_to_many
+- test_should_handle_self_referential_relations_when_using_many_to_many
+- test_should_handle_reverse_relations_when_using_many_to_many
+- test_should_resolve_references_when_using_string_references
+- test_should_validate_custom_through_model_when_using_many_to_many
+- test_should_handle_symmetrical_relations_when_using_self_referential
+- test_should_validate_intermediary_model_fields_when_using_many_to_many
+- test_should_handle_unique_together_when_using_many_to_many
+- test_should_handle_ordering_when_using_many_to_many
+
+## 4. Model Properties and Methods
+
+#### 4.0 General
+- test_should_handle_property_methods_when_using_property_decorator
+- test_should_validate_correctly_when_using_property_methods
+- test_should_handle_cached_properties_when_using_cached_property
+- test_should_exclude_methods_when_generating_schema
+- test_should_use_type_hints_when_using_property_methods
+- test_should_handle_async_methods_when_using_property_methods
+- test_should_handle_setter_and_deleter_when_using_property_methods
+- test_should_handle_errors_when_using_property_methods
+- test_should_handle_computed_fields_when_using_property_methods
+
+#### 4.1 Using Parameterized Tests
+- test_should_infer_types_correctly_when_using_property_methods
+
+#### 4.2 Using Hypothesis
+- test_should_handle_complex_dependencies_when_using_properties
+
+## 5. Inheritance and Subclassing
+
+### 5.0 General
+- test_should_handle_abstract_base_classes_when_using_inheritance
+- test_should_handle_multi_table_inheritance_when_using_inheritance
+- test_should_handle_proxy_models_when_using_inheritance
+- test_should_handle_mixin_classes_when_using_inheritance
+- test_should_handle_inheritance_chains_when_using_inheritance
+- test_should_handle_concrete_inheritance_when_using_inheritance
+- test_should_resolve_multiple_inheritance_when_using_inheritance
+- test_should_customize_proxy_models_when_using_inheritance
+- test_should_handle_custom_model_managers_when_using_inheritance
+- test_should_inherit_meta_options_when_using_inheritance
+- test_should_override_fields_when_using_subclasses
+
+## 6. Field Options and Validators
+
+### 6.0 General
+- test_should_use_default_values_when_using_fields
+- test_should_handle_custom_validators_when_using_fields
+- test_should_enforce_constraints_when_using_field_options
+- test_should_convert_help_text_when_using_fields
+- test_should_customize_validator_messages_when_using_fields
+- test_should_handle_field_dependencies_when_using_validation
+- test_should_handle_async_validators_when_using_fields
+- test_should_group_validations_when_using_fields
+
+### 6.1 Using Parameterized Tests
+- test_should_handle_null_and_blank_options_when_using_fields
+- test_should_handle_choices_and_enum_fields_when_using_fields
+
+### 6.2 Using Hypothesis
+- test_should_handle_complex_validation_chains_when_using_fields
+- test_should_handle_conditional_validation_when_using_fields
+
+## 7. Schema Configuration
+
+### 7.0 General
+- test_should_apply_schema_config_options_when_using_schema
+- test_should_register_custom_field_types_when_using_schema
+- test_should_handle_custom_field_handlers_when_using_schema
+- test_should_apply_validation_settings_when_using_schema
+- test_should_apply_custom_naming_patterns_when_using_schema
+- test_should_configure_field_aliases_when_using_schema
+- test_should_use_custom_encoders_when_using_schema
+- test_should_handle_schema_versioning_when_using_schema
+- test_should_apply_inheritance_strategies_when_using_schema
+- test_should_include_dynamic_fields_when_using_schema
+
+### 7.1 Using Parameterized Tests
+- test_should_include_and_exclude_fields_when_using_schema
+- test_should_apply_model_naming_when_using_schema
+
+## 8. Edge Cases and Error Handling
+
+### 8.0 General
+- test_should_handle_missing_fields_when_generating_schema
+- test_should_handle_invalid_field_definitions_when_generating_schema
+- test_should_handle_circular_dependencies_when_generating_schema
+- test_should_handle_invalid_model_references_when_generating_schema
+- test_should_handle_unsupported_field_types_when_generating_schema
+- test_should_generate_error_messages_when_validation_fails
+- test_should_handle_maximum_recursion_when_generating_schema
+- test_should_handle_invalid_field_configurations_when_generating_schema
+- test_should_handle_generation_timeouts_when_generating_schema
+
+### 8.1 Using Hypothesis
+- test_should_handle_deeply_nested_circular_references_when_generating_schema
+- test_should_handle_field_name_collisions_when_generating_schema
+- test_should_handle_memory_limits_when_generating_large_models
+
+## 9. Integration Tests
+
+### 9.0 General
+- test_should_integrate_correctly_when_using_django_rest_framework
+- test_should_integrate_correctly_when_using_fastapi
+- test_should_integrate_correctly_when_using_graphql
+- test_should_handle_real_world_scenarios_when_using_complex_models
+- test_should_maintain_performance_when_using_large_models
+- test_should_manage_memory_efficiently_when_processing_models
+- test_should_handle_nested_serializers_when_using_django_rest_framework
+- test_should_work_with_dependency_injection_when_using_fastapi
+- test_should_handle_operations_when_using_graphql_mutations_and_queries
+- test_should_integrate_correctly_when_using_strawberry_graphql
+- test_should_work_with_admin_when_using_django_admin
+- test_should_maintain_performance_when_doing_bulk_operations
+
+## 10. Compatibility
+
+### 10.0 General
+- test_should_support_features_when_using_django_4_0_and_above
+- test_should_handle_differences_when_using_pydantic_v1_vs_v2
+- test_should_support_features_when_using_python_3_12_and_above
+- test_should_work_correctly_when_using_custom_database_field_implementations
+- test_should_support_third_party_fields_when_using_external_django_libraries
+
+### 10.1 Using Parameterized Tests
+- test_should_work_correctly_when_using_different_django_versions
+- test_should_work_correctly_when_using_different_pydantic_versions
+- test_should_work_correctly_when_using_different_python_versions
+- test_should_work_correctly_when_using_different_database_backends
+
+## 11. Performance Testing
+
+### 11.0 General
+
+### 11.1 Using Parameterized Tests
+- test_should_maintain_performance_for_different_model_sizes
+- test_should_optimize_memory_usage_for_large_models
+
+### 11.2 Using Benchmarks
+- benchmark_schema_generation_speed_for_complex_models
+- benchmark_validation_performance_for_large_datasets

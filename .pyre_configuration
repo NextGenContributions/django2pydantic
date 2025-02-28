@@ -1,7 +1,7 @@
 {
   "site_package_search_strategy": "all",
   "source_directories": [
-    "."
+    "django2pydantic"
   ],
   "strict": true,
   "python_version": "3.12"

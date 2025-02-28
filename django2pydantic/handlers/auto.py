@@ -18,12 +18,14 @@ class SmallAutoFieldHandler(DjangoFieldHandler[models.SmallAutoField[int, int]])
     @property
     @override
     def ge(self) -> int | None:
-        return 1
+        validator_min = super().ge
+        return max(1, validator_min) if validator_min is not None else 1
 
     @property
     @override
     def le(self) -> int | None:
-        return 32767
+        validator_max = super().le
+        return min(32767, validator_max) if validator_max is not None else 32767
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -41,12 +43,16 @@ class AutoFieldHandler(DjangoFieldHandler[models.AutoField[int, int]]):
     @property
     @override
     def ge(self) -> int | None:
-        return 1
+        validator_min = super().ge
+        return max(1, validator_min) if validator_min is not None else 1
 
     @property
     @override
     def le(self) -> int | None:
-        return 2147483647
+        validator_max = super().le
+        return (
+            min(2147483647, validator_max) if validator_max is not None else 2147483647
+        )
 
     @override
     def get_pydantic_type_raw(self) -> type[int]:
@@ -64,12 +70,18 @@ class BigAutoFieldHandler(DjangoFieldHandler[models.BigAutoField[int, int]]):
     @property
     @override
     def ge(self) -> int | None:
-        return 1
+        validator_min = super().ge
+        return max(1, validator_min) if validator_min is not None else 1
 
     @property
     @override
     def le(self) -> int | None:
-        return 9223372036854775807
+        validator_max = super().le
+        return (
+            min(9223372036854775807, validator_max)
+            if validator_max is not None
+            else 9223372036854775807
+        )
 
     @property
     @override

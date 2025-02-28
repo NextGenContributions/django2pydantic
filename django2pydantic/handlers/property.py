@@ -16,8 +16,8 @@ class PropertyHandler(FieldTypeHandler[type[property]]):
 
     @classmethod
     @override
-    def field(cls):
-        return Callable[..., Any]
+    def field(cls) -> type[property]:
+        return property
 
     @property
     @override

@@ -1,13 +1,20 @@
 """Pytest configuration file."""
 
 import django_stubs_ext
+import pytest
+from _pytest.config import Config
+from _pytest.fixtures import SubRequest
 from django import setup
+from django.apps import apps
 from django.conf import settings
 
 django_stubs_ext.monkeypatch()
 
 
-def pytest_configure(config) -> None:
+def pytest_configure(
+    config: Config,  # noqa: ARG001
+) -> None:
+    """Configure Django settings for pytest."""
     settings.configure(
         ALLOWED_HOSTS=["*"],
         DEBUG_PROPAGATE_EXCEPTIONS=True,
@@ -15,7 +22,7 @@ def pytest_configure(config) -> None:
             "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
         },
         SITE_ID=1,
-        SECRET_KEY="not very secret in tests",
+        SECRET_KEY="not very secret in tests",  # noqa: S106
         USE_I18N=True,
         USE_L10N=True,
         STATIC_URL="/static/",
@@ -60,3 +67,14 @@ def pytest_configure(config) -> None:
     )
 
     setup()
+
+
+@pytest.fixture(autouse=True)
+def teardown_after_each_test(request: SubRequest) -> None:
+    """Clear cached django models to avoid issue with reusing model name."""
+
+    def clear_django_models_cache() -> None:
+        test_app = apps.get_app_config("tests")
+        test_app.models.clear()
+
+    request.addfinalizer(clear_django_models_cache)  # noqa: PT021

@@ -14,6 +14,7 @@ class IntegerFieldHandler(DjangoFieldHandler[models.IntegerField[int, int]]):
     def field(cls) -> type[models.IntegerField[int, int]]:
         return models.IntegerField
 
+    # TODO(phuongfi91): Revisit all the potential None values in mix and max params
     @property
     @override
     def ge(self) -> int | None:
@@ -159,17 +160,17 @@ class PositiveBigIntegerFieldHandler(
     @property
     @override
     def ge(self) -> int | None:
-        return min(
+        return max(
             connection.ops.integer_field_range("PositiveBigIntegerField")[0],
-            super().ge,
+            super().ge or 0,
         )
 
     @property
     @override
     def le(self) -> int | None:
-        return max(
+        return min(
             connection.ops.integer_field_range("PositiveBigIntegerField")[1],
-            super().le,
+            super().le or 9223372036854775808,
         )
 
     @override

@@ -12,27 +12,27 @@ from django.db import models
 from tests.utils import pydantic_schema_from_field
 
 IntegerField = type[
-    models.SmallIntegerField[int]
-    | models.IntegerField[int]
-    | models.BigIntegerField[int]
-    | models.PositiveBigIntegerField[int]
-    | models.PositiveIntegerField[int]
-    | models.PositiveSmallIntegerField[int]
-    | models.SmallAutoField
-    | models.AutoField
-    | models.BigAutoField
+    models.SmallIntegerField[int, int]
+    | models.IntegerField[int, int]
+    | models.BigIntegerField[int, int]
+    | models.PositiveBigIntegerField[int, int]
+    | models.PositiveIntegerField[int, int]
+    | models.PositiveSmallIntegerField[int, int]
+    | models.SmallAutoField[int, int]
+    | models.AutoField[int, int]
+    | models.BigAutoField[int, int]
 ]
 
 IntegerFields: list[IntegerField] = [
-    models.SmallIntegerField[int],
-    models.IntegerField[int],
-    models.BigIntegerField[int],
-    models.PositiveBigIntegerField[int],
-    models.PositiveIntegerField[int],
-    models.PositiveSmallIntegerField[int],
-    models.SmallAutoField,
-    models.AutoField,
-    models.BigAutoField,
+    models.SmallIntegerField[int, int],
+    models.IntegerField[int, int],
+    models.BigIntegerField[int, int],
+    models.PositiveBigIntegerField[int, int],
+    models.PositiveIntegerField[int, int],
+    models.PositiveSmallIntegerField[int, int],
+    models.SmallAutoField[int, int],
+    models.AutoField[int, int],
+    models.BigAutoField[int, int],
 ]
 
 
