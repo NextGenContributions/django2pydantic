@@ -1,7 +1,6 @@
 """Handler for property decorated methods."""
 
-from collections.abc import Callable
-from typing import Any, cast, override
+from typing import cast, override
 
 from pydantic import Field
 from pydantic.fields import FieldInfo
