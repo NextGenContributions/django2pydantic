@@ -1,5 +1,6 @@
 """Test that inheriting and subclassing works."""
 
+
 @pytest.mark.skip(reason="Placeholder test")
 def test_models_can_have_abstract_base_classes() -> None:
     """Test that models can have abstract base classes."""
