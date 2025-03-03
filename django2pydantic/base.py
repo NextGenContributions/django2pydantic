@@ -365,7 +365,7 @@ def _determine_field_type(
         default = PydanticUndefined
     elif isinstance(django_field, ManyToOneRel):
         # 5
-        field_type = Optional[list[related_schema]]  # noqa: UP007
+        field_type = list[related_schema] | None
         default = PydanticUndefined
     else:
         msg = (
