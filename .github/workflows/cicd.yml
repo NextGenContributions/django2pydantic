@@ -14,6 +14,8 @@ jobs:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/test.yml@main
     with:
       project_name: django2pydantic
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/release.yml@main
