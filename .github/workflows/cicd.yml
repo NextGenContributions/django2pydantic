@@ -16,6 +16,7 @@ jobs:
       project_name: django2pydantic
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   release:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/release.yml@main
