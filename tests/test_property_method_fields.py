@@ -1,12 +1,12 @@
 """Test property method based fields."""
 
-from typing import Any, ClassVar
+from typing import Any
 
 import pytest
 from django.db import models
 
-from django2pydantic.schema import Schema
-from django2pydantic.types import Infer, ModelFields
+from django2pydantic.schema import BaseSchema, SchemaConfig
+from django2pydantic.types import Infer
 from tests.utils import add_property_method, get_openapi_equivalent
 
 BasicTypes = [
@@ -26,7 +26,7 @@ def test_django_model_property_methods_are_supported(return_type: Any) -> None:
     property_name = "some_property"
 
     class ModelA(models.Model):
-        id = models.AutoField(primary_key=True)
+        id = models.AutoField[int, int](primary_key=True)
 
     add_property_method(
         cls=ModelA,
@@ -35,16 +35,15 @@ def test_django_model_property_methods_are_supported(return_type: Any) -> None:
         value="test",
     )
 
-    class SchemaA(Schema):
+    class SchemaA(BaseSchema[ModelA]):
         """SchemaA class."""
 
-        class Meta(Schema.Meta):
-            """Meta class."""
-
-            model = ModelA
-            fields: ClassVar[ModelFields] = {
+        config = SchemaConfig(
+            model=ModelA,
+            fields={
                 property_name: Infer,
-            }
+            },
+        )
 
     openapi_schema = SchemaA.model_json_schema()
     assert openapi_schema["properties"][property_name][

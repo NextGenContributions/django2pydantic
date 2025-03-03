@@ -1,7 +1,6 @@
 """Handler for property decorated methods."""
 
-from collections.abc import Callable
-from typing import Any, cast, override
+from typing import cast, override
 
 from pydantic import Field
 from pydantic.fields import FieldInfo
@@ -16,8 +15,8 @@ class PropertyHandler(FieldTypeHandler[type[property]]):
 
     @classmethod
     @override
-    def field(cls):
-        return Callable[..., Any]
+    def field(cls) -> type[property]:
+        return property
 
     @property
     @override
