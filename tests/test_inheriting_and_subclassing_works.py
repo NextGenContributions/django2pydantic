@@ -23,7 +23,7 @@ def test_models_can_have_abstract_base_classes() -> None:
     class SchemaA(BaseSchema[ModelA]):
         """SchemaA class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
@@ -49,10 +49,10 @@ def test_foreign_key_fields_can_have_string_reference_to_related_model() -> None
             "ModelA", on_delete=models.CASCADE
         )  # <-- string reference
 
-    class SchemaA(BaseSchema[ModelA]):
+    class SchemaA(BaseSchema[ModelA]):  # pyright: ignore [reportUnusedClass]
         """SchemaA class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
@@ -63,7 +63,7 @@ def test_foreign_key_fields_can_have_string_reference_to_related_model() -> None
     class SchemaB(BaseSchema[ModelB]):
         """SchemaB class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelB](
             model=ModelB,
             fields={
                 "id": Infer,
@@ -79,7 +79,7 @@ def test_foreign_key_fields_can_have_string_reference_to_related_model() -> None
 
 @pytest.mark.skip(reason="Placeholder test")
 def test_many_to_many_fields_can_have_string_reference_to_related_model() -> None:
-    """Test that many to many fields can have a string reference to the related model."""
+    """Many-to-many fields can have a string reference to the related model."""
 
     class ModelA(models.Model):
         id = models.AutoField[int, int](primary_key=True)
@@ -87,12 +87,12 @@ def test_many_to_many_fields_can_have_string_reference_to_related_model() -> Non
 
     class ModelB(models.Model):
         id = models.AutoField[int, int](primary_key=True)
-        model_a = models.ManyToManyField("ModelA")
+        model_a = models.ManyToManyField[ModelA, ModelA]("ModelA")
 
-    class SchemaA(BaseSchema[ModelA]):
+    class SchemaA(BaseSchema[ModelA]):  # pyright: ignore [reportUnusedClass]
         """SchemaA class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
@@ -103,7 +103,7 @@ def test_many_to_many_fields_can_have_string_reference_to_related_model() -> Non
     class SchemaB(BaseSchema[ModelB]):
         """SchemaB class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelB](
             model=ModelB,
             fields={
                 "id": Infer,
@@ -128,12 +128,14 @@ def test_one_to_one_fields_can_have_string_reference_to_related_model() -> None:
 
     class ModelB(models.Model):
         id = models.AutoField[int, int](primary_key=True)
-        model_a = models.OneToOneField("ModelA", on_delete=models.CASCADE)
+        model_a = models.OneToOneField[ModelA, ModelA](
+            "ModelA", on_delete=models.CASCADE
+        )
 
-    class SchemaA(BaseSchema[ModelA]):
+    class SchemaA(BaseSchema[ModelA]):  # pyright: ignore [reportUnusedClass]
         """SchemaA class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
@@ -144,7 +146,7 @@ def test_one_to_one_fields_can_have_string_reference_to_related_model() -> None:
     class SchemaB(BaseSchema[ModelB]):
         """SchemaB class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelB](
             model=ModelB,
             fields={
                 "id": Infer,
@@ -169,7 +171,7 @@ def test_there_can_be_multiple_schemas_for_one_model() -> None:
     class SchemaA(BaseSchema[ModelA]):
         """SchemaA class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
@@ -180,7 +182,7 @@ def test_there_can_be_multiple_schemas_for_one_model() -> None:
     class SchemaB(BaseSchema[ModelA]):
         """SchemaB class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
@@ -199,12 +201,14 @@ def test_there_can_be_self_referencing_fields() -> None:
 
     class ModelA(models.Model):
         id = models.AutoField[int, int](primary_key=True)
-        parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+        parent = models.ForeignKey["ModelA", "ModelA"](
+            "self", on_delete=models.CASCADE, null=True
+        )
 
     class SchemaA(BaseSchema[ModelA]):
         """SchemaA class."""
 
-        config = SchemaConfig(
+        config = SchemaConfig[ModelA](
             model=ModelA,
             fields={
                 "id": Infer,
