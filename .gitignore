@@ -3,6 +3,7 @@ tmp/
 .testmondata*
 coverage.xml
 coverage.lcov
+junit.xml
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,linux,windows,visualstudiocode,python,django,pycharm+all
