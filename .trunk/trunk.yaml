@@ -1,6 +1,6 @@
-version: '0.1'
+version: "0.1"
 cli:
-  version: 1.22.9
+  version: 1.22.10
 plugins:
   sources:
     - id: trunk
@@ -8,30 +8,32 @@ plugins:
       uri: https://github.com/trunk-io/plugins
 runtimes:
   enabled:
+    - go@1.21.0
+    - node@18.20.5
     - python@>=3.10.8
 lint:
   enabled:
     - actionlint@1.7.7
-    - bandit@1.8.2
+    - bandit@1.8.3
     - git-diff-check
     - markdownlint@0.44.0
-    - mypy@1.14.1
+    - mypy@1.15.0
     - osv-scanner@1.9.2
-    - prettier@3.4.2
+    - prettier@3.5.3
     - pylint@3.3.4
-    - renovate@39.141.0
-    - ruff@0.9.3
+    - renovate@39.185.0
+    - ruff@0.9.9
     - shellcheck@0.10.0
     - shfmt@3.6.0
     - taplo@0.9.3
-    - trufflehog@3.88.3
+    - trufflehog@3.88.14
     - yamllint@1.35.1
   ignore:
     - linters:
         - ALL
       paths:
-        - '*.egg'
-        - '*.egg-info/**'
+        - "*.egg"
+        - "*.egg-info/**"
         - .eggs/**
         - .git/**
         - .tox/**
@@ -42,3 +44,10 @@ lint:
         - dist/**
         - test_*.py
         - tests/**
+actions:
+  disabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+  enabled:
+    - trunk-upgrade-available
