@@ -132,7 +132,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
                 )(BaseMixins.validate_relation)
 
         elif isinstance(field_def, InferExcept):
-            type_handler = field_type_registry.get_handler(django_field)  # pyright: ignore[reportUnknownArgumentType]
+            type_handler = field_type_registry.get_handler(django_field)
             python_type = type_handler.get_pydantic_type()
             pydantic_field_info = type_handler.get_pydantic_field()
 
@@ -361,11 +361,11 @@ def _determine_field_type(
         default = PydanticUndefined
     elif isinstance(django_field, ManyToManyRel):
         # 4
-        field_type = Optional[list[related_schema]]  # noqa: UP007
+        field_type = list[related_schema] | None
         default = PydanticUndefined
     elif isinstance(django_field, ManyToOneRel):
         # 5
-        field_type = Optional[list[related_schema]]  # noqa: UP007
+        field_type = list[related_schema] | None
         default = PydanticUndefined
     else:
         msg = (

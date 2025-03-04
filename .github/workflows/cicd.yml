@@ -1,6 +1,10 @@
 name: CI/CD pipeline
 
 on:
+  workflow_dispatch:  # Add this line to enable manual triggering
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - "*"
@@ -10,6 +14,12 @@ jobs:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/test.yml@main
     with:
       project_name: django2pydantic
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      QLTY_COVERAGE_TOKEN: ${{ secrets.QLTY_COVERAGE_TOKEN }}
 
   release:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/release.yml@main
