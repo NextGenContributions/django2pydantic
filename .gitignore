@@ -1,6 +1,8 @@
 # Custom:
 tmp/
 .testmondata*
+coverage.xml
+coverage.lcov
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,linux,windows,visualstudiocode,python,django,pycharm+all
@@ -66,7 +68,6 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
-coverage.xml
 *.cover
 *.py,cover
 .hypothesis/
