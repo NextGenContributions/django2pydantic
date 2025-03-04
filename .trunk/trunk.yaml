@@ -15,18 +15,31 @@ lint:
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
+    - checkov@3.2.379
+    - codespell@2.4.1
+    - cspell@8.17.5
+    - djlint@1.36.4
+    - flake8@7.1.2
     - git-diff-check
-    - markdownlint@0.44.0
+    - gitleaks@8.24.0
+    - hadolint@2.12.1-beta
+    - markdown-link-check@3.13.6
+    - markdown-table-prettify@3.6.0
+    - markdownlint-cli2@0.17.2
     - mypy@1.15.0
     - osv-scanner@1.9.2
     - prettier@3.5.3
     - pylint@3.3.4
+    - pyright@1.1.396
     - renovate@39.185.0
     - ruff@0.9.9
+    - semgrep@1.110.0
     - shellcheck@0.10.0
     - shfmt@3.6.0
     - taplo@0.9.3
+    - trivy@0.59.1
     - trufflehog@3.88.14
+    - vale@3.9.6
     - yamllint@1.35.1
   ignore:
     - linters:
