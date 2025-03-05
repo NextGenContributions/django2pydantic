@@ -28,6 +28,7 @@ lint:
     - markdownlint-cli2@0.17.2
     - mypy@1.15.0:
         packages:
+          # Required for mypy to correctly type-check Django and Pydantic code
           - django-stubs@5.1.3
           - pydantic@2.10.6
     - osv-scanner@1.9.2
