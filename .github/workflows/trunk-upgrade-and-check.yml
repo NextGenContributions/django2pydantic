@@ -14,6 +14,8 @@ jobs:
   
   trunk-check:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
+    with:
+      check_mode: all
     permissions:
       checks: write # For trunk to post annotations
       contents: read # For repo checkout
