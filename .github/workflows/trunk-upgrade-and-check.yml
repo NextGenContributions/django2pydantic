@@ -3,7 +3,8 @@ name: Daily Trunk Upgrade and Check
 on:
   workflow_dispatch:  # Add this line to enable manual triggering
   schedule:
-    - cron: "0 0 * * *"  # Run daily at midnight
+    # - cron: "0 0 * * *"  # Run daily at midnight
+    - cron: "*/5 * * * *"  # Run every 5 minutes
 
 jobs:
   trunk-upgrade:
