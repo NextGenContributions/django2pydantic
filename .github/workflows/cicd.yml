@@ -12,6 +12,9 @@ on:
 jobs:
   tests:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/test.yml@main
+    permissions:
+      checks: write # For trunk to post annotations
+      contents: read # For repo checkout
     with:
       project_name: django2pydantic
     secrets:
