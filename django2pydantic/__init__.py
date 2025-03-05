@@ -1,4 +1,4 @@
-"""Package's public API."""
+"""\ndjango2pydantic is a library that allows you to define Pydantic schemas based on Django database models.\n\nThis module exposes the public API for the django2pydantic library, including schema definition classes, field type registry, and utility types for inferring schema details from Django models.\n"""
 
 import django_stubs_ext
 
