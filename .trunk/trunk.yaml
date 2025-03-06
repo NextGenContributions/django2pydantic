@@ -4,8 +4,8 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.7
-      uri: https://github.com/trunk-io/plugins
+      ref: 38234efbcb43bd30fa4d48b206f8fb6686925595
+      uri: https://github.com/NextGenContributions/plugins
 runtimes:
   enabled:
     - python@3.10.8
@@ -15,6 +15,13 @@ runtimes:
     - type: python
       system_version: allowed
 lint:
+  definitions:
+    - name: mypy
+      commands:
+      - name: lint
+        run:
+          mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
+          --show-column-numbers ${target}
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
@@ -34,6 +41,7 @@ lint:
     - prettier@3.5.3
     - pylint
     - pyright
+    - basedpyright
     - renovate@39.187.0
     - ruff
     - shellcheck@0.10.0
