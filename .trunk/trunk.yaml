@@ -8,6 +8,7 @@ plugins:
       uri: https://github.com/trunk-io/plugins
 runtimes:
   enabled:
+    - python@3.10.8
     - go@1.21.0
     - node@18.20.5
   definitions:
@@ -33,7 +34,7 @@ lint:
     - prettier@3.5.3
     - pylint
     - pyright
-    - renovate@39.185.0
+    - renovate@39.187.0
     - ruff
     - shellcheck@0.10.0
     - shfmt@3.6.0
