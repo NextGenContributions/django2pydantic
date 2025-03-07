@@ -41,7 +41,7 @@ jobs:
 
       - name: Trunk Check
         # uses: trunk-io/trunk-action@v1
-        uses: NextGenContributions/trunk-action@84978c8e3fd6d558f6fba389bf8858e98dc2a176
+        uses: NextGenContributions/trunk-action@fix/phuongfi91/unexpected-comma-token
         with:
           post-annotations: true
           trunk-token: ${{ secrets.TRUNK_TOKEN }}
