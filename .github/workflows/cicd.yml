@@ -1,7 +1,7 @@
 name: CI/CD pipeline
 
 on:
-  workflow_dispatch:  # Add this line to enable manual triggering
+  workflow_dispatch: # Add this line to enable manual triggering
   pull_request:
     branches:
       - main
@@ -9,16 +9,41 @@ on:
     branches:
       - "*"
 
-permissions: write-all
+permissions: read-all
 
 jobs:
+  # trunk-check:
+  #   uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
+  #   # permissions:
+  #   #   checks: write # For trunk to post annotations
+  #   #   contents: read # For repo checkout
+  #   secrets:
+  #     TRUNK_TOKEN: ${{ secrets.TRUNK_TOKEN }}
   trunk-check:
-    uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
-    # permissions:
-      # checks: write # For trunk to post annotations
-      # contents: read # For repo checkout
-    secrets:
-      TRUNK_TOKEN: ${{ secrets.TRUNK_TOKEN }}
+    name: Trunk Code Quality Runner
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write # For trunk to post annotations
+      contents: read # For repo checkout
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Install the project
+        run: UV_PROJECT_ENVIRONMENT=$pythonLocation uv sync --all-extras --dev --frozen --no-install-project
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          post-annotations: true
+          trunk-token: ${{ secrets.TRUNK_TOKEN }}
 
   tests:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/test.yml@main
@@ -51,20 +76,19 @@ jobs:
     needs:
       - release
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      id-token: write # IMPORTANT: mandatory for trusted publishing
 
     environment:
       name: testpypi
       url: ${{ format('https://test.pypi.org/p/{0}', 'django2pydantic') }}
 
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution 📦 to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
-
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
