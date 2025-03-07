@@ -13,6 +13,7 @@ jobs:
   trunk-check:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
     permissions:
+      actions: read
       checks: write # For trunk to post annotations
       contents: read # For repo checkout
     secrets:
