@@ -4,7 +4,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: 38234efbcb43bd30fa4d48b206f8fb6686925595
+      ref: 1aefea45fa91485f53837b51d705f115070c83e1
       uri: https://github.com/NextGenContributions/plugins
 runtimes:
   enabled:
@@ -18,16 +18,23 @@ lint:
   definitions:
     - name: mypy
       commands:
-      - name: lint
-        run:
-          mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
-          --show-column-numbers ${target}
+        - name: lint
+          run:
+            # Override mypy default command by adding '--no-incremental' flag, which is
+            # needed to handle "AssertionError: Internal error: method must be called
+            # on parsed file only" during trunk check run
+            # Refs:
+            # - https://github.com/python/mypy/issues/14521
+            # - https://mypy.readthedocs.io/en/stable/command_line.html#incremental
+            mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
+            --show-column-numbers ${target}
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
     - checkov@3.2.379
     - codespell@2.4.1
-    - cspell@8.17.5
+    # Temporarily disabled until we have better solution for unknown words
+    # - cspell@8.17.5
     - djlint@1.36.4
     - flake8
     - git-diff-check
