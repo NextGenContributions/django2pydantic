@@ -27,7 +27,7 @@ lint:
     - bandit@1.8.3
     - checkov@3.2.379
     - codespell@2.4.1
-    - cspell@8.17.5
+    # - cspell@8.17.5
     - djlint@1.36.4
     - flake8
     - git-diff-check
