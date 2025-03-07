@@ -40,7 +40,8 @@ jobs:
         run: UV_PROJECT_ENVIRONMENT=$pythonLocation uv sync --all-extras --dev --frozen --no-install-project
 
       - name: Trunk Check
-        uses: trunk-io/trunk-action@v1
+        # uses: trunk-io/trunk-action@v1
+        uses: NextGenContributions/trunk-action@7c6ce9c08092606d1569df7e59fd7105b3e7bd62
         with:
           post-annotations: true
           trunk-token: ${{ secrets.TRUNK_TOKEN }}
