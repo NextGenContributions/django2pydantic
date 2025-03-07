@@ -18,10 +18,10 @@ lint:
   definitions:
     - name: mypy
       commands:
-      - name: lint
-        run:
-          mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
-          --show-column-numbers ${target}
+        - name: lint
+          run:
+            mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
+            --show-column-numbers ${target}
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
