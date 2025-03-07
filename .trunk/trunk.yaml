@@ -4,7 +4,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: 38234efbcb43bd30fa4d48b206f8fb6686925595
+      ref: 1aefea45fa91485f53837b51d705f115070c83e1
       uri: https://github.com/NextGenContributions/plugins
 runtimes:
   enabled:
