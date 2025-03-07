@@ -9,14 +9,14 @@ on:
     branches:
       - "*"
 
-permissions: read-all
+permissions: write-all
 
 jobs:
   trunk-check:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
-    permissions:
-      checks: write # For trunk to post annotations
-      contents: read # For repo checkout
+    # permissions:
+      # checks: write # For trunk to post annotations
+      # contents: read # For repo checkout
     secrets:
       TRUNK_TOKEN: ${{ secrets.TRUNK_TOKEN }}
 
