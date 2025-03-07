@@ -75,6 +75,7 @@ dev = [
     "project-config>=0.9.7",
     "taplo>=0.9.3",
     "nitpick",
+    "nbmake>=1.5.5",
 ]
 
 [tool.uv.sources]
