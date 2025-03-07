@@ -20,6 +20,12 @@ lint:
       commands:
         - name: lint
           run:
+            # Override mypy default command by adding '--no-incremental' flag, which is
+            # needed to handle "AssertionError: Internal error: method must be called 
+            # on parsed file only" during trunk check run
+            # Refs:
+            # - https://github.com/python/mypy/issues/14521
+            # - https://mypy.readthedocs.io/en/stable/command_line.html#incremental
             mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
             --show-column-numbers ${target}
   enabled:
@@ -27,6 +33,7 @@ lint:
     - bandit@1.8.3
     - checkov@3.2.379
     - codespell@2.4.1
+    # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
     - djlint@1.36.4
     - flake8
