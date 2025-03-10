@@ -78,7 +78,7 @@ dev = [
 ]
 
 [tool.uv.sources]
-nitpick = { git = "https://github.com/NextGenContributions/nitpick", rev = "cb116b89b1bbdda1e69163788da1927d5b495e8f" }
+nitpick = { git = "https://github.com/NextGenContributions/nitpick", branch = "develop-ng" }
 
 [tool.semantic_release]
 assets = []
