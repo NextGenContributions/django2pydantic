@@ -127,7 +127,7 @@ def is_correct_field_type_and_format(
     return datas[field]["type"] == type_ and datas[field]["format"] == format
 
 
-@pytest.mark.skip(reason="WOOF")
+@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 @given(
     help_text=st.text(alphabet=printable).filter(
@@ -146,7 +146,7 @@ def test_field_description_is_set_from_help_text(
     )
 
 
-@pytest.mark.skip(reason="WOOF")
+@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 def test_field_type_and_format_is_correct_openapi_equivalent(field: FieldClass) -> None:
     """Test that the field type and format is correct OpenAPI equivalent."""
@@ -160,7 +160,7 @@ def test_field_type_and_format_is_correct_openapi_equivalent(field: FieldClass) 
     )
 
 
-@pytest.mark.skip(reason="WOOF")
+@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 @given(
     help_text=st.text(alphabet=printable).filter(
@@ -179,7 +179,7 @@ def test_field_description_is_set_from_lazy_translated_help_text(
     ).replace("\n", "") == help_text.strip().replace("\r", "").replace("\n", "")
 
 
-@pytest.mark.skip(reason="WOOF")
+@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 @given(
     verbose_name=st.text(alphabet=printable).filter(
@@ -198,7 +198,7 @@ def test_field_description_is_set_from_verbose_name_if_no_help_text(
     )
 
 
-@pytest.mark.skip(reason="WOOF")
+@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 @given(
     verbose_name=st.text(alphabet=printable).filter(
@@ -219,7 +219,7 @@ def test_field_description_is_set_from_lazy_translated_verbose_name_if_no_help_t
     ) == verbose_name.strip().lower().strip().replace("\r", "").replace("\n", "")
 
 
-@pytest.mark.skip(reason="WOOF")
+@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 def test_default_value_is_set(field: FieldClass) -> None:
     """Test that the default value is set."""

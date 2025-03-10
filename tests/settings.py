@@ -1,15 +1,17 @@
 """Django settings file for the tests."""
 
+from typing import Any
+
 ALLOWED_HOSTS = ["*"]
 DEBUG_PROPAGATE_EXCEPTIONS = True
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 SITE_ID = 1
-SECRET_KEY = "not very secret in tests"
+SECRET_KEY = "not very secret in tests"  # noqa: S105
 USE_I18N = True
 USE_L10N = True
 STATIC_URL = "/static/"
 ROOT_URLCONF = "tests.urls"
-TEMPLATES = [
+TEMPLATES: list[dict[str, Any]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],

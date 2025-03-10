@@ -25,4 +25,4 @@ max-raises = 5
 max-string-usages = 4
 max-try-body-length = 9
 per-file-ignores =
-  tests/*.py:WPS116,WPS118,WPS218,WPS432,WPS431
+  tests/*.py:WPS116,WPS118,WPS218,WPS226,WPS432,WPS431

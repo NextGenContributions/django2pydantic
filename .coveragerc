@@ -16,3 +16,6 @@ exclude_also =
     @(abc\.)?abstractmethod
     @(pytest\.|pytest\.mark.\.)?skip
     @(pytest\.|pytest\.mark.\.)?xfail
+
+[run]
+relative_files = True

@@ -1,0 +1,24 @@
+name: Daily Trunk Upgrade and Check
+
+on:
+  workflow_dispatch:  # Add this line to enable manual triggering
+  schedule:
+    - cron: "0 0 * * *"  # Run daily at midnight
+
+jobs:
+  trunk-upgrade:
+    uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-auto-upgrade.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+  
+  trunk-check:
+    uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
+    with:
+      check_mode: all
+      arguments: --replace # Overwrite previous check results for the same commit
+    permissions:
+      checks: write # For trunk to post annotations
+      contents: read # For repo checkout
+    secrets:
+      TRUNK_TOKEN: ${{ secrets.TRUNK_TOKEN }}

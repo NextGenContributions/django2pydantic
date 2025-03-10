@@ -35,7 +35,7 @@ Bases = tuple[type[BaseModel]]
 
 
 class SchemaResolver(ModelMetaclass):
-    """Metaclass for django2pydantic."""
+    """Metaclass for BaseSchema."""
 
     @override
     def __new__(
