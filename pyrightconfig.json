@@ -1,7 +1,5 @@
 {
-  "include": [
-    "."
-  ],
+  "include": ["."],
   "exclude": ["typings", "out", ".pyre", ".pytype", ".mypy_cache", "*.pyi"],
   "ignore": ["**/*.pyi"],
   "defineConstant": {
@@ -10,9 +8,7 @@
   "stubPath": "out",
   "pythonVersion": "3.12",
   "pythonPlatform": "Linux",
-  "extraPaths": [
-    "/usr/local/lib/python3.12/site-packages"
-  ],
+  "extraPaths": ["/usr/local/lib/python3.12/site-packages"],
   "analyzeUnannotatedFunctions": true,
   "strictParameterNoneValue": true,
   "enableTypeIgnoreComments": true,
