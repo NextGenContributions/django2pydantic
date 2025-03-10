@@ -1,6 +1,8 @@
 [tool.nitpick]
 style = [
     "github://NextGenContributions/.nitpick@main/nitpick_styles/django-pyproject.toml",
+    "github://NextGenContributions/.nitpick@main/nitpick_styles/generic-pyre.toml",
+    "github://NextGenContributions/.nitpick@main/nitpick_styles/generic-basedpyright.toml",
     "github://NextGenContributions/.nitpick@main/nitpick_styles/generic-codacy.toml",
     "github://NextGenContributions/.nitpick@main/nitpick_styles/generic-deepsource.toml",
     "github://NextGenContributions/.nitpick@main/nitpick_styles/generic-mypy.toml",
