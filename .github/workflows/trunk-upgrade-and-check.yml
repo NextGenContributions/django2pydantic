@@ -1,9 +1,9 @@
 name: Daily Trunk Upgrade and Check
 
 on:
-  workflow_dispatch:  # Add this line to enable manual triggering
+  workflow_dispatch: # Add this line to enable manual triggering
   schedule:
-    - cron: "0 0 * * *"  # Run daily at midnight
+    - cron: "0 0 * * *" # Run daily at midnight
 
 jobs:
   trunk-upgrade:
@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-  
+
   trunk-check:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
     with:
