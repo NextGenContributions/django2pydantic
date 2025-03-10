@@ -16,6 +16,7 @@ jobs:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
     with:
       check_mode: all
+      arguments: --replace # Overwrite previous check results for the same commit
     permissions:
       checks: write # For trunk to post annotations
       contents: read # For repo checkout
