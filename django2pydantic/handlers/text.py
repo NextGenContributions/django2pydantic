@@ -69,6 +69,7 @@ class TextFieldHandler(DjangoFieldHandler[models.TextField[SetType, GetType]]):
             return 1
         return None
 
+
 class SlugFieldHandler(DjangoFieldHandler[models.SlugField[SetType, GetType]]):
     """Handler for Slug fields."""
 
