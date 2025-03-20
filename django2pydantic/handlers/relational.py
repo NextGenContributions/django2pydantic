@@ -120,6 +120,18 @@ class ForeignKeyHandler(
     def field(cls) -> type[models.ForeignKey[models.Model, models.Model]]:
         return models.ForeignKey
 
+    @override
+    def get_pydantic_type(self) -> type[Annotated[Any, Any]]:
+        """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
+        field_info: FieldInfo = (
+            FieldTypeRegistry.instance()
+            .get_handler(self._get_target_field())
+            .get_pydantic_field()
+        )
+        return Annotated[self.get_pydantic_type_raw(), field_info]
+
 
 class OneToOneFieldHandler(
     RelatedFieldHandler[models.OneToOneField[models.Model, models.Model]]
