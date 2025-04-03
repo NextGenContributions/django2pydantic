@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, TypeVar, Union, Unpack, override
+from typing import Any, Mapping, Sequence, TypeVar, Union, Unpack, override
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
@@ -37,25 +37,25 @@ class InferExcept:
 
 
 type ModelFields = (
-    dict[
+    Mapping[
         str,
         type[Infer | BaseModel]
         | InferExcept
         | FieldInfo
-        | list[type[BaseModel]]
+        | Sequence[type[BaseModel]]
         | ModelFields,
     ]
     | None
 )
 
-type ModelFieldsCompact = list[
+type ModelFieldsCompact = Sequence[
     str
     | tuple[
         str,
         type[Infer | BaseModel]
         | InferExcept
         | FieldInfo
-        | list[type[BaseModel]]
+        | Sequence[type[BaseModel]]
         | ModelFieldsCompact,
     ]
 ]

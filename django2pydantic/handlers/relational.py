@@ -4,7 +4,9 @@ from abc import ABC
 from typing import TYPE_CHECKING, Annotated, Any, Generic, TypeVar, override
 
 from django.apps import apps
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
+from django.db.models import ForeignObjectRel
 from django.db.models.base import ModelBase
 from django.db.models.fields.related import RelatedField
 
@@ -16,7 +18,7 @@ if TYPE_CHECKING:
 
 TDjangoRelatedField_co = TypeVar(
     "TDjangoRelatedField_co",
-    bound=RelatedField[models.Model, models.Model],
+    bound=RelatedField[models.Model, models.Model] | ForeignObjectRel,
     covariant=True,
 )
 
@@ -25,6 +27,26 @@ class RelatedFieldHandler(
     Generic[TDjangoRelatedField_co], DjangoFieldHandler[TDjangoRelatedField_co], ABC
 ):
     """Base handler for Related fields."""
+
+    @property
+    @override
+    def ge(self) -> int | None:
+        return None
+
+    @property
+    @override
+    def gt(self) -> int | None:
+        return None
+
+    @property
+    @override
+    def le(self) -> int | None:
+        return None
+
+    @property
+    @override
+    def lt(self) -> int | None:
+        return None
 
     @override
     def get_pydantic_type_raw(self):
@@ -153,6 +175,31 @@ class ManyToManyFieldHandler(
     @override
     def field(cls) -> type[models.ManyToManyField[models.Model, models.Model]]:
         return models.ManyToManyField
+
+    @override
+    def get_pydantic_type(self) -> type[list[Annotated[Any, Any]]]:
+        """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
+        field_info: FieldInfo = (
+            FieldTypeRegistry.instance()
+            .get_handler(self._get_target_field())
+            .get_pydantic_field()
+        )
+        return list[Annotated[self.get_pydantic_type_raw(), field_info]]
+
+
+class ManyToManyRelHandler(RelatedFieldHandler[models.ManyToManyRel]):
+    """Handler for ManyToMany fields."""
+
+    @classmethod
+    @override
+    def field(cls) -> type[models.ManyToManyRel]:
+        return models.ManyToManyRel
+
+    @override
+    def _get_target_field(self) -> models.Field[SetType, GetType]:
+        return self.field_obj
 
     @override
     def get_pydantic_type(self) -> type[list[Annotated[Any, Any]]]:

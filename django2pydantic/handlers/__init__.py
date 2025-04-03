@@ -30,6 +30,7 @@ from django2pydantic.handlers.relational import (
     ForeignKeyHandler,
     ManyToManyFieldHandler,
     OneToOneFieldHandler,
+    ManyToManyRelHandler,
 )
 from django2pydantic.handlers.text import (
     CharFieldHandler,
@@ -73,6 +74,7 @@ __all__: list[str] = [
     "ForeignKeyHandler",
     "OneToOneFieldHandler",
     "ManyToManyFieldHandler",
+    "ManyToManyRelHandler",
     "PropertyHandler",
     "JSONFieldHandler",
     "BinaryFieldHandler",

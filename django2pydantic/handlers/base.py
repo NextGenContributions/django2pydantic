@@ -89,7 +89,10 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
     def __init__(self, field_obj: TFieldType_co) -> None:
         """Initialize the field handler."""
         super().__init__(field_obj)
-        self.field_obj = field_obj
+        if isinstance(field_obj, models.ForeignObjectRel):
+            self.field_obj = field_obj.related_model._meta.pk
+        else:
+            self.field_obj = field_obj
 
     @classmethod
     @abstractmethod
