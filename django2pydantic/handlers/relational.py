@@ -154,9 +154,7 @@ class ForeignKeyHandler(
         return Annotated[self.get_pydantic_type_raw(), field_info]
 
 
-class ManyToOneRelHandler(
-    RelatedFieldHandler[models.ManyToOneRel]
-):
+class ManyToOneRelHandler(RelatedFieldHandler[models.ManyToOneRel]):
     """Handler for ManyToOne reverse relation."""
 
     @property
@@ -195,6 +193,7 @@ class OneToOneFieldHandler(
     @override
     def field(cls) -> type[models.OneToOneField[models.Model, models.Model]]:
         return models.OneToOneField
+
 
 class OneToOneRelHandler(RelatedFieldHandler[models.OneToOneRel]):
     """Handler for OneToOne reverse relation."""
