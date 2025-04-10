@@ -1,20 +1,19 @@
 """Handlers for relational fields."""
 
 from abc import ABC
-from typing import TYPE_CHECKING, Annotated, Any, Generic, TypeVar, override
+from enum import Enum, IntEnum
+from types import UnionType
+from typing import Annotated, Any, Generic, TypeVar, override
 
 from django.apps import apps
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.db.models import ForeignObjectRel
 from django.db.models.base import ModelBase
 from django.db.models.fields.related import RelatedField
+from pydantic.fields import FieldInfo
 
 from django2pydantic.handlers.base import DjangoFieldHandler
 from django2pydantic.types import GetType, SetType
-
-if TYPE_CHECKING:
-    from pydantic.fields import FieldInfo
 
 TDjangoRelatedField_co = TypeVar(
     "TDjangoRelatedField_co",
@@ -155,6 +154,38 @@ class ForeignKeyHandler(
         return Annotated[self.get_pydantic_type_raw(), field_info]
 
 
+class ManyToOneRelHandler(
+    RelatedFieldHandler[models.ManyToOneRel]
+):
+    """Handler for ManyToOne reverse relation."""
+
+    @property
+    @override
+    def default(self) -> Any:
+        return None  # So that the field is not marked as required
+
+    @classmethod
+    @override
+    def field(cls) -> type[models.ManyToOneRel]:
+        return models.ManyToOneRel
+
+    @override
+    def _get_target_field(self) -> models.Field[SetType, GetType]:
+        return self.field_obj
+
+    @override
+    def get_pydantic_type(self) -> type[Annotated[Any, Any]]:
+        """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
+        field_info: FieldInfo = (
+            FieldTypeRegistry.instance()
+            .get_handler(self._get_target_field())
+            .get_pydantic_field()
+        )
+        return list[Annotated[self.get_pydantic_type_raw(), field_info]]
+
+
 class OneToOneFieldHandler(
     RelatedFieldHandler[models.OneToOneField[models.Model, models.Model]]
 ):
@@ -164,6 +195,27 @@ class OneToOneFieldHandler(
     @override
     def field(cls) -> type[models.OneToOneField[models.Model, models.Model]]:
         return models.OneToOneField
+
+class OneToOneRelHandler(RelatedFieldHandler[models.OneToOneRel]):
+    """Handler for OneToOne reverse relation."""
+
+    @property
+    @override
+    def default(self) -> Any:
+        return None  # So that the field is not marked as required
+
+    @classmethod
+    @override
+    def field(cls) -> type[models.OneToOneRel]:
+        return models.OneToOneRel
+
+    @override
+    def _get_target_field(self) -> models.Field[SetType, GetType]:
+        return self.field_obj
+
+    @override
+    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
+        return self.get_pydantic_type_raw() | None
 
 
 class ManyToManyFieldHandler(
@@ -190,7 +242,12 @@ class ManyToManyFieldHandler(
 
 
 class ManyToManyRelHandler(RelatedFieldHandler[models.ManyToManyRel]):
-    """Handler for ManyToMany fields."""
+    """Handler for ManyToMany reverse relation."""
+
+    @property
+    @override
+    def default(self) -> Any:
+        return None  # So that the field is not marked as required
 
     @classmethod
     @override

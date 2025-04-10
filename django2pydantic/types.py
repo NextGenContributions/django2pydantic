@@ -1,8 +1,8 @@
 """Shared types within the package."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any, Mapping, Sequence, TypeVar, Union, Unpack, override
+from typing import Any, TypeVar, Union, Unpack, override
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
@@ -67,7 +67,9 @@ Example:
 ...     (
 ...         "description",
 ...         InferExcept(
-...             title="My better title", description="My better description", max_length=100
+...             title="My better title",
+                description="My better description",
+                max_length=100,
 ...         ),
 ...     ),
 ...     "organization_id",
@@ -130,7 +132,7 @@ This includes Django's fields such as:
 TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
 """Represents the supported parent field types to be used with library's generics."""
 
-TDjangoModel_co = TypeVar("TDjangoModel_co", bound=models.Model, covariant=True)
+TDjangoModel = TypeVar("TDjangoModel", bound=models.Model)
 
 type DictStrAny = dict[str, Any]  # pyright: ignore[reportExplicitAny]
 """Type for a dictionary with string keys and any values."""

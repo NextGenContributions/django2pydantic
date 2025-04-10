@@ -409,6 +409,36 @@ def test_many_to_many_relations_provide_an_array_of_ids() -> None:
     assert openapi_schema["properties"]["rel_a"]["items"]["type"] == "integer"
 
 
+# TODO(phuongfi91): Related to the experimental django validators
+#  https://github.com/NextGenContributions/django2pydantic/issues/41
+# def test_random_thing():
+#     """Test that random things are supported."""
+#     from django.core.validators import MaxLengthValidator, MinLengthValidator
+#
+#     class ModelA(models.Model):
+#         id = models.AutoField[int, int](primary_key=True)
+#         name = models.CharField[str, str](max_length=100, validators=[
+#             MinLengthValidator(1),
+#             MaxLengthValidator(100),
+#         ])
+#
+#     class SchemaA(BaseSchema[ModelA]):
+#         """SchemaA class."""
+#
+#         config = SchemaConfig[ModelA](
+#             model=ModelA,
+#             fields={
+#                 # "id": Infer,
+#                 "name": Infer,
+#             },
+#         )
+#
+#     a = SchemaA.model_validate({
+#         # "id": 1,
+#         "name": "a",
+#     })
+
+
 def test_inferred_many_to_many_field_should_be_list_of_ids() -> None:
     """Inferred many-to-many field should return only a list of related object IDs."""
 

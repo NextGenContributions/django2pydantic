@@ -2,7 +2,7 @@
 
 from enum import Enum, IntEnum
 from types import UnionType
-from typing import TYPE_CHECKING, Any, Optional, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from beartype import beartype
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -10,6 +10,7 @@ from django.core.exceptions import FieldDoesNotExist
 from django.db.models import (
     Field,
     ForeignKey,
+    ForeignObject,
     ForeignObjectRel,
     ManyToManyField,
     ManyToManyRel,
@@ -110,6 +111,17 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
             errors.append(str(e))
             continue
 
+        # TODO(jhassine): Make this works and move to function
+        #  https://github.com/NextGenContributions/django2pydantic/issues/41
+        # Register the Django field's validators as field validators in Pydantic models
+        # if use_django_validators and isinstance(django_field, Field):
+        #     for validator in django_field.validators:
+        #         if callable(validator):
+        #             validators[f"{field_name}_{validator.__str__()}"] = field_validator(
+        #                 field_name,
+        #                 mode="after",
+        #             )(validator)
+
         pydantic_field_info: FieldInfo
         if field_def is Infer:
             type_handler = field_type_registry.get_handler(django_field)
@@ -117,15 +129,14 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
             pydantic_field_info = type_handler.get_pydantic_field()
             pydantic_fields[field_name] = (python_type, pydantic_field_info)
 
-            if isinstance(
-                django_field,
-                ForeignKey
-                | ManyToManyField
-                | OneToOneField
-                | ManyToOneRel
-                | ManyToManyRel
-                | OneToOneRel,
-            ):
+            if type(django_field) in {
+                ForeignKey,
+                ManyToOneRel,
+                ManyToManyField,
+                ManyToManyRel,
+                OneToOneField,
+                OneToOneRel,
+            }:
                 validators[f"{field_name}_relation"] = field_validator(
                     field_name,
                     mode="wrap",
@@ -164,7 +175,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
             related_schema = field_def[0]
             pydantic_fields[field_name] = (
                 # TODO(phuongfi91): Fix issue with dynamic type variable
-                list[related_schema],
+                list[related_schema],  # type: ignore[valid-type]
                 FieldInfo(
                     title=field_name,
                     description=field_name,
@@ -325,48 +336,31 @@ def _recursively_create_related_schema(  # noqa: PLR0913
 
 def _determine_field_type(
     *,
-    django_field: Field[Any, Any] | ForeignObjectRel | GenericForeignKey | property,
+    django_field: Field[Any, Any]
+    | ForeignObjectRel
+    | ForeignObject[Model, Model]
+    | property,
     related_django_model_name: str,
     related_schema: type[BaseModel],
 ) -> tuple[Any, FieldInfo]:
-    default = PydanticUndefined
+    default: PydanticUndefined | None = PydanticUndefined  # type: ignore[valid-type]
     # TODO(phuongfi91): Figure out how to annotate this
     field_type: Any  # noqa: F821
-    if isinstance(django_field, ManyToManyField):
+
+    dj_field_type = type(django_field)
+    if dj_field_type in {ForeignKey, OneToOneField, OneToOneRel}:
+        if django_field.null:  # type: ignore[union-attr]  # type narrowing doesn't work
+            field_type = related_schema | None  # noqa: UP007
+            default = None
+        else:
+            field_type = related_schema
+    elif dj_field_type in {ManyToManyField, ManyToManyRel, ManyToOneRel}:
         # TODO(jhassine): Check if through model is set
         #   and if it defines the foreign key as unique
         #   then the return type should not be a list
         #   Ref: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ManyToManyField.through_fields
-
-        field_type = Optional[list[related_schema]]  # noqa: UP007
-        default = PydanticUndefined
-    elif isinstance(django_field, OneToOneField):
-        # 1
-        field_type = related_schema
-        if django_field.null:
-            field_type = Optional[related_schema]  # noqa: UP007
-            default = PydanticUndefined
-        else:
-            field_type = related_schema
-    elif isinstance(django_field, ForeignKey):
-        # 2
-        if django_field.null:
-            field_type = Optional[related_schema]  # noqa: UP007
-            default = PydanticUndefined
-        else:
-            field_type = related_schema
-    elif isinstance(django_field, OneToOneRel):
-        # 3
-        field_type = Optional[related_schema]  # noqa: UP007
-        default = PydanticUndefined
-    elif isinstance(django_field, ManyToManyRel):
-        # 4
-        field_type = list[related_schema] | None
-        default = PydanticUndefined
-    elif isinstance(django_field, ManyToOneRel):
-        # 5
-        field_type = list[related_schema] | None
-        default = PydanticUndefined
+        field_type = list[related_schema] | None  # type: ignore[valid-type]
+        default = None
     else:
         msg = (
             f"Unknown field type {django_field} for "

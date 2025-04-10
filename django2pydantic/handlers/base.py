@@ -59,7 +59,7 @@ class PydanticConverter(Protocol[TFieldType_co]):
             type: The type of the field.
 
         """
-        return NotImplemented
+        raise NotImplementedError
 
     def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
         """Return the type of the field.
@@ -68,7 +68,7 @@ class PydanticConverter(Protocol[TFieldType_co]):
             type: The type of the field.
 
         """
-        return NotImplemented
+        raise NotImplementedError
 
     def get_pydantic_field(self) -> FieldInfo:
         """Return the Pydantic field information.
@@ -77,7 +77,7 @@ class PydanticConverter(Protocol[TFieldType_co]):
             FieldInfo: The Pydantic field information.
 
         """
-        return NotImplemented
+        raise NotImplementedError
 
 
 class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co], ABC):  # noqa: WPS214 - Found too many methods
@@ -90,7 +90,11 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         """Initialize the field handler."""
         super().__init__(field_obj)
         if isinstance(field_obj, models.ForeignObjectRel):
-            self.field_obj = field_obj.related_model._meta.pk
+            if field_obj.related_model == "self":
+                related_model = field_obj.model
+            else:
+                related_model = field_obj.related_model
+            self.field_obj = related_model._meta.pk  # pyright: ignore [reportAttributeAccessIssue]  # noqa: SLF001
         else:
             self.field_obj = field_obj
 
@@ -106,7 +110,7 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         return None
 
     @property
-    def default(self) -> Any:
+    def default(self) -> Any:  # noqa: ANN401
         """Return the default value of the field."""
         return PydanticUndefinedType
 
@@ -216,7 +220,7 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         return cast(
             FieldInfo,
             pydantic_field,
-        )  # Pydantic seems have marked Field as Any although it is FieldInfo
+        )  # Pydantic seems to have marked Field as Any, although it is FieldInfo
 
 
 TDjangoMainParentFields = (
@@ -247,6 +251,9 @@ class DjangoFieldHandler(  # noqa: WPS214
     @property
     def is_required(self) -> bool:
         """Return whether the field is required."""
+        # TODO(phuongfi91): null is database only, blank is for validation
+        #  so in this case it's likely that we should check only for blank
+        #  https://github.com/NextGenContributions/django2pydantic/issues/41
         return not self.field_obj.null and not self.field_obj.blank
 
     @property

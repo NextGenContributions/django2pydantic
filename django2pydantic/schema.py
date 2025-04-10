@@ -16,7 +16,7 @@ from django2pydantic.types import (
     DictStrAny,
     ModelFields,
     ModelFieldsCompact,
-    TDjangoModel_co,
+    TDjangoModel,
 )
 
 SType = TypeVar("SType", bound=BaseModel)
@@ -38,8 +38,8 @@ class SchemaResolver(ModelMetaclass):
     """Metaclass for BaseSchema."""
 
     @override
-    def __new__(
-        mcs: type[ModelMetaclass],
+    def __new__(  # pylint: disable=signature-differs
+        mcs: type[ModelMetaclass],  # noqa: N804
         cls_name: str,
         bases: Bases,
         namespace: DictStrAny,
@@ -63,7 +63,12 @@ class SchemaResolver(ModelMetaclass):
             or not is_final_or_not_specified
             or is_abstract_or_not_specified
         ):
-            return super().__new__(mcs, cls_name, bases, namespace)  # pyright: ignore[reportUnknownVariableType]
+            return super().__new__(  # type: ignore[no-any-return,misc]
+                mcs,
+                cls_name,  # pyright: ignore [reportCallIssue]
+                bases,
+                namespace,
+            )
 
         config = namespace.get("config")
 
@@ -82,7 +87,7 @@ class SchemaResolver(ModelMetaclass):
             config.field_type_registry = field_type_registry
 
         return create_pydantic_model(
-            config.model,
+            config.model,  # pyright: ignore [reportUnknownArgumentType, reportUnknownMemberType]
             config.field_type_registry,
             fields=config.fields,
             model_name=config.name,
@@ -91,10 +96,10 @@ class SchemaResolver(ModelMetaclass):
 
 
 @dataclass(init=True, kw_only=True)
-class SchemaConfig(Generic[TDjangoModel_co]):
+class SchemaConfig(Generic[TDjangoModel]):
     """Schema configuration."""
 
-    model: type[TDjangoModel_co]
+    model: type[TDjangoModel]
     """Django model class."""
 
     fields: ModelFields | ModelFieldsCompact
@@ -115,10 +120,10 @@ class SchemaConfig(Generic[TDjangoModel_co]):
     """
 
 
-class BaseSchema(BaseModel, Generic[TDjangoModel_co], ABC, metaclass=SchemaResolver):
+class BaseSchema(BaseModel, Generic[TDjangoModel], ABC, metaclass=SchemaResolver):
     """django2pydantic BaseSchema class."""
 
-    config: SchemaConfig[TDjangoModel_co]
+    config: SchemaConfig[TDjangoModel]
     """Schema configuration."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
@@ -129,21 +134,4 @@ class BaseSchema(BaseModel, Generic[TDjangoModel_co], ABC, metaclass=SchemaResol
 
     See:
     https://docs.pydantic.dev/2.10/concepts/config/
-    """
-
-    """
-    @model_validator(mode="wrap")
-    @classmethod
-    def _run_root_validator(
-        cls,
-        values: Any,
-        handler: ModelWrapValidatorHandler[SType],
-        info: ValidationInfo,
-    ) -> SType:
-        forbids_extra = cls.model_config.get("extra") == "forbid"
-        should_validate_assignment = cls.model_config.get("validate_assignment", False)
-        if forbids_extra or should_validate_assignment:
-            handler(values)
-        values = DjangoGetter(obj=values, schema_cls=cls, context=info.context)
-        return handler(values)
     """
