@@ -219,12 +219,15 @@ def test_field_description_is_set_from_lazy_translated_verbose_name_if_no_help_t
     ) == verbose_name.strip().lower().strip().replace("\r", "").replace("\n", "")
 
 
-@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 def test_default_value_is_set(field: FieldClass) -> None:
     """Test that the default value is set."""
     default_value = get_test_data_for_field(field)
     openapi_schema = get_openapi_schema_from_field(field(default=default_value))
+
+    if field is models.BinaryField and isinstance(default_value, bytes):
+        default_value = default_value.decode()
+
     assert openapi_schema["properties"]["field"]["default"] == default_value
 
 

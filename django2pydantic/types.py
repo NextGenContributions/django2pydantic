@@ -6,6 +6,7 @@ from typing import Any, TypeVar, Union, Unpack, override
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
+from django.db.models import ForeignObjectRel
 from django.db.models.fields.related import RelatedField
 from pydantic import BaseModel
 from pydantic.fields import (  # noqa: WPS450
@@ -111,12 +112,17 @@ To be used with the Django Stubs library for field _GT annotations.
 Ref: https://github.com/typeddjango/django-stubs/blob/9d6c8f49e271935832509b108dbeb20b9ce9af3f/django-stubs/db/models/fields/__init__.pyi#L47-L52
 """
 
+type ForwardRel = RelatedField[models.Model, models.Model]
+type ReverseRel = ForeignObjectRel
+
+type SupportedPydanticTypes = type
+
 # Field types supported by the library
 type SupportedParentFields = Union[  # pyright: ignore[reportDeprecated] # noqa: UP007
     models.Field[SetType, GetType],
     RelatedField[models.Model, models.Model],
     GenericForeignKey,
-    models.ForeignObjectRel,
+    ForeignObjectRel,
     Callable[[], type[object]],
     property,
     type[property],
@@ -129,7 +135,7 @@ This includes Django's fields such as:
 * property decorators.
 """
 
-TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
+TFieldType_co = TypeVar("TFieldType_co", covariant=True)
 """Represents the supported parent field types to be used with library's generics."""
 
 TDjangoModel = TypeVar("TDjangoModel", bound=models.Model)

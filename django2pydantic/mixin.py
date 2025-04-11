@@ -19,7 +19,7 @@ from django2pydantic.getter import DjangoGetter
 if TYPE_CHECKING:
     from django2pydantic import BaseSchema
 
-SVar = TypeVar("SVar", bound="BaseSchema")  # type: ignore[type-arg] # pyright: ignore [reportMissingTypeArgument]
+SVar = TypeVar("SVar", bound="BaseSchema")  # type: ignore[type-arg]
 
 
 class BaseMixins(BaseModel):
@@ -33,7 +33,7 @@ class BaseMixins(BaseModel):
     }
 
     # Override base 'model_dump(...)' to always 'exclude_unset=True'
-    model_dump = functools.partialmethod(  # type: ignore[pydantic-field,assignment]  # pyright: ignore[reportUnannotatedClassAttribute,reportAssignmentType]
+    model_dump = functools.partialmethod(  # type: ignore[pydantic-field,assignment]
         BaseModel.model_dump,
         exclude_unset=True,
     )
@@ -66,7 +66,7 @@ class BaseMixins(BaseModel):
 
             raise ValueError(value) from validation_err  # pyright: ignore[reportUnknownArgumentType]
 
-    @model_validator(mode="wrap")  # type: ignore[arg-type]  # pyright: ignore[reportArgumentType]
+    @model_validator(mode="wrap")  # type: ignore[arg-type]
     @classmethod
     def _run_root_validator(
         cls,

@@ -10,7 +10,6 @@ from django.core.exceptions import FieldDoesNotExist
 from django.db.models import (
     Field,
     ForeignKey,
-    ForeignObject,
     ForeignObjectRel,
     ManyToManyField,
     ManyToManyRel,
@@ -25,7 +24,15 @@ from pydantic_core import PydanticUndefined
 
 from django2pydantic.mixin import BaseMixins
 from django2pydantic.registry import FieldTypeRegistry
-from django2pydantic.types import Infer, InferExcept, ModelFields, ModelFieldsCompact
+from django2pydantic.types import (
+    GetType,
+    Infer,
+    InferExcept,
+    ModelFields,
+    ModelFieldsCompact,
+    SetType,
+    TDjangoModel,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -49,7 +56,7 @@ def has_property(cls: type[object], property_name: str) -> bool:
 
 
 def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOSONAR
-    django_model: type[Model],
+    django_model: type[TDjangoModel],
     field_type_registry: FieldTypeRegistry,
     fields: ModelFields | ModelFieldsCompact,
     bases: tuple[type[BaseModel], ...] | None = None,
@@ -76,7 +83,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
 
     pydantic_fields: PydanticFields = {}
 
-    validators: dict[str, Callable[..., Any]] = {}
+    validators: dict[str, Callable[..., Any]] = {}  # pyright: ignore [reportExplicitAny]
 
     errors: list[str] = []
 
@@ -113,7 +120,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
 
         # TODO(jhassine): Make this works and move to function
         #  https://github.com/NextGenContributions/django2pydantic/issues/41
-        # Register the Django field's validators as field validators in Pydantic models
+        # # Register the Django field's validators as field validators in Pydantic models
         # if use_django_validators and isinstance(django_field, Field):
         #     for validator in django_field.validators:
         #         if callable(validator):
@@ -129,7 +136,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
             pydantic_field_info = type_handler.get_pydantic_field()
             pydantic_fields[field_name] = (python_type, pydantic_field_info)
 
-            if type(django_field) in {
+            if type(django_field) in {  # noqa: WPS516
                 ForeignKey,
                 ManyToOneRel,
                 ManyToManyField,
@@ -174,7 +181,6 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
                 continue
             related_schema = field_def[0]
             pydantic_fields[field_name] = (
-                # TODO(phuongfi91): Fix issue with dynamic type variable
                 list[related_schema],  # type: ignore[valid-type]
                 FieldInfo(
                     title=field_name,
@@ -203,7 +209,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
 
             # Determine the field type based on the relationship type:
             try:
-                field_type, field_info = _determine_field_type(
+                field_type, field_info = _determine_field_type(  # pyright: ignore [reportAny]
                     django_field=django_field,
                     related_django_model_name=related_django_model_name,
                     related_schema=related_schema,
@@ -247,7 +253,7 @@ def _get_django_field(
     *,
     django_model: type[Model],
     field_name: str,
-) -> Field[Any, Any] | ForeignObjectRel | GenericForeignKey | property:
+) -> Field[GetType, SetType] | ForeignObjectRel | GenericForeignKey | property:
     # Check if the field is a property function:
     if has_property(django_model, field_name):
         return cast(property, getattr(django_model, field_name))
@@ -264,9 +270,9 @@ def _get_django_field(
 
 
 def _get_field_info(
-    field: str | tuple[str, Any],
+    field: str | tuple[str, Any],  # pyright: ignore [reportExplicitAny]
     fields: ModelFields | ModelFieldsCompact,
-) -> tuple[str, Any]:
+) -> tuple[str, Any]:  # pyright: ignore [reportExplicitAny]
     """Retrieve field information from the given fields."""
     if isinstance(field, str):
         field_name = field
@@ -281,7 +287,7 @@ def _get_field_info(
             # We're dealing with a non-dict iterable
             field_def = Infer
     else:
-        field_name, field_def = field
+        field_name, field_def = field  # pyright: ignore [reportAny]
     return field_name, field_def
 
 
@@ -308,7 +314,7 @@ def _recursively_create_related_schema(  # noqa: PLR0913
         raise ValueError(msg)
 
     nested_dj_model: type[Model]
-    if isinstance(related_django_model, type) and issubclass(  # pyright: ignore [reportUnnecessaryIsInstance]
+    if isinstance(related_django_model, type) and issubclass(
         related_django_model, Model
     ):
         nested_dj_model = related_django_model
@@ -336,31 +342,30 @@ def _recursively_create_related_schema(  # noqa: PLR0913
 
 def _determine_field_type(
     *,
-    django_field: Field[Any, Any]
+    django_field: Field[SetType, GetType]
     | ForeignObjectRel
-    | ForeignObject[Model, Model]
+    | GenericForeignKey
     | property,
     related_django_model_name: str,
     related_schema: type[BaseModel],
-) -> tuple[Any, FieldInfo]:
+) -> tuple[Any, FieldInfo]:  # pyright: ignore [reportExplicitAny]
     default: PydanticUndefined | None = PydanticUndefined  # type: ignore[valid-type]
-    # TODO(phuongfi91): Figure out how to annotate this
-    field_type: Any  # noqa: F821
+    field_type: Any  # noqa: F821  # pyright: ignore [reportExplicitAny]
 
     dj_field_type = type(django_field)
     if dj_field_type in {ForeignKey, OneToOneField, OneToOneRel}:
         if django_field.null:  # type: ignore[union-attr]  # type narrowing doesn't work
-            field_type = related_schema | None  # noqa: UP007
-            default = None
+            field_type = related_schema | None  # noqa: UP007  # pyright: ignore [reportAny]
+            default = None  # pyright: ignore [reportUnknownVariableType]
         else:
-            field_type = related_schema
+            field_type = related_schema  # pyright: ignore [reportAny]
     elif dj_field_type in {ManyToManyField, ManyToManyRel, ManyToOneRel}:
-        # TODO(jhassine): Check if through model is set
-        #   and if it defines the foreign key as unique
-        #   then the return type should not be a list
+        # TODO(jhassine): Check if through model is set and if it defines the foreign
+        #   key as unique then the return type should not be a list
         #   Ref: https://docs.djangoproject.com/en/dev/ref/models/fields/#django.db.models.ManyToManyField.through_fields
+        #   https://github.com/NextGenContributions/django2pydantic/issues/41
         field_type = list[related_schema] | None  # type: ignore[valid-type]
-        default = None
+        default = None  # pyright: ignore [reportUnknownVariableType]
     else:
         msg = (
             f"Unknown field type {django_field} for "

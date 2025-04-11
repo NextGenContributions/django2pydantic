@@ -1,29 +1,31 @@
 """Handlers for relational fields."""
 
 from abc import ABC
-from enum import Enum, IntEnum
-from types import UnionType
-from typing import Annotated, Any, Generic, TypeVar, override
+from typing import Annotated, Any, Generic, TypeVar, override, Sequence
 
-from django.apps import apps
 from django.db import models
-from django.db.models import ForeignObjectRel
-from django.db.models.base import ModelBase
-from django.db.models.fields.related import RelatedField
 from pydantic.fields import FieldInfo
 
 from django2pydantic.handlers.base import DjangoFieldHandler
-from django2pydantic.types import GetType, SetType
+from django2pydantic.types import (
+    ForwardRel,
+    ReverseRel,
+    SupportedPydanticTypes,
+)
 
-TDjangoRelatedField_co = TypeVar(
-    "TDjangoRelatedField_co",
-    bound=RelatedField[models.Model, models.Model] | ForeignObjectRel,
-    covariant=True,
+TDjangoReverseField = TypeVar(
+    "TDjangoReverseField",
+    bound=ReverseRel,
+)
+
+TDjangoRelatedField = TypeVar(
+    "TDjangoRelatedField",
+    bound=ForwardRel | ReverseRel,
 )
 
 
 class RelatedFieldHandler(
-    Generic[TDjangoRelatedField_co], DjangoFieldHandler[TDjangoRelatedField_co], ABC
+    Generic[TDjangoRelatedField], DjangoFieldHandler[TDjangoRelatedField], ABC
 ):
     """Base handler for Related fields."""
 
@@ -48,87 +50,40 @@ class RelatedFieldHandler(
         return None
 
     @override
-    def get_pydantic_type_raw(self):
+    def get_pydantic_type_raw(self) -> SupportedPydanticTypes:
         """Return the Pydantic type of the field."""
         from django2pydantic.registry import FieldTypeRegistry
 
         return (
-            FieldTypeRegistry.instance()
-            .get_handler(self._get_target_field())
-            .get_pydantic_type()
+            FieldTypeRegistry.instance().get_handler(self.field_obj).get_pydantic_type()
         )
 
-    def _get_target_field(self) -> models.Field[SetType, GetType]:
-        """Return the target field of the relation."""
-        if getattr(self.field_obj, "to_field", False) and isinstance(
-            self.field_obj.to_field,
-            ModelBase,
-        ):
-            target_field = self.field_obj.related_model._meta.get_field(
-                self.field_obj.to_field,
-            )
-        elif isinstance(self.field_obj.related_model, str):
-            if "." in self.field_obj.related_model:
-                app_label = self.field_obj.related_model.split(".")[0]
-                model_name = self.field_obj.related_model.split(".")[1]
-                target_field = apps.get_model(  # noqa: SLF001
-                    app_label=app_label, model_name=model_name
-                )._meta.pk
-            elif self.field_obj.related_model != "self":
-                app_label = self.field_obj.model._meta.app_label  # type: ignore[unreachable]  # noqa: SLF001, WPS437
-                model_name = self.field_obj.related_model
-                try:
-                    target_field = apps.get_model(  # noqa: SLF001
-                        app_label=app_label, model_name=model_name
-                    )._meta.pk
-                except LookupError as lookup_exception:
-                    msg = (
-                        f"{lookup_exception}\n"
-                        f"For field '{self.field_obj.name}'"
-                        f" in model '{self.field_obj.model.__name__}',"
-                        f" did not find related model {self.field_obj.related_model}. "
-                        "If you are using string references to models,"
-                        " use the format 'app_label.ModelName'.\n"
-                        "More information: https://docs.djangoproject.com/en/5.1/ref/models/fields/#absolute-relationships"
-                    )
-                    raise ValueError(
-                        msg,
-                    ) from lookup_exception
-
-            if self.field_obj.related_model == "self":
-                target_field = self.field_obj.model._meta.pk
-        else:
-            target_field = self.field_obj.related_model._meta.pk
-        if not target_field:
-            msg = f"Related model {self.field_obj.related_model} does not have a primary key field."
-            raise ValueError(
-                msg,
-            )  # This should never happen, but just in case, we raise an error here.
-        return target_field
-
-    @property
-    def _examples(self) -> list[Any] | None:  # PRAGMA: NO COVER
-        """Return the example value(s) of the field.
-
-        Currently disabled as marked as protected method.
-
-        There might be some use case to provide example values for the fields,
-        by using limit_choices_to or default values.
-        """
-        lct = self.field_obj.get_limit_choices_to()
-        if self.field_obj.choices:
-            return list(
-                self.field_obj.get_choices(
-                    include_blank=self.field_obj.blank,
-                    limit_choices_to=lct,
-                ),
-            )
-        if self.field_obj.has_default():
-            if not callable(self.field_obj.default):
-                return [self.field_obj.default]
-            if callable(self.field_obj.default):
-                return [self.field_obj.default()]
-        return None
+    # TODO(phuongfi91): https://github.com/NextGenContributions/django2pydantic/issues/50
+    # @property
+    # def _examples(
+    #     self,
+    # ) -> list[Any] | None:  # PRAGMA: NO COVER  # pyright: ignore [reportExplicitAny]
+    #     """Return the example value(s) of the field.
+    #
+    #     Currently disabled as marked as protected method.
+    #
+    #     There might be some use case to provide example values for the fields,
+    #     by using limit_choices_to or default values.
+    #     """
+    #     lct = self.field_obj.get_limit_choices_to()
+    #     if self.field_obj.choices:
+    #         return list(
+    #             self.field_obj.get_choices(
+    #                 include_blank=self.field_obj.blank,
+    #                 limit_choices_to=lct,
+    #             ),
+    #         )
+    #     if self.field_obj.has_default():
+    #         if not callable(self.field_obj.default):
+    #             return [self.field_obj.default]
+    #         if callable(self.field_obj.default):
+    #             return [self.field_obj.default()]
+    #     return None
 
 
 class ForeignKeyHandler(
@@ -142,46 +97,16 @@ class ForeignKeyHandler(
         return models.ForeignKey
 
     @override
-    def get_pydantic_type(self) -> type[Annotated[Any, Any]]:
+    def get_pydantic_type(self) -> Annotated[SupportedPydanticTypes, Any]:
         """Return the Pydantic type of the field."""
         from django2pydantic.registry import FieldTypeRegistry
 
         field_info: FieldInfo = (
             FieldTypeRegistry.instance()
-            .get_handler(self._get_target_field())
+            .get_handler(self.field_obj)
             .get_pydantic_field()
         )
-        return Annotated[self.get_pydantic_type_raw(), field_info]
-
-
-class ManyToOneRelHandler(RelatedFieldHandler[models.ManyToOneRel]):
-    """Handler for ManyToOne reverse relation."""
-
-    @property
-    @override
-    def default(self) -> Any:
-        return None  # So that the field is not marked as required
-
-    @classmethod
-    @override
-    def field(cls) -> type[models.ManyToOneRel]:
-        return models.ManyToOneRel
-
-    @override
-    def _get_target_field(self) -> models.Field[SetType, GetType]:
-        return self.field_obj
-
-    @override
-    def get_pydantic_type(self) -> type[Annotated[Any, Any]]:
-        """Return the Pydantic type of the field."""
-        from django2pydantic.registry import FieldTypeRegistry
-
-        field_info: FieldInfo = (
-            FieldTypeRegistry.instance()
-            .get_handler(self._get_target_field())
-            .get_pydantic_field()
-        )
-        return list[Annotated[self.get_pydantic_type_raw(), field_info]]
+        return Annotated[self.get_pydantic_type_raw(), field_info]  # type: ignore[return-value]
 
 
 class OneToOneFieldHandler(
@@ -195,28 +120,6 @@ class OneToOneFieldHandler(
         return models.OneToOneField
 
 
-class OneToOneRelHandler(RelatedFieldHandler[models.OneToOneRel]):
-    """Handler for OneToOne reverse relation."""
-
-    @property
-    @override
-    def default(self) -> Any:
-        return None  # So that the field is not marked as required
-
-    @classmethod
-    @override
-    def field(cls) -> type[models.OneToOneRel]:
-        return models.OneToOneRel
-
-    @override
-    def _get_target_field(self) -> models.Field[SetType, GetType]:
-        return self.field_obj
-
-    @override
-    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
-        return self.get_pydantic_type_raw() | None
-
-
 class ManyToManyFieldHandler(
     RelatedFieldHandler[models.ManyToManyField[models.Model, models.Model]],
 ):
@@ -228,25 +131,40 @@ class ManyToManyFieldHandler(
         return models.ManyToManyField
 
     @override
-    def get_pydantic_type(self) -> type[list[Annotated[Any, Any]]]:
+    def get_pydantic_type(self) -> Sequence[Annotated[SupportedPydanticTypes, Any]]:
         """Return the Pydantic type of the field."""
         from django2pydantic.registry import FieldTypeRegistry
 
         field_info: FieldInfo = (
             FieldTypeRegistry.instance()
-            .get_handler(self._get_target_field())
+            .get_handler(self.field_obj)
             .get_pydantic_field()
         )
-        return list[Annotated[self.get_pydantic_type_raw(), field_info]]
+        return list[Annotated[self.get_pydantic_type_raw(), field_info]]  # type: ignore[return-value,misc]
 
 
-class ManyToManyRelHandler(RelatedFieldHandler[models.ManyToManyRel]):
-    """Handler for ManyToMany reverse relation."""
+class ReverseRelHandler(
+    Generic[TDjangoReverseField], RelatedFieldHandler[TDjangoReverseField]
+):
+    """Base handler for reverse relation fields."""
 
     @property
     @override
-    def default(self) -> Any:
+    def default(self) -> None:
         return None  # So that the field is not marked as required
+
+    @override
+    def get_pydantic_type_raw(self) -> SupportedPydanticTypes:
+        """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
+        return (
+            FieldTypeRegistry.instance().get_handler(self.field_obj).get_pydantic_type()
+        )
+
+
+class ManyToManyRelHandler(ReverseRelHandler[models.ManyToManyRel]):
+    """Handler for ManyToMany reverse relation."""
 
     @classmethod
     @override
@@ -254,17 +172,47 @@ class ManyToManyRelHandler(RelatedFieldHandler[models.ManyToManyRel]):
         return models.ManyToManyRel
 
     @override
-    def _get_target_field(self) -> models.Field[SetType, GetType]:
-        return self.field_obj
-
-    @override
-    def get_pydantic_type(self) -> type[list[Annotated[Any, Any]]]:
+    def get_pydantic_type(self) -> list[Annotated[SupportedPydanticTypes, Any]]:
         """Return the Pydantic type of the field."""
         from django2pydantic.registry import FieldTypeRegistry
 
         field_info: FieldInfo = (
             FieldTypeRegistry.instance()
-            .get_handler(self._get_target_field())
+            .get_handler(self.field_obj)
+            .get_pydantic_field()
+        )
+        return list[Annotated[self.get_pydantic_type_raw(), field_info]]  # type: ignore[return-value,misc]
+
+
+class OneToOneRelHandler(ReverseRelHandler[models.OneToOneRel]):
+    """Handler for OneToOne reverse relation."""
+
+    @classmethod
+    @override
+    def field(cls) -> type[models.OneToOneRel]:
+        return models.OneToOneRel
+
+    @override
+    def get_pydantic_type(self) -> SupportedPydanticTypes:
+        return self.get_pydantic_type_raw() | None
+
+
+class ManyToOneRelHandler(ReverseRelHandler[models.ManyToOneRel]):
+    """Handler for ManyToOne reverse relation."""
+
+    @classmethod
+    @override
+    def field(cls) -> type[models.ManyToOneRel]:
+        return models.ManyToOneRel
+
+    @override
+    def get_pydantic_type(self) -> type[Annotated[Any, Any]]:
+        """Return the Pydantic type of the field."""
+        from django2pydantic.registry import FieldTypeRegistry
+
+        field_info: FieldInfo = (
+            FieldTypeRegistry.instance()
+            .get_handler(self.field_obj)
             .get_pydantic_field()
         )
         return list[Annotated[self.get_pydantic_type_raw(), field_info]]

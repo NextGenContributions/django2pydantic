@@ -4,6 +4,7 @@ from collections.abc import Callable
 from typing import ClassVar, TypeVar, override
 from uuid import UUID
 
+from django.db.models import ForeignObjectRel
 from pydantic_core import PydanticUndefinedType
 
 from django2pydantic.handlers.base import PydanticConverter
@@ -44,7 +45,7 @@ class FieldTypeRegistry:
 
     def get_handler(
         self,
-        field: SupportedParentFields,
+        field: SupportedParentFields | ForeignObjectRel,
     ) -> PydanticConverter[SupportedParentFields]:
         """Get the handler for a Django field."""
         # Primarily use a handler that is registered for the exact Django field class:

@@ -23,12 +23,12 @@ def test_foreign_key_field_to_primary_key_is_supported() -> None:
 def test_foreign_key_field_with_to_field_is_supported() -> None:
     """Test that foreign key fields are supported."""
     related_model = django_model_factory(
-        fields={"someid": models.SmallIntegerField(unique=True)},
+        fields={"someid": models.CharField(unique=True)},
     )
     openapi_schema = get_openapi_schema_from_field(
         models.ForeignKey(related_model, on_delete=models.CASCADE, to_field="someid"),
     )
-    assert openapi_schema["properties"]["field"]["type"] == "integer"
+    assert openapi_schema["properties"]["field"]["type"] == "string"
 
 
 def test_foreign_key_field() -> None:
