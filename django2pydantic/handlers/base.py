@@ -6,7 +6,6 @@ from collections.abc import Callable
 from enum import Enum, IntEnum
 from types import UnionType
 from typing import (
-    Annotated,
     Any,
     Generic,
     Protocol,
@@ -14,6 +13,7 @@ from typing import (
     cast,
     override,
     runtime_checkable,
+    Union,
 )
 from uuid import UUID
 
@@ -27,7 +27,6 @@ from django.core.validators import (
 )
 from django.db import models
 from django.db.models import ForeignObjectRel
-from django.db.models.fields.related import RelatedField
 from django.utils.encoding import force_str
 from pydantic import Field
 from pydantic.fields import FieldInfo
@@ -68,7 +67,9 @@ class PydanticConverter(Protocol[TFieldType_co]):
         """
         raise NotImplementedError
 
-    def get_pydantic_type(self) -> SupportedPydanticTypes:
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the type of the field.
 
         Returns:
@@ -187,7 +188,9 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
 
     @abstractmethod
     @override
-    def get_pydantic_type(self) -> SupportedPydanticTypes:
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
         return type
 
@@ -251,8 +254,6 @@ class DjangoFieldHandler(  # noqa: WPS214
             else:
                 related_model = field_obj.related_model
             self.field_obj = related_model._meta.pk  # noqa: SLF001  # pyright: ignore [reportUnknownMemberType]
-        elif isinstance(field_obj, RelatedField):
-            self.field_obj = field_obj.target_field  # pyright: ignore [reportUnknownMemberType]
         else:
             self.field_obj = field_obj
 
@@ -381,11 +382,13 @@ class DjangoFieldHandler(  # noqa: WPS214
     @abstractmethod
     def get_pydantic_type_raw(
         self,
-    ) -> type[object] | UnionType | Annotated[SetType, GetType]:
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the type of the field."""
 
     @override
-    def get_pydantic_type(self) -> SupportedPydanticTypes:
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field.
 
         If the field has choices, return an Enum/IntEnum type. Otherwise, return the
@@ -417,5 +420,5 @@ class DjangoFieldHandler(  # noqa: WPS214
             )
 
         if self.field_obj.null:
-            return self.get_pydantic_type_raw() | None
+            return Union[self.get_pydantic_type_raw(), None]  # type: ignore[return-value]
         return self.get_pydantic_type_raw()

@@ -49,9 +49,9 @@ class FieldTypeRegistry:
     ) -> PydanticConverter[SupportedParentFields]:
         """Get the handler for a Django field."""
         # Primarily use a handler that is registered for the exact Django field class:
-        for django_field_class, type_handler in self.handlers.items():
-            if type(field) is django_field_class:  # noqa: WPS516
-                return type_handler(field)
+        type_handler = self.handlers.get(type(field), None)
+        if type_handler is not None:
+            return type_handler(field)
 
         # Secondary, use a handler that is registered for a superclass of the Django field class:
         # for django_field_class, type_handler in self.handlers.items():

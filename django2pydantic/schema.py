@@ -6,7 +6,7 @@ from typing import ClassVar, Generic, TypeVar, override
 
 from beartype import beartype
 from pydantic import BaseModel, ConfigDict
-from pydantic._internal._model_construction import ModelMetaclass
+from pydantic._internal._model_construction import ModelMetaclass  # pyright: ignore [reportPrivateImportUsage]
 
 from django2pydantic.base import create_pydantic_model
 from django2pydantic.defaults import field_type_registry

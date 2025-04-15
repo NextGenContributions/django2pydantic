@@ -2,6 +2,7 @@
 
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
+from enum import Enum, IntEnum
 from typing import Any, TypeVar, Union, Unpack, override
 
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -115,7 +116,7 @@ Ref: https://github.com/typeddjango/django-stubs/blob/9d6c8f49e271935832509b108d
 type ForwardRel = RelatedField[models.Model, models.Model]
 type ReverseRel = ForeignObjectRel
 
-type SupportedPydanticTypes = type
+type SupportedPydanticTypes = type | IntEnum | Enum
 
 # Field types supported by the library
 type SupportedParentFields = Union[  # pyright: ignore[reportDeprecated] # noqa: UP007
