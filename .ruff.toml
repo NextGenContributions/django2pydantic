@@ -36,7 +36,7 @@ indent-width = 4
 [lint]
 select = ["ALL"]
 external = ["WPS", "C", "W"]
-ignore = ["RUF100", "COM812", "ISC001"]
+ignore = ["RUF100", "COM812", "ISC001", "FIX002"]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"

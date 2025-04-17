@@ -4,13 +4,13 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: 1aefea45fa91485f53837b51d705f115070c83e1
+      ref: main-ng
       uri: https://github.com/NextGenContributions/plugins
 runtimes:
   enabled:
-    - python@3.10.8
-    - go@1.21.0
-    - node@18.20.5
+    - python@>=3.10.8
+    - go@>=1.21.0
+    - node@>=18.20.5
   definitions:
     - type: python
       system_version: allowed
@@ -19,15 +19,7 @@ lint:
     - name: mypy
       commands:
         - name: lint
-          run:
-            # Override mypy default command by adding '--no-incremental' flag, which is
-            # needed to handle "AssertionError: Internal error: method must be called
-            # on parsed file only" during trunk check run
-            # Refs:
-            # - https://github.com/python/mypy/issues/14521
-            # - https://mypy.readthedocs.io/en/stable/command_line.html#incremental
-            mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
-            --show-column-numbers ${target}
+          run: mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes --show-column-numbers ${target}
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
