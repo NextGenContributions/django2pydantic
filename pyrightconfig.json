@@ -23,15 +23,9 @@
     "**/node_modules",
     ".git"
   ],
-  "extraPaths": [
-    "/usr/local/lib/python3.12/site-packages"
-  ],
-  "ignore": [
-    "**/*.pyi"
-  ],
-  "include": [
-    "."
-  ],
+  "extraPaths": ["/usr/local/lib/python3.12/site-packages"],
+  "ignore": ["**/*.pyi"],
+  "include": ["."],
   "pythonPlatform": "Linux",
   "pythonVersion": "3.12",
   "reportAbstractUsage": "error",

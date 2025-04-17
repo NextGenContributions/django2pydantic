@@ -2,6 +2,6 @@ rules:
   quoted-strings:
     required: only-when-needed
     extra-allowed:
-      - '{|}'
+      - "{|}"
   octal-values:
     forbid-implicit-octal: true
