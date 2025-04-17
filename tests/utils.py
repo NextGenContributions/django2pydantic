@@ -9,9 +9,9 @@ import pydantic
 from django.db import models
 
 from django2pydantic.schema import BaseSchema, SchemaConfig
-from django2pydantic.types import Infer, ModelFields
+from django2pydantic.types import GetType, Infer, ModelFields, SetType
 
-DjangoField = models.Field[Any, Any]
+DjangoField = models.Field[GetType, SetType]  # pyright: ignore [reportExplicitAny]
 
 JSONValue = str | int | float | bool | None | list["JSONValue"] | dict[str, "JSONValue"]
 
@@ -38,7 +38,7 @@ def django_model_factory(
         "Meta": type("Meta", (), meta_attrs),
     }
     model_name = f"TestModel{randint(0, 10000000)}"
-    return type(model_name, (models.Model,), attrs)
+    return cast(type[models.Model], type(model_name, (models.Model,), attrs))
 
 
 def pydantic_schema_from_field(field: DjangoField) -> type[pydantic.BaseModel]:
@@ -46,7 +46,7 @@ def pydantic_schema_from_field(field: DjangoField) -> type[pydantic.BaseModel]:
     field_name = "field"
     model: type[models.Model] = django_model_factory(fields={field_name: field})
     fields_def: ModelFields = {field_name: Infer}
-    meta_class_attrs: SchemaConfig = SchemaConfig(
+    meta_class_attrs: SchemaConfig = SchemaConfig(  # type: ignore[type-arg]
         model=model,
         fields=fields_def,
     )
@@ -73,7 +73,7 @@ def add_property_method(
     cls: type[models.Model],
     name: str,
     return_type: type,
-    value: Any,
+    value: Any,  # pyright: ignore [reportExplicitAny, reportAny, reportUnusedParameter]
 ) -> None:
     """Create a property method on the given class.
 
@@ -87,7 +87,7 @@ def add_property_method(
 
     """
 
-    def property_method(self) -> Any:
+    def property_method(self) -> Any:  # type: ignore[no-untyped-def]  # pyright: ignore [reportExplicitAny]
         """Test method."""
 
     property_method.__annotations__["return"] = return_type
