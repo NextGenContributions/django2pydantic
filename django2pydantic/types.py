@@ -1,11 +1,13 @@
 """Shared types within the package."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
+from enum import Enum, IntEnum
 from typing import Any, TypeVar, Union, Unpack, override
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
+from django.db.models import ForeignObjectRel
 from django.db.models.fields.related import RelatedField
 from pydantic import BaseModel
 from pydantic.fields import (  # noqa: WPS450
@@ -37,25 +39,25 @@ class InferExcept:
 
 
 type ModelFields = (
-    dict[
+    Mapping[
         str,
         type[Infer | BaseModel]
         | InferExcept
         | FieldInfo
-        | list[type[BaseModel]]
+        | Sequence[type[BaseModel]]
         | ModelFields,
     ]
     | None
 )
 
-type ModelFieldsCompact = list[
+type ModelFieldsCompact = Sequence[
     str
     | tuple[
         str,
         type[Infer | BaseModel]
         | InferExcept
         | FieldInfo
-        | list[type[BaseModel]]
+        | Sequence[type[BaseModel]]
         | ModelFieldsCompact,
     ]
 ]
@@ -67,7 +69,9 @@ Example:
 ...     (
 ...         "description",
 ...         InferExcept(
-...             title="My better title", description="My better description", max_length=100
+...             title="My better title",
+                description="My better description",
+                max_length=100,
 ...         ),
 ...     ),
 ...     "organization_id",
@@ -109,12 +113,17 @@ To be used with the Django Stubs library for field _GT annotations.
 Ref: https://github.com/typeddjango/django-stubs/blob/9d6c8f49e271935832509b108dbeb20b9ce9af3f/django-stubs/db/models/fields/__init__.pyi#L47-L52
 """
 
+type ForwardRel = RelatedField[models.Model, models.Model]
+type ReverseRel = ForeignObjectRel
+
+type SupportedPydanticTypes = type | IntEnum | Enum
+
 # Field types supported by the library
 type SupportedParentFields = Union[  # pyright: ignore[reportDeprecated] # noqa: UP007
     models.Field[SetType, GetType],
     RelatedField[models.Model, models.Model],
     GenericForeignKey,
-    models.ForeignObjectRel,
+    ForeignObjectRel,
     Callable[[], type[object]],
     property,
     type[property],
@@ -127,10 +136,10 @@ This includes Django's fields such as:
 * property decorators.
 """
 
-TFieldType_co = TypeVar("TFieldType_co", bound=SupportedParentFields, covariant=True)
+TFieldType_co = TypeVar("TFieldType_co", covariant=True)
 """Represents the supported parent field types to be used with library's generics."""
 
-TDjangoModel_co = TypeVar("TDjangoModel_co", bound=models.Model, covariant=True)
+TDjangoModel = TypeVar("TDjangoModel", bound=models.Model)
 
 type DictStrAny = dict[str, Any]  # pyright: ignore[reportExplicitAny]
 """Type for a dictionary with string keys and any values."""
