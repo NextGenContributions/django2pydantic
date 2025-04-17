@@ -4,41 +4,58 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.6.7
-      uri: https://github.com/trunk-io/plugins
+      ref: 1aefea45fa91485f53837b51d705f115070c83e1
+      uri: https://github.com/NextGenContributions/plugins
 runtimes:
   enabled:
+    - python@3.10.8
     - go@1.21.0
     - node@18.20.5
-    - python@>=3.10.8
+  definitions:
+    - type: python
+      system_version: allowed
 lint:
+  definitions:
+    - name: mypy
+      commands:
+        - name: lint
+          run:
+            # Override mypy default command by adding '--no-incremental' flag, which is
+            # needed to handle "AssertionError: Internal error: method must be called
+            # on parsed file only" during trunk check run
+            # Refs:
+            # - https://github.com/python/mypy/issues/14521
+            # - https://mypy.readthedocs.io/en/stable/command_line.html#incremental
+            mypy --no-incremental --ignore-missing-imports --follow-imports=silent --show-error-codes
+            --show-column-numbers ${target}
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
-    - checkov@3.2.379
+    - checkov@3.2.382
     - codespell@2.4.1
-    - cspell@8.17.5
+    # Temporarily disabled until we have better solution for unknown words
+    # - cspell@8.17.5
     - djlint@1.36.4
-    - flake8@7.1.2
+    - flake8
     - git-diff-check
     - gitleaks@8.24.0
     - hadolint@2.12.1-beta
     - markdown-link-check@3.13.6
     - markdown-table-prettify@3.6.0
     - markdownlint-cli2@0.17.2
-    - mypy@1.15.0
+    - mypy
     - osv-scanner@1.9.2
     - prettier@3.5.3
-    - pylint@3.3.4
-    - pyright@1.1.396
-    - renovate@39.185.0
-    - ruff@0.9.9
-    - semgrep@1.110.0
+    - pylint
+    - pyright
+    - basedpyright
+    - renovate@39.190.1
+    - ruff
     - shellcheck@0.10.0
     - shfmt@3.6.0
     - taplo@0.9.3
-    - trivy@0.59.1
-    - trufflehog@3.88.14
+    - trivy@0.60.0
+    - trufflehog@3.88.15
     - vale@3.9.6
     - yamllint@1.35.1
   ignore:

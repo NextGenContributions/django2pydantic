@@ -1,0 +1,23 @@
+on:
+  workflow_dispatch:  # Add this line to enable manual triggering
+  push:
+    branches: [main]
+    paths: [.trunk/trunk.yaml]
+
+permissions: read-all
+
+jobs:
+  cache_trunk:
+    name: Cache Trunk
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          check-mode: populate_cache_only

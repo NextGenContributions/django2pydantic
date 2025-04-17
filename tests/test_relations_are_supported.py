@@ -23,12 +23,12 @@ def test_foreign_key_field_to_primary_key_is_supported() -> None:
 def test_foreign_key_field_with_to_field_is_supported() -> None:
     """Test that foreign key fields are supported."""
     related_model = django_model_factory(
-        fields={"someid": models.SmallIntegerField(unique=True)},
+        fields={"someid": models.CharField(unique=True)},
     )
     openapi_schema = get_openapi_schema_from_field(
         models.ForeignKey(related_model, on_delete=models.CASCADE, to_field="someid"),
     )
-    assert openapi_schema["properties"]["field"]["type"] == "integer"
+    assert openapi_schema["properties"]["field"]["type"] == "string"
 
 
 def test_foreign_key_field() -> None:
@@ -407,6 +407,36 @@ def test_many_to_many_relations_provide_an_array_of_ids() -> None:
     openapi_schema = SchemaB.model_json_schema()
     assert openapi_schema["properties"]["rel_a"]["type"] == "array"
     assert openapi_schema["properties"]["rel_a"]["items"]["type"] == "integer"
+
+
+# TODO(phuongfi91): Related to the experimental django validators
+#  https://github.com/NextGenContributions/django2pydantic/issues/41
+# def test_random_thing():
+#     """Test that random things are supported."""
+#     from django.core.validators import MaxLengthValidator, MinLengthValidator
+#
+#     class ModelA(models.Model):
+#         id = models.AutoField[int, int](primary_key=True)
+#         name = models.CharField[str, str](max_length=100, validators=[
+#             MinLengthValidator(1),
+#             MaxLengthValidator(100),
+#         ])
+#
+#     class SchemaA(BaseSchema[ModelA]):
+#         """SchemaA class."""
+#
+#         config = SchemaConfig[ModelA](
+#             model=ModelA,
+#             fields={
+#                 # "id": Infer,
+#                 "name": Infer,
+#             },
+#         )
+#
+#     a = SchemaA.model_validate({
+#         # "id": 1,
+#         "name": "a",
+#     })
 
 
 def test_inferred_many_to_many_field_should_be_list_of_ids() -> None:

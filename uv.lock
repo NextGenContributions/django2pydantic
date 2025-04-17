@@ -534,7 +534,7 @@ dev = [
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "nbmake", specifier = ">=1.5.5" },
     { name = "ninja-schema", specifier = ">=0.13.6" },
-    { name = "nitpick", git = "https://github.com/NextGenContributions/nitpick?rev=develop-ng" },
+    { name = "nitpick", git = "https://github.com/NextGenContributions/nitpick?branch=develop-ng" },
     { name = "nox", specifier = ">=2024.10.9" },
     { name = "pre-commit", specifier = ">=4.1.0" },
     { name = "project-config", specifier = ">=0.9.7" },
@@ -1303,7 +1303,7 @@ wheels = [
 [[package]]
 name = "nitpick"
 version = "0.35.0"
-source = { git = "https://github.com/NextGenContributions/nitpick?rev=develop-ng#cb116b89b1bbdda1e69163788da1927d5b495e8f" }
+source = { git = "https://github.com/NextGenContributions/nitpick?branch=develop-ng#cb116b89b1bbdda1e69163788da1927d5b495e8f" }
 dependencies = [
     { name = "attrs" },
     { name = "autorepr" },

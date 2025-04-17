@@ -6,15 +6,14 @@ from collections.abc import Callable
 from enum import Enum, IntEnum
 from types import UnionType
 from typing import (
-    Annotated,
     Any,
     Generic,
-    Optional,  # pyright: ignore[reportDeprecated]
     Protocol,
     TypeVar,
     cast,
     override,
     runtime_checkable,
+    Union,
 )
 from uuid import UUID
 
@@ -27,13 +26,20 @@ from django.core.validators import (
     StepValueValidator,
 )
 from django.db import models
-from django.db.models.fields.related import RelatedField
+from django.db.models import ForeignObjectRel
 from django.utils.encoding import force_str
 from pydantic import Field
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined, PydanticUndefinedType
 
-from django2pydantic.types import GetType, SetType, TFieldType_co
+from django2pydantic.types import (
+    ForwardRel,
+    GetType,
+    ReverseRel,
+    SetType,
+    SupportedPydanticTypes,
+    TFieldType_co,
+)
 
 CallableOutput = TypeVar("CallableOutput", int, str, bool, UUID, float)
 DefaultCallable = Callable[..., CallableOutput]
@@ -47,7 +53,7 @@ class PydanticConverter(Protocol[TFieldType_co]):
         """Initialize the field converter.
 
         Args:
-            field_obj (TFieldType_co): The Django field object.
+            field_obj (TFieldAndRelType_co): The Django field object.
 
         """
 
@@ -59,16 +65,18 @@ class PydanticConverter(Protocol[TFieldType_co]):
             type: The type of the field.
 
         """
-        return NotImplemented
+        raise NotImplementedError
 
-    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the type of the field.
 
         Returns:
             type: The type of the field.
 
         """
-        return NotImplemented
+        raise NotImplementedError
 
     def get_pydantic_field(self) -> FieldInfo:
         """Return the Pydantic field information.
@@ -77,19 +85,15 @@ class PydanticConverter(Protocol[TFieldType_co]):
             FieldInfo: The Pydantic field information.
 
         """
-        return NotImplemented
+        raise NotImplementedError
 
 
 class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co], ABC):  # noqa: WPS214 - Found too many methods
-    """Abstract base class for handling Django model fields."""
-
-    field_obj: TFieldType_co
+    """Abstract base class for handling generic model fields."""
 
     @override
     def __init__(self, field_obj: TFieldType_co) -> None:
-        """Initialize the field handler."""
-        super().__init__(field_obj)
-        self.field_obj = field_obj
+        pass
 
     @classmethod
     @abstractmethod
@@ -103,12 +107,12 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         return None
 
     @property
-    def default(self) -> Any:
+    def default(self) -> Any:  # noqa: ANN401  # pyright: ignore[reportAny,reportExplicitAny]
         """Return the default value of the field."""
         return PydanticUndefinedType
 
     @property
-    def default_factory(self) -> DefaultCallable[Any] | PydanticUndefinedType:
+    def default_factory(self) -> DefaultCallable[Any] | PydanticUndefinedType:  # pyright: ignore [reportExplicitAny]
         """Return the default factory of the field."""
         return PydanticUndefined
 
@@ -168,7 +172,7 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         return None
 
     @property
-    def examples(self) -> list[Any] | None:
+    def examples(self) -> list[Any] | None:  # pyright: ignore [reportExplicitAny]
         """Return the example values of the field."""
         return None
 
@@ -184,15 +188,17 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
 
     @abstractmethod
     @override
-    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
         return type
 
     @override
     def get_pydantic_field(self) -> FieldInfo:
         """Return the Pydantic field information."""
-        pydantic_field = Field(
-            default=self.default,
+        pydantic_field = Field(  # pyright: ignore [reportAny]
+            default=self.default,  # pyright: ignore [reportAny]
             title=self.title,
             description=self.description,
             alias=self.alias,
@@ -211,13 +217,15 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         )
 
         return cast(
-            FieldInfo,
+            "FieldInfo",
             pydantic_field,
-        )  # Pydantic seems have marked Field as Any although it is FieldInfo
+        )  # Pydantic seems to have marked Field as Any, although it is FieldInfo
 
 
 TDjangoMainParentFields = (
-    models.Field[SetType, GetType] | RelatedField[models.Model, models.Model]
+    models.Field[SetType, GetType]  # pyright: ignore [reportExplicitAny]
+    | ForwardRel
+    | ReverseRel
 )
 
 TDjangoField_co = TypeVar(
@@ -232,70 +240,79 @@ class DjangoFieldHandler(  # noqa: WPS214
 ):
     """Base class for handling Django fields.
 
-    Implementations should override the `field` class method to return the Django field class they handle.
+    Implementations should override the `field` class method to return the Django field
+    class they handle.
     """
+
+    @override
+    def __init__(self, field_obj: TDjangoField_co) -> None:  # pyright: ignore[reportMissingSuperCall]
+        """Initialize the field handler."""
+        self.field_obj: models.Field[SetType, GetType] | ForwardRel
+        if isinstance(field_obj, ForeignObjectRel):
+            if field_obj.related_model == "self":
+                related_model = field_obj.model
+            else:
+                related_model = field_obj.related_model
+            self.field_obj = related_model._meta.pk  # noqa: SLF001  # pyright: ignore [reportUnknownMemberType]
+        else:
+            self.field_obj = field_obj
 
     @classmethod
     @override
     def field(cls) -> type[TDjangoField_co]:
         """Return the type of the field."""
-        return models.Field[SetType, GetType]
-
-    @property
-    def is_required(self) -> bool:
-        """Return whether the field is required."""
-        return not self.field_obj.null and not self.field_obj.blank
+        return models.Field[SetType, GetType]  # type: ignore[return-value]
 
     @property
     @override
     def title(self) -> str | None:
         """Return the title of the field."""
-        if getattr(self.field_obj, "verbose_name", None):
-            return force_str(self.field_obj.verbose_name)
-        if getattr(self.field_obj, "name", None):
-            return self.field_obj.name
-        if getattr(self.field_obj, "attname", None):
-            return self.field_obj.attname
+        if vn := self.field_obj.verbose_name:
+            return force_str(vn)
+        if n := self.field_obj.name:
+            return n
+        if an := self.field_obj.attname:
+            return an
         return None
 
     @property
     @override
     def description(self) -> str | None:
         """Return the description of the field."""
-        if self.field_obj.help_text:
-            return force_str(self.field_obj.help_text).strip()
-        if self.field_obj.verbose_name:
-            return force_str(self.field_obj.verbose_name).strip()
+        if ht := self.field_obj.help_text:
+            return force_str(ht).strip()
+        if vn := self.field_obj.verbose_name:
+            return force_str(vn).strip()
         return None
 
     @property
     @override
-    def default(self) -> Any:
+    def default(self) -> Any:  # pyright: ignore [reportAny, reportExplicitAny]
         """Return the default value of the field."""
-        if self.field_obj.has_default() and not callable(self.field_obj.default):
-            return self.field_obj.default
+        if self.field_obj.has_default() and not callable(self.field_obj.default):  # pyright: ignore [reportAny]
+            return self.field_obj.default  # pyright: ignore [reportAny]
         if self.field_obj.null:  # So that the field is not marked as required
             return None
         return PydanticUndefined
 
     @property
     @override
-    def default_factory(self) -> DefaultCallable[Any] | PydanticUndefinedType:
+    def default_factory(self) -> DefaultCallable[Any] | PydanticUndefinedType:  # pyright: ignore [reportExplicitAny]
         """Return the default factory of the field."""
-        if self.field_obj.has_default() and callable(self.field_obj.default):
-            return cast(DefaultCallable[Any], self.field_obj.default)
+        if self.field_obj.has_default() and callable(self.field_obj.default):  # pyright: ignore [reportAny]
+            return cast("DefaultCallable[Any]", self.field_obj.default)  # pyright: ignore [reportExplicitAny]
         return PydanticUndefined
 
     @property
     @override
-    def examples(self) -> list[Any] | None:
+    def examples(self) -> list[Any] | None:  # pyright: ignore [reportExplicitAny]
         """Return the example value(s) of the field."""
         if self.field_obj.choices:
             choices = self.field_obj.get_choices(include_blank=self.field_obj.blank)
             return [c[0] for c in choices]
         if self.field_obj.has_default():
-            if not callable(self.field_obj.default):
-                return [self.field_obj.default]
+            if not callable(self.field_obj.default):  # pyright: ignore [reportAny]
+                return [self.field_obj.default]  # pyright: ignore [reportAny]
             if callable(self.field_obj.default):
                 return [self.field_obj.default()]
         return None
@@ -304,30 +321,30 @@ class DjangoFieldHandler(  # noqa: WPS214
     @override
     def ge(self) -> int | None:
         # check if the field has MinValueValidator
-        if self.field_obj.validators:
-            for validator in self.field_obj.validators:
-                if isinstance(validator, MinValueValidator):
-                    return cast(int, validator.limit_value)
+        for validator in self.field_obj.validators:
+            if isinstance(validator, MinValueValidator):
+                return cast("int", validator.limit_value)
         return None
 
     @property
     @override
     def le(self) -> int | None:
-        if self.field_obj.validators:
-            for validator in self.field_obj.validators:
-                if isinstance(validator, MaxValueValidator):
-                    return cast(int, validator.limit_value)
+        # check if the field has MaxValueValidator
+        for validator in self.field_obj.validators:
+            if isinstance(validator, MaxValueValidator):
+                return cast("int", validator.limit_value)
 
         return None
 
     @property
     @override
     def multiple_of(self) -> int | None:
-        if self.field_obj.validators:
-            for validator in self.field_obj.validators:
-                if isinstance(validator, StepValueValidator):
-                    if not getattr(validator, "offset", None):
-                        return cast(int, validator.limit_value)
+        for validator in self.field_obj.validators:
+            if isinstance(validator, StepValueValidator) and not getattr(
+                validator, "offset", None
+            ):
+                return cast("int", validator.limit_value)
+
         return None
 
     @property
@@ -336,9 +353,9 @@ class DjangoFieldHandler(  # noqa: WPS214
         """Return the max length of the field if it has a MaxLengthValidator."""
         for validator in self.field_obj.validators:
             if isinstance(validator, MaxLengthValidator):
-                if callable(validator.limit_value):
-                    return cast(int, validator.limit_value())
-                return cast(int, validator.limit_value)
+                if callable(validator.limit_value):  # pyright: ignore [reportAny]
+                    return cast("int", validator.limit_value())
+                return cast("int", validator.limit_value)
         return None
 
     @property
@@ -347,9 +364,9 @@ class DjangoFieldHandler(  # noqa: WPS214
         """Return the min length of the field if it has a MinLengthValidator."""
         for validator in self.field_obj.validators:
             if isinstance(validator, MinLengthValidator):
-                if callable(validator.limit_value):
-                    return cast(int, validator.limit_value())
-                return cast(int, validator.limit_value)
+                if callable(validator.limit_value):  # pyright: ignore [reportAny]
+                    return cast("int", validator.limit_value())
+                return cast("int", validator.limit_value)
         return None
 
     @property
@@ -365,14 +382,17 @@ class DjangoFieldHandler(  # noqa: WPS214
     @abstractmethod
     def get_pydantic_type_raw(
         self,
-    ) -> type[object] | UnionType | Annotated[SetType, GetType]:
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the type of the field."""
 
     @override
-    def get_pydantic_type(self) -> IntEnum | Enum | type[object] | UnionType:
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field.
 
-        If the field has choices, return an Enum/IntEnum type. Otherwise, return the raw type.
+        If the field has choices, return an Enum/IntEnum type. Otherwise, return the
+        raw type.
         """
         if self.field_obj.choices:
             ch = self.field_obj.get_choices(include_blank=False)
@@ -400,5 +420,5 @@ class DjangoFieldHandler(  # noqa: WPS214
             )
 
         if self.field_obj.null:
-            return Optional[self.get_pydantic_type_raw()]  # noqa: UP007
+            return Union[self.get_pydantic_type_raw(), None]  # type: ignore[return-value]
         return self.get_pydantic_type_raw()
