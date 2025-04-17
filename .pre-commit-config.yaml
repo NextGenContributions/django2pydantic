@@ -4,12 +4,12 @@ default_stages:
   - pre-commit
 repos:
   - repo: https://github.com/NextGenContributions/nitpick
-    rev: 1c41efbb3713116eaad1a6485c2c5286fb6d91a7
+    rev: 922e7085b80a5e705f326e8b88ce4dabc2636a04
     hooks:
       - id: nitpick-check
       - id: nitpick-fix
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -20,7 +20,7 @@ repos:
       - id: check-case-conflict
       - id: detect-private-key
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.6
+    rev: v0.4.9
     hooks:
       - id: ruff
         args:
