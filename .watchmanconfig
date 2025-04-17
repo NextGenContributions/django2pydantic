@@ -1,1 +1,5 @@
-{}
+{
+  "ignore_dirs": [
+    "placeholder_to_avoid_empty_file_which_nitpick_does_not_support"
+  ]
+}
