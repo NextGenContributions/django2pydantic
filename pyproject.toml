@@ -3,7 +3,7 @@ name = "django2pydantic"
 version = "0.2.0"
 description = "Converting Django models to Pydantic models"
 readme = "README.md"
-requires-python = "==3.12.*"
+requires-python = "==3.13.*"
 authors = [{ name = "Jukka Hassinen", email = "jukka.hassinen@gmail.com" }]
 license = "MIT"
 keywords = ["django", "pydantic", "models", "schema", "converter"]
