@@ -1,6 +1,6 @@
 version: "0.1"
 cli:
-  version: 1.22.10
+  version: 1.22.15
 plugins:
   sources:
     - id: trunk
@@ -23,33 +23,33 @@ lint:
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
-    - checkov@3.2.382
+    - checkov@3.2.414
     - codespell@2.4.1
     # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
     - djlint@1.36.4
     - flake8
     - git-diff-check
-    - gitleaks@8.24.0
+    - gitleaks@8.25.1
     - hadolint@2.12.1-beta
-    - markdown-link-check@3.13.6
+    - markdown-link-check@3.13.7
     - markdown-table-prettify@3.6.0
     - markdownlint-cli2@0.17.2
     - mypy
-    - osv-scanner@1.9.2
+    - osv-scanner@2.0.2
     - prettier@3.5.3
     - pylint
     - pyright
     - basedpyright
-    - renovate@39.190.1
+    - renovate@40.0.6
     - ruff
     - shellcheck@0.10.0
     - shfmt@3.6.0
     - taplo@0.9.3
-    - trivy@0.60.0
-    - trufflehog@3.88.15
-    - vale@3.9.6
-    - yamllint@1.35.1
+    - trivy@0.61.1
+    - trufflehog@3.88.26
+    - vale@3.11.2
+    - yamllint@1.37.0
   ignore:
     - linters:
         - ALL
