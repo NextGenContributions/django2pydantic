@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
   
   trunk-check:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-check.yml@main
