@@ -47,9 +47,9 @@ lint:
     - shfmt@3.6.0
     - taplo@0.9.3
     - trivy@0.61.1
-    - trufflehog@3.88.26
+    - trufflehog@3.88.27
     - vale@3.11.2
-    - yamllint@1.37.0
+    - yamllint@1.37.1
   ignore:
     - linters:
         - ALL
