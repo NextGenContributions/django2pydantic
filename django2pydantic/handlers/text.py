@@ -2,15 +2,23 @@
 
 import re
 import uuid
-from typing import Annotated, override
+from types import UnionType
+from typing import Annotated, Any, override
 from uuid import UUID
 
 from django.core.validators import RegexValidator
 from django.db import models
-from pydantic import UUID1, UUID3, UUID4, UUID5, AnyUrl, EmailStr
+from pydantic import UUID1, UUID3, UUID4, UUID5, AnyUrl, BeforeValidator, EmailStr
 
 from django2pydantic.handlers.base import DjangoFieldHandler
-from django2pydantic.types import GetType, SetType
+from django2pydantic.types import GetType, SetType, SupportedPydanticTypes
+
+
+def ensure_not_empty_string(value: Any) -> Any | None:  # noqa: ANN401  # pyright: ignore [reportExplicitAny]
+    """Ensure string is not empty, which can fail Pydantic validation e.g. Email/URL."""
+    if isinstance(value, str) and len(value) == 0:
+        return None
+    return value
 
 
 class CharFieldHandler(DjangoFieldHandler[models.CharField[SetType, GetType]]):
@@ -126,6 +134,14 @@ class EmailFieldHandler(DjangoFieldHandler[models.EmailField[str, str]]):
         """Return the type of the field."""
         return EmailStr
 
+    @override
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
+        return Annotated[  # type: ignore[return-value]
+            super().get_pydantic_type(), BeforeValidator(ensure_not_empty_string)
+        ]
+
 
 class UrlFieldHandler(DjangoFieldHandler[models.URLField[str, str]]):
     """Handler for URL fields."""
@@ -148,3 +164,11 @@ class UrlFieldHandler(DjangoFieldHandler[models.URLField[str, str]]):
     @override
     def get_pydantic_type_raw(self) -> type[AnyUrl]:
         return AnyUrl
+
+    @override
+    def get_pydantic_type(
+        self,
+    ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
+        return Annotated[  # type: ignore[return-value]
+            super().get_pydantic_type(), BeforeValidator(ensure_not_empty_string)
+        ]
