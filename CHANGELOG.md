@@ -1,13 +1,18 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-05-21)
+
+### Features
+
+- **#70**: Pydantic Email/URL validation should accept empty string
+  ([#69](https://github.com/NextGenContributions/django2pydantic/pull/69),
+  [`1ba4370`](https://github.com/NextGenContributions/django2pydantic/commit/1ba4370809eab3824bb7ac1a8793d8b55e613fc2))
+
+
 ## v0.3.0 (2025-05-05)
 
 ### Bug Fixes
-
-- Trunk permission to create/update label
-  ([#55](https://github.com/NextGenContributions/django2pydantic/pull/55),
-  [`e36ed63`](https://github.com/NextGenContributions/django2pydantic/commit/e36ed639cc8e7d17c6e77b8f9104390fe6c55521))
 
 - Daily trunk check failure if the commit is already checked
   ([#36](https://github.com/NextGenContributions/django2pydantic/pull/36),
@@ -39,8 +44,6 @@
 
 * debug: Remove test cron
 
-* debug: Remove test cron
-
 * fix: Trunk's mypy incremental cache issue
 
 * chore: Update plugin sources to address issue with ruff
@@ -49,29 +52,44 @@
 
 * debug: Issue reading 'github.event.workflow_run.id'
 
-* chore: Fix formatting
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
 * fix: Issue with comma due to misuse of post-annotations flag
 
 * chore: Add comments
 
-* chore: Fix formatting
-
 * fix: Daily trunk check failure if the commit is already checked
+
+- Include django-stubs-ext as a non-dev dependency
+  ([#16](https://github.com/NextGenContributions/django2pydantic/pull/16),
+  [`b26f36b`](https://github.com/NextGenContributions/django2pydantic/commit/b26f36b80b0ed6e986d5cea8f754ebfebafa8701))
+
+Fixes #7
+
+---
+
+For more details, open the [Copilot Workspace
+  session](https://copilot-workspace.githubnext.com/NextGenContributions/django2pydantic/issues/7?shareId=XXXX-XXXX-XXXX-XXXX).
+
+- Trunk permission to create/update label
+  ([#55](https://github.com/NextGenContributions/django2pydantic/pull/55),
+  [`e36ed63`](https://github.com/NextGenContributions/django2pydantic/commit/e36ed639cc8e7d17c6e77b8f9104390fe6c55521))
+
+- Trunk's mypy environment missing deps
+  ([#26](https://github.com/NextGenContributions/django2pydantic/pull/26),
+  [`383bd51`](https://github.com/NextGenContributions/django2pydantic/commit/383bd51b1e556aad5922affaf5bee301f9c67d95))
+
+* chore: Trunk configs
+
+* fix: Trunk's mypy environment missing deps
+
+* chore: Add comment
+
+* chore: Utilize system linters for some
+
+* chore: Fix workflow permissions
+
+* refactor: Move trunk check to separate job
+
+* chore: Add .vale.ini config
 
 - Trunk's mypy incremental cache issue
   ([#34](https://github.com/NextGenContributions/django2pydantic/pull/34),
@@ -103,13 +121,15 @@
 
 * debug: Remove test cron
 
-* debug: Remove test cron
-
 * fix: Trunk's mypy incremental cache issue
 
-- Trunk's mypy environment missing deps
-  ([#26](https://github.com/NextGenContributions/django2pydantic/pull/26),
-  [`383bd51`](https://github.com/NextGenContributions/django2pydantic/commit/383bd51b1e556aad5922affaf5bee301f9c67d95))
+### Features
+
+- Add nitpick and configs ([#9](https://github.com/NextGenContributions/django2pydantic/pull/9),
+  [`e2949fa`](https://github.com/NextGenContributions/django2pydantic/commit/e2949faf601ff76fadf1a0079b97c47146fe8bce))
+
+- Cache Trunk ([#27](https://github.com/NextGenContributions/django2pydantic/pull/27),
+  [`3e16247`](https://github.com/NextGenContributions/django2pydantic/commit/3e16247ece1fc6e91d0448209cbf77be15ab1ec0))
 
 * chore: Trunk configs
 
@@ -125,18 +145,33 @@
 
 * chore: Add .vale.ini config
 
-- Include django-stubs-ext as a non-dev dependency
-  ([#16](https://github.com/NextGenContributions/django2pydantic/pull/16),
-  [`b26f36b`](https://github.com/NextGenContributions/django2pydantic/commit/b26f36b80b0ed6e986d5cea8f754ebfebafa8701))
+* feat: Cache Trunk
 
-Fixes #7
+* feat: Update trunk workflows
 
----
+- Enable workflow_dispatch for cache-trunk
+  ([#28](https://github.com/NextGenContributions/django2pydantic/pull/28),
+  [`81356c2`](https://github.com/NextGenContributions/django2pydantic/commit/81356c27f12a8eea9ef6b530fc3876824f5f944f))
 
-For more details, open the [Copilot Workspace
-  session](https://copilot-workspace.githubnext.com/NextGenContributions/django2pydantic/issues/7?shareId=XXXX-XXXX-XXXX-XXXX).
+* chore: Trunk configs
 
-### Features
+* fix: Trunk's mypy environment missing deps
+
+* chore: Add comment
+
+* chore: Utilize system linters for some
+
+* chore: Fix workflow permissions
+
+* refactor: Move trunk check to separate job
+
+* chore: Add .vale.ini config
+
+* feat: Cache Trunk
+
+* feat: Update trunk workflows
+
+* feat: Enable workflow_dispatch for cache-trunk
 
 - Relation handlers additions/tweaks. Proper annotations/typings
   ([#40](https://github.com/NextGenContributions/django2pydantic/pull/40),
@@ -155,20 +190,21 @@ Details: https://github.com/NextGenContributions/django2pydantic/pull/40
 
 * feat: Additional relation handlers. Typing tweaks
 
-* style: format code with Ruff Formatter
-
 This commit fixes the style issues introduced in 877a052 according to the output from Ruff
   Formatter.
-
-Details: https://github.com/NextGenContributions/django2pydantic/pull/40
-
-* chore: WIP fixes
 
 * chore: More typing fixes and recursion fix
 
 ---------
 
 Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
+
+- Support Trunk.io ([#22](https://github.com/NextGenContributions/django2pydantic/pull/22),
+  [`1b82554`](https://github.com/NextGenContributions/django2pydantic/commit/1b8255416d5f2bd778e457fd6171d7dd7252b3f0))
+
+* feat: Support Trunk.io
+
+* feat: Trunk auto upgrade workflow
 
 - Trunk check_mode all for daily check
   ([#29](https://github.com/NextGenContributions/django2pydantic/pull/29),
@@ -196,58 +232,6 @@ Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.
 
 * feat: Trunk check_mode all for daily check
 
-- Enable workflow_dispatch for cache-trunk
-  ([#28](https://github.com/NextGenContributions/django2pydantic/pull/28),
-  [`81356c2`](https://github.com/NextGenContributions/django2pydantic/commit/81356c27f12a8eea9ef6b530fc3876824f5f944f))
-
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
-* feat: Enable workflow_dispatch for cache-trunk
-
-- Cache Trunk ([#27](https://github.com/NextGenContributions/django2pydantic/pull/27),
-  [`3e16247`](https://github.com/NextGenContributions/django2pydantic/commit/3e16247ece1fc6e91d0448209cbf77be15ab1ec0))
-
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
-- Support Trunk.io ([#22](https://github.com/NextGenContributions/django2pydantic/pull/22),
-  [`1b82554`](https://github.com/NextGenContributions/django2pydantic/commit/1b8255416d5f2bd778e457fd6171d7dd7252b3f0))
-
-* feat: Support Trunk.io
-
-* feat: Trunk auto upgrade workflow
-
 - Validate 'Inferred' relation and return appropriate primary key(s)
   ([#20](https://github.com/NextGenContributions/django2pydantic/pull/20),
   [`38b38ba`](https://github.com/NextGenContributions/django2pydantic/commit/38b38ba8f0d3aefcf3c0302b8e22900822f40c79))
@@ -273,9 +257,6 @@ Details: https://github.com/NextGenContributions/django2pydantic/pull/17
 
 Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
 
-- Add nitpick and configs ([#9](https://github.com/NextGenContributions/django2pydantic/pull/9),
-  [`e2949fa`](https://github.com/NextGenContributions/django2pydantic/commit/e2949faf601ff76fadf1a0079b97c47146fe8bce))
-
 
 ## v0.2.0 (2024-12-13)
 
@@ -289,14 +270,14 @@ Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.
 
 ### Bug Fixes
 
-- Related model inheritance fixes and string format reference support
-  ([`fe97eaf`](https://github.com/NextGenContributions/django2pydantic/commit/fe97eaf67209d530589c4eacee245d7d5b0c6e97))
-
 - Decimalfield fix?
   ([`db3e1ba`](https://github.com/NextGenContributions/django2pydantic/commit/db3e1bae28c79223399490cc0be7df0c1a217f20))
 
 - Jsonfield fix?
   ([`79e1d08`](https://github.com/NextGenContributions/django2pydantic/commit/79e1d083a7bb3683183ab6832e599bd1ac8d77c4))
+
+- Related model inheritance fixes and string format reference support
+  ([`fe97eaf`](https://github.com/NextGenContributions/django2pydantic/commit/fe97eaf67209d530589c4eacee245d7d5b0c6e97))
 
 
 ## v0.1.2 (2024-11-29)
