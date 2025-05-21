@@ -23,7 +23,7 @@ lint:
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.3
-    - checkov@3.2.424
+    - checkov@3.2.427
     - codespell@2.4.1
     # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
@@ -47,7 +47,7 @@ lint:
     - shfmt@3.6.0
     - taplo@0.9.3
     - trivy@0.62.1
-    - trufflehog@3.88.29
+    - trufflehog@3.88.30
     - vale@3.11.2
     - yamllint@1.37.1
   ignore:
