@@ -256,7 +256,7 @@ def _get_django_field(
 ) -> Field[GetType, SetType] | ForeignObjectRel | GenericForeignKey | property:
     # Check if the field is a property function:
     if has_property(django_model, field_name):
-        return cast(property, getattr(django_model, field_name))
+        return cast("property", getattr(django_model, field_name))
     try:
         return django_model._meta.get_field(  # noqa: SLF001, WPS437 # pyright: ignore[reportUnknownVariableType,reportUnknownMemberType]
             field_name=field_name,

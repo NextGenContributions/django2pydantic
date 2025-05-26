@@ -2,10 +2,11 @@
 
 from abc import ABC
 from types import UnionType
-from typing import Annotated, Generic, TypeVar, override, Union
+from typing import Annotated, Any, Generic, TypeVar, Union, override
 
 from django.db import models
 from django.db.models.fields.related import RelatedField
+from pydantic_core import PydanticUndefined
 
 from django2pydantic.handlers.base import DjangoFieldHandler, PydanticConverter
 from django2pydantic.types import (
@@ -59,16 +60,20 @@ class RelatedFieldHandler(
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
         if not isinstance(self.field_obj, RelatedField):
-            raise TypeError(
+            msg = (
                 f"Expected 'field_obj' to be of type 'RelatedField', "
                 f"got {type(self.field_obj)} instead"
             )
+            raise TypeError(msg)
 
         pydantic_type = self._get_field_type_handler(
             self.field_obj.target_field  # pyright: ignore [reportUnknownMemberType, reportUnknownArgumentType]
         ).get_pydantic_type()
 
-        if self.field_obj.null:
+        # ManyToManyField: null has no effect since there is no way to require a
+        # relationship at the database level.
+        # Ref: https://docs.djangoproject.com/en/5.1/ref/models/fields/#manytomanyfield
+        if not self.field_obj.many_to_many and self.field_obj.null:
             return Union[pydantic_type, None]  # type: ignore[return-value]
         return pydantic_type
 
@@ -154,6 +159,19 @@ class ManyToManyFieldHandler(
     def field(cls) -> type[models.ManyToManyField[models.Model, models.Model]]:
         return models.ManyToManyField
 
+    @property
+    @override
+    def default(self) -> Any:  # pyright: ignore [reportAny, reportExplicitAny]
+        """Return the default value of the field."""
+        if self.field_obj.has_default() and not callable(self.field_obj.default):  # pyright: ignore [reportAny]
+            return self.field_obj.default  # pyright: ignore [reportAny]
+        if self.field_obj.blank:
+            # ManyToManyField: null has no effect since there is no way to require a
+            # relationship at the database level.
+            # Ref: https://docs.djangoproject.com/en/5.1/ref/models/fields/#manytomanyfield
+            return None
+        return PydanticUndefined
+
     @override
     def get_pydantic_type(
         self,
@@ -193,7 +211,10 @@ class ManyToManyRelHandler(ReverseRelatedFieldHandler[models.ManyToManyRel]):
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[return-value,misc]
+        return (
+            list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[misc]
+            | None
+        )
 
 
 class OneToOneRelHandler(ReverseRelatedFieldHandler[models.OneToOneRel]):
@@ -224,4 +245,7 @@ class ManyToOneRelHandler(ReverseRelatedFieldHandler[models.ManyToOneRel]):
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[return-value,misc]
+        return (
+            list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[misc]
+            | None
+        )
