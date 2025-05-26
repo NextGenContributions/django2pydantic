@@ -60,9 +60,11 @@ def generate_string_field_test_cases() -> Sequence[tuple[Any, bool, Any, int | N
     return test_cases
 
 
-def generate_non_string_field_test_cases() -> Sequence[
-    tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
-]:
+def generate_non_string_field_test_cases() -> (
+    Sequence[
+        tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
+    ]
+):
     """Generate test cases for number-based Django fields.
 
     Returns:
@@ -124,9 +126,11 @@ def generate_non_string_field_test_cases() -> Sequence[
     return test_cases
 
 
-def generate_relational_field_test_cases() -> Sequence[
-    tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
-]:
+def generate_relational_field_test_cases() -> (
+    Sequence[
+        tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
+    ]
+):
     """Generate test cases for relational Django fields.
 
     Returns:
@@ -212,9 +216,9 @@ def test_fields(
     assert field_info.default == expected_default
     assert field_info._attributes_set.get("min_length") == expected_min_length  # noqa: SLF001  # pyright: ignore [reportPrivateUsage]
     is_nullable = type_is_nullable(field_type)
-    assert is_nullable == field.null, (
-        f"Expected Optional: {field.null}, got: {is_nullable}"
-    )
+    assert (
+        is_nullable == field.null
+    ), f"Expected Optional: {field.null}, got: {is_nullable}"
 
     # Assert OpenAPI schema
     openapi_schema = get_openapi_schema_from_field(field)

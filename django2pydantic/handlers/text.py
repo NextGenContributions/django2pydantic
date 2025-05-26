@@ -129,7 +129,8 @@ class EmailFieldHandler(DjangoStringBasedFieldHandler[models.EmailField[str, str
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         return Annotated[  # type: ignore[return-value]
-            super().get_pydantic_type(), WrapValidator(handle_empty_string),
+            super().get_pydantic_type(),
+            WrapValidator(handle_empty_string),
         ]
 
 
@@ -157,7 +158,8 @@ class UrlFieldHandler(DjangoStringBasedFieldHandler[models.URLField[str, str]]):
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         return Annotated[  # type: ignore[return-value]
-            super().get_pydantic_type(), WrapValidator(handle_empty_string),
+            super().get_pydantic_type(),
+            WrapValidator(handle_empty_string),
         ]
 
     @property
