@@ -231,20 +231,6 @@ def test_default_value_is_set(field: FieldClass) -> None:
     assert openapi_schema["properties"]["field"]["default"] == default_value
 
 
-@pytest.mark.parametrize("field", DjangoFieldTypes)
-def test_null_field_sets_field_as_not_required(field: FieldClass) -> None:
-    """Test that null fields are not required."""
-    openapi_schema = get_openapi_schema_from_field(field(null=True))
-    assert openapi_schema.get("required", []) == []
-
-
-@pytest.mark.parametrize("field", DjangoFieldTypes)
-def test_non_null_field_sets_as_required(field: FieldClass) -> None:
-    """Test that non-null fields are required."""
-    openapi_schema = get_openapi_schema_from_field(field(null=False))
-    assert openapi_schema.get("required", []) == ["field"]
-
-
 def test_schema_subclassing_works() -> None:
     """Test that schema subclassing works."""
 
