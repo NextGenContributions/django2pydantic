@@ -10,7 +10,6 @@ SECRET_KEY = "not very secret in tests"  # noqa: S105
 USE_I18N = True
 USE_L10N = True
 STATIC_URL = "/static/"
-ROOT_URLCONF = "tests.urls"
 TEMPLATES: list[dict[str, Any]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -27,21 +26,20 @@ TEMPLATES: list[dict[str, Any]] = [
     },
 ]
 MIDDLEWARE = (
-    (
-        "django.middleware.security.SecurityMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.common.CommonMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    ),
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 )
 INSTALLED_APPS = (
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.messages",
     "django.contrib.sites",
     "django.contrib.staticfiles",
     "tests",

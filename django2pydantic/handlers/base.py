@@ -10,10 +10,10 @@ from typing import (
     Generic,
     Protocol,
     TypeVar,
+    Union,
     cast,
     override,
     runtime_checkable,
-    Union,
 )
 from uuid import UUID
 
@@ -291,7 +291,8 @@ class DjangoFieldHandler(  # noqa: WPS214
         """Return the default value of the field."""
         if self.field_obj.has_default() and not callable(self.field_obj.default):  # pyright: ignore [reportAny]
             return self.field_obj.default  # pyright: ignore [reportAny]
-        if self.field_obj.null:  # So that the field is not marked as required
+        if self.field_obj.null and self.field_obj.blank:
+            # So that the field is not marked as required
             return None
         return PydanticUndefined
 

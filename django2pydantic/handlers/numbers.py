@@ -12,6 +12,8 @@ from django2pydantic.handlers.base import DjangoFieldHandler, TDjangoField_co
 class DjangoIntegerFieldHandler(
     Generic[TDjangoField_co], DjangoFieldHandler[TDjangoField_co]
 ):
+    """Base handler for Django Integer fields."""
+
     @property
     @override
     def ge(self) -> int | None:
