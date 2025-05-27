@@ -405,8 +405,9 @@ def test_many_to_many_relations_provide_an_array_of_ids() -> None:
         )
 
     openapi_schema = SchemaB.model_json_schema()
-    assert openapi_schema["properties"]["rel_a"]["type"] == "array"
-    assert openapi_schema["properties"]["rel_a"]["items"]["type"] == "integer"
+    assert openapi_schema["properties"]["rel_a"]["anyOf"][0]["type"] == "array"
+    assert openapi_schema["properties"]["rel_a"]["anyOf"][0]["items"]["type"] == "integer"
+    assert openapi_schema["properties"]["rel_a"]["anyOf"][1]["type"] == "null"
 
 
 # TODO(phuongfi91): Related to the experimental django validators

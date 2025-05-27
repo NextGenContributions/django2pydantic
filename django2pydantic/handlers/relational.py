@@ -177,7 +177,10 @@ class ManyToManyFieldHandler(
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[return-value,misc]
+        return (
+            list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[misc]
+            | None
+        )
 
 
 class ReverseRelatedFieldHandler(
