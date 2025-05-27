@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.4.1 (2025-05-27)
+
+### Bug Fixes
+
+- Various incorrect field types, default value and required status
+  ([#75](https://github.com/NextGenContributions/django2pydantic/pull/75),
+  [`6eeb034`](https://github.com/NextGenContributions/django2pydantic/commit/6eeb03461c884c3e48c2395eecc1861da66a668f))
+
+
 ## v0.4.0 (2025-05-21)
 
 ### Features
@@ -18,56 +27,9 @@
   ([#36](https://github.com/NextGenContributions/django2pydantic/pull/36),
   [`cf50e0a`](https://github.com/NextGenContributions/django2pydantic/commit/cf50e0a623260352db84b50b768570538e954755))
 
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
-* feat: Enable workflow_dispatch for cache-trunk
-
-* feat: Trunk check_mode all for daily check
-
-* debug: Test cron
-
-* debug: Remove test cron
-
-* fix: Trunk's mypy incremental cache issue
-
-* chore: Update plugin sources to address issue with ruff
-
-* chore: Fix formatting
-
-* debug: Issue reading 'github.event.workflow_run.id'
-
-* fix: Issue with comma due to misuse of post-annotations flag
-
-* chore: Add comments
-
-* fix: Daily trunk check failure if the commit is already checked
-
 - Include django-stubs-ext as a non-dev dependency
   ([#16](https://github.com/NextGenContributions/django2pydantic/pull/16),
   [`b26f36b`](https://github.com/NextGenContributions/django2pydantic/commit/b26f36b80b0ed6e986d5cea8f754ebfebafa8701))
-
-Fixes #7
-
----
-
-For more details, open the [Copilot Workspace
-  session](https://copilot-workspace.githubnext.com/NextGenContributions/django2pydantic/issues/7?shareId=XXXX-XXXX-XXXX-XXXX).
 
 - Trunk permission to create/update label
   ([#55](https://github.com/NextGenContributions/django2pydantic/pull/55),
@@ -77,51 +39,9 @@ For more details, open the [Copilot Workspace
   ([#26](https://github.com/NextGenContributions/django2pydantic/pull/26),
   [`383bd51`](https://github.com/NextGenContributions/django2pydantic/commit/383bd51b1e556aad5922affaf5bee301f9c67d95))
 
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
 - Trunk's mypy incremental cache issue
   ([#34](https://github.com/NextGenContributions/django2pydantic/pull/34),
   [`85bc639`](https://github.com/NextGenContributions/django2pydantic/commit/85bc639970101332792532b62ff5201fc4da6d12))
-
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
-* feat: Enable workflow_dispatch for cache-trunk
-
-* feat: Trunk check_mode all for daily check
-
-* debug: Test cron
-
-* debug: Remove test cron
-
-* fix: Trunk's mypy incremental cache issue
 
 ### Features
 
@@ -131,131 +51,24 @@ For more details, open the [Copilot Workspace
 - Cache Trunk ([#27](https://github.com/NextGenContributions/django2pydantic/pull/27),
   [`3e16247`](https://github.com/NextGenContributions/django2pydantic/commit/3e16247ece1fc6e91d0448209cbf77be15ab1ec0))
 
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
 - Enable workflow_dispatch for cache-trunk
   ([#28](https://github.com/NextGenContributions/django2pydantic/pull/28),
   [`81356c2`](https://github.com/NextGenContributions/django2pydantic/commit/81356c27f12a8eea9ef6b530fc3876824f5f944f))
-
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
-* feat: Enable workflow_dispatch for cache-trunk
 
 - Relation handlers additions/tweaks. Proper annotations/typings
   ([#40](https://github.com/NextGenContributions/django2pydantic/pull/40),
   [`6a9a05a`](https://github.com/NextGenContributions/django2pydantic/commit/6a9a05ad9779a60aa44603c98538e77bb20ec773))
 
-* chore: WIP fixes
-
-* style: format code with Ruff Formatter
-
-This commit fixes the style issues introduced in 4f7df37 according to the output from Ruff
-  Formatter.
-
-Details: https://github.com/NextGenContributions/django2pydantic/pull/40
-
-* feat: Reverse m2m relation handler WIP
-
-* feat: Additional relation handlers. Typing tweaks
-
-This commit fixes the style issues introduced in 877a052 according to the output from Ruff
-  Formatter.
-
-* chore: More typing fixes and recursion fix
-
----------
-
-Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
-
 - Support Trunk.io ([#22](https://github.com/NextGenContributions/django2pydantic/pull/22),
   [`1b82554`](https://github.com/NextGenContributions/django2pydantic/commit/1b8255416d5f2bd778e457fd6171d7dd7252b3f0))
-
-* feat: Support Trunk.io
-
-* feat: Trunk auto upgrade workflow
 
 - Trunk check_mode all for daily check
   ([#29](https://github.com/NextGenContributions/django2pydantic/pull/29),
   [`6d10fb2`](https://github.com/NextGenContributions/django2pydantic/commit/6d10fb2070fde60e44c25cada39da6c81d454477))
 
-* chore: Trunk configs
-
-* fix: Trunk's mypy environment missing deps
-
-* chore: Add comment
-
-* chore: Utilize system linters for some
-
-* chore: Fix workflow permissions
-
-* refactor: Move trunk check to separate job
-
-* chore: Add .vale.ini config
-
-* feat: Cache Trunk
-
-* feat: Update trunk workflows
-
-* feat: Enable workflow_dispatch for cache-trunk
-
-* feat: Trunk check_mode all for daily check
-
 - Validate 'Inferred' relation and return appropriate primary key(s)
   ([#20](https://github.com/NextGenContributions/django2pydantic/pull/20),
   [`38b38ba`](https://github.com/NextGenContributions/django2pydantic/commit/38b38ba8f0d3aefcf3c0302b8e22900822f40c79))
-
-* chore: Various copilot stuffs
-
-* style: format code with Ruff Formatter
-
-This commit fixes the style issues introduced in 084e334 according to the output from Ruff
-  Formatter.
-
-Details: https://github.com/NextGenContributions/django2pydantic/pull/17
-
-* chore: small tweaks
-
-* feat: Validate 'Inferred' relation and return appropriate primary key(s)
-
-* chore: Mark WIP tests
-
-* chore: Update pytest config
-
----------
-
-Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.noreply.github.com>
 
 
 ## v0.2.0 (2024-12-13)
@@ -289,10 +102,6 @@ Co-authored-by: deepsource-autofix[bot] <62050782+deepsource-autofix[bot]@users.
 
 - Some default naming of models/related model schemas
   ([`b9fcb76`](https://github.com/NextGenContributions/django2pydantic/commit/b9fcb76944a9a5a8b8e28d13cfd473652da90a3e))
-
-Other changes: - documented the use of @property methods as field (related to Support for @property
-  decorated Django model methods #1) - some other documentation improvements - removed some obsolete
-  files
 
 
 ## v0.1.1 (2024-11-21)
@@ -350,8 +159,6 @@ Other changes: - documented the use of @property methods as field (related to Su
 
 - Update README.md
   ([`bc2ed39`](https://github.com/NextGenContributions/django2pydantic/commit/bc2ed39001e84799e886ea917566c9492fc86dea))
-
-Signed-off-by: Jukka Hassinen <jukka.hassinen@gmail.com>
 
 
 ## v0.0.0 (2024-11-18)
