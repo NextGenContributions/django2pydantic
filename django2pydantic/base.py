@@ -18,6 +18,7 @@ from django.db.models import (
     OneToOneField,
     OneToOneRel,
 )
+from django.utils.encoding import force_str
 from pydantic import BaseModel, create_model, field_validator
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
@@ -373,11 +374,14 @@ def _determine_field_type(
         )
         raise TypeError(msg)
 
+    title = force_str(getattr(django_field, "verbose_name", None))
+    description = force_str(getattr(django_field, "help_text", None))
+
     return (
         field_type,
         FieldInfo(
             default=default,
-            title=related_django_model_name,
-            description=related_django_model_name,
+            title=title,
+            description=description,
         ),
     )
