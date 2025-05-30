@@ -374,8 +374,16 @@ def _determine_field_type(
         )
         raise TypeError(msg)
 
-    title = force_str(getattr(django_field, "verbose_name", None))
-    description = force_str(getattr(django_field, "help_text", None))
+    target_field = django_field
+    if dj_field_type in {ManyToOneRel, OneToOneRel, ManyToManyRel}:
+        target_field = django_field.remote_field  # type: ignore[union-attr,assignment]
+
+    title = None
+    description = None
+    if verbose_name := getattr(target_field, "verbose_name", None):
+        title = force_str(verbose_name)
+    if help_text := getattr(target_field, "help_text", None):
+        description = force_str(help_text)
 
     return (
         field_type,
