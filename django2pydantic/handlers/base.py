@@ -10,7 +10,7 @@ from typing import (
     Generic,
     Protocol,
     TypeVar,
-    Union,
+    Union,  # pyright: ignore [reportDeprecated]
     cast,
     override,
     runtime_checkable,
@@ -26,7 +26,6 @@ from django.core.validators import (
     StepValueValidator,
 )
 from django.db import models
-from django.db.models import ForeignObjectRel
 from django.utils.encoding import force_str
 from pydantic import Field
 from pydantic.fields import FieldInfo
@@ -248,12 +247,13 @@ class DjangoFieldHandler(  # noqa: WPS214
     def __init__(self, field_obj: TDjangoField_co) -> None:  # pyright: ignore[reportMissingSuperCall]
         """Initialize the field handler."""
         self.field_obj: models.Field[SetType, GetType] | ForwardRel
-        if isinstance(field_obj, ForeignObjectRel):
+        if isinstance(field_obj, models.ForeignObjectRel):
             if field_obj.related_model == "self":
                 related_model = field_obj.model
             else:
                 related_model = field_obj.related_model
             self.field_obj = related_model._meta.pk  # noqa: SLF001  # pyright: ignore [reportUnknownMemberType]
+            self.related_model: type[models.Model] | None = related_model
         else:
             self.field_obj = field_obj
 
@@ -421,5 +421,5 @@ class DjangoFieldHandler(  # noqa: WPS214
             )
 
         if self.field_obj.null:
-            return Union[self.get_pydantic_type_raw(), None]  # type: ignore[return-value]
+            return Union[self.get_pydantic_type_raw(), None]  # type: ignore[return-value]  # noqa: UP007
         return self.get_pydantic_type_raw()

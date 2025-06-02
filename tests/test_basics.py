@@ -127,7 +127,6 @@ def is_correct_field_type_and_format(
     return datas[field]["type"] == type_ and datas[field]["format"] == format
 
 
-@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 @given(
     help_text=st.text(alphabet=printable).filter(
@@ -160,7 +159,6 @@ def test_field_type_and_format_is_correct_openapi_equivalent(field: FieldClass) 
     )
 
 
-@pytest.mark.skip(reason="WIP")
 @pytest.mark.parametrize("field", DjangoFieldTypes)
 @given(
     help_text=st.text(alphabet=printable).filter(
