@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.4.3 (2025-06-03)
+
+### Bug Fixes
+
+- Reverse relation titles more complete
+  ([#87](https://github.com/NextGenContributions/django2pydantic/pull/87),
+  [`c6effbe`](https://github.com/NextGenContributions/django2pydantic/commit/c6effbe86f2b515b93deea63933afe075c59df21))
+
+
 ## v0.4.2 (2025-05-30)
 
 ### Bug Fixes
