@@ -194,6 +194,12 @@ class ReverseRelatedFieldHandler(
     def default(self) -> None:
         return None  # So that the field is not marked as required
 
+    @property
+    @override
+    def description(self) -> None:
+        # TODO(jhassine): https://github.com/NextGenContributions/django2pydantic/issues/88
+        return None
+
     @override
     def get_pydantic_type_raw(
         self,
