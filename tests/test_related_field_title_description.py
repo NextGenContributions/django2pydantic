@@ -71,7 +71,7 @@ def test_OneToOneField_reverse_relationship_title_is_set_from_verbose_name() -> 
 
     @final
     class A(models.Model):
-        pass
+        """Test model."""
 
     @final
     class B(models.Model):  # pyright: ignore[reportUnusedClass]
@@ -90,18 +90,31 @@ def test_OneToOneField_reverse_relationship_title_is_set_from_verbose_name() -> 
             model=A, fields={"id": Infer, related_name: Infer}
         )
 
+    class DictSchema(BaseSchema[A]):
+        config: SchemaConfig[A] = SchemaConfig(
+            model=A, fields={"id": Infer, related_name: {"id": Infer}}
+        )
+
     openapi_schema = FieldSchema.model_json_schema()
     assert openapi_schema["properties"][related_name]["title"].strip() == title.strip()
 
+    openapi_schema_dict = DictSchema.model_json_schema()
+    assert (
+        openapi_schema_dict["properties"][related_name]["title"].strip()
+        == title.strip()
+    )
 
-def test_ManyToManyField_reverse_relationship_title_is_set_from_verbose_name() -> None:
+
+def test_ManyToManyField_reverse_relationship_title_is_set_from_verbose_name_plural() -> (
+    None
+):
     """Test that the reverse relation field title is set from the verbose name."""
     title = "This is a test title for the reverse relationship field."
     related_name = "b_set"
 
     @final
     class A(models.Model):
-        pass
+        """Test model."""
 
     @final
     class B(models.Model):  # pyright: ignore[reportUnusedClass]
@@ -119,18 +132,31 @@ def test_ManyToManyField_reverse_relationship_title_is_set_from_verbose_name() -
             model=A, fields={"id": Infer, related_name: Infer}
         )
 
+    class DictSchema(BaseSchema[A]):
+        config: SchemaConfig[A] = SchemaConfig(
+            model=A, fields={"id": Infer, related_name: {"id": Infer}}
+        )
+
     openapi_schema = FieldSchema.model_json_schema()
     assert openapi_schema["properties"][related_name]["title"].strip() == title.strip()
 
+    openapi_schema_dict = DictSchema.model_json_schema()
+    assert (
+        openapi_schema_dict["properties"][related_name]["title"].strip()
+        == title.strip()
+    )
 
-def test_ForeignKey_reverse_relationship_title_is_set_from_verbose_name() -> None:
+
+def test_ForeignKey_reverse_relationship_title_is_set_from_verbose_name_plural() -> (
+    None
+):
     """Test that the reverse relation field title is set from the verbose name."""
     title = "This is a test title for the reverse relationship field."
     related_name = "b_set"
 
     @final
     class A(models.Model):
-        pass
+        """Test model."""
 
     @final
     class B(models.Model):  # pyright: ignore[reportUnusedClass]
@@ -149,5 +175,16 @@ def test_ForeignKey_reverse_relationship_title_is_set_from_verbose_name() -> Non
             model=A, fields={"id": Infer, related_name: Infer}
         )
 
+    class DictSchema(BaseSchema[A]):
+        config: SchemaConfig[A] = SchemaConfig(
+            model=A, fields={"id": Infer, related_name: {"id": Infer}}
+        )
+
     openapi_schema = FieldSchema.model_json_schema()
     assert openapi_schema["properties"][related_name]["title"].strip() == title.strip()
+
+    openapi_schema_dict = DictSchema.model_json_schema()
+    assert (
+        openapi_schema_dict["properties"][related_name]["title"].strip()
+        == title.strip()
+    )

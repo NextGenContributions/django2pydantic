@@ -86,13 +86,33 @@ class PydanticConverter(Protocol[TFieldType_co]):
         """
         raise NotImplementedError
 
+    @property
+    def title(self) -> str | None:
+        """Return the title of the field.
+
+        Returns:
+            str | None: The title of the field.
+
+        """
+        raise NotImplementedError
+
+    @property
+    def description(self) -> str | None:
+        """Return the description of the field.
+
+        Returns:
+            str | None: The description of the field.
+
+        """
+        raise NotImplementedError
+
 
 class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co], ABC):  # noqa: WPS214 - Found too many methods
     """Abstract base class for handling generic model fields."""
 
     @override
-    def __init__(self, field_obj: TFieldType_co) -> None:
-        pass
+    def __init__(self, field_obj: TFieldType_co) -> None:  # pyright: ignore[reportMissingSuperCall]
+        pass  # noqa: WPS420
 
     @classmethod
     @abstractmethod
@@ -101,6 +121,7 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         """Return the type of the field."""
 
     @property
+    @override
     def description(self) -> str | None:
         """Return the description of the field."""
         return None
@@ -116,6 +137,7 @@ class FieldTypeHandler(Generic[TFieldType_co], PydanticConverter[TFieldType_co],
         return PydanticUndefined
 
     @property
+    @override
     def title(self) -> str | None:
         """Return the title of the field."""
         return None
