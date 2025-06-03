@@ -6,6 +6,7 @@ from typing import Annotated, Any, Generic, TypeVar, Union, override
 
 from django.db import models
 from django.db.models.fields.related import RelatedField
+from django.utils.encoding import force_str
 from pydantic_core import PydanticUndefined
 
 from django2pydantic.handlers.base import DjangoFieldHandler, PydanticConverter
@@ -74,7 +75,7 @@ class RelatedFieldHandler(
         # relationship at the database level.
         # Ref: https://docs.djangoproject.com/en/5.1/ref/models/fields/#manytomanyfield
         if not self.field_obj.many_to_many and self.field_obj.null:
-            return Union[pydantic_type, None]  # type: ignore[return-value]
+            return Union[pydantic_type, None]  # type: ignore[return-value]  # noqa: UP007
         return pydantic_type
 
     def _get_field_type_handler(
@@ -209,6 +210,13 @@ class ManyToManyRelHandler(ReverseRelatedFieldHandler[models.ManyToManyRel]):
     def field(cls) -> type[models.ManyToManyRel]:
         return models.ManyToManyRel
 
+    @property
+    @override
+    def title(self) -> str | None:
+        if vn := self.related_model._meta.verbose_name_plural:  # noqa: SLF001 # pyright: ignore [reportOptionalMemberAccess]
+            return force_str(vn)
+        return super().title
+
     @override
     def get_pydantic_type(
         self,
@@ -228,6 +236,13 @@ class OneToOneRelHandler(ReverseRelatedFieldHandler[models.OneToOneRel]):
     def field(cls) -> type[models.OneToOneRel]:
         return models.OneToOneRel
 
+    @property
+    @override
+    def title(self) -> str | None:
+        if vn := self.related_model._meta.verbose_name:  # noqa: SLF001  # pyright: ignore [reportOptionalMemberAccess]
+            return force_str(vn)
+        return super().title
+
     @override
     def get_pydantic_type(
         self,
@@ -242,6 +257,13 @@ class ManyToOneRelHandler(ReverseRelatedFieldHandler[models.ManyToOneRel]):
     @override
     def field(cls) -> type[models.ManyToOneRel]:
         return models.ManyToOneRel
+
+    @property
+    @override
+    def title(self) -> str | None:
+        if vn := self.related_model._meta.verbose_name_plural:  # noqa: SLF001  # pyright: ignore [reportOptionalMemberAccess]
+            return force_str(vn)
+        return super().title
 
     @override
     def get_pydantic_type(
