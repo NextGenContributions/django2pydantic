@@ -18,7 +18,6 @@ from django.db.models import (
     OneToOneField,
     OneToOneRel,
 )
-from django.utils.encoding import force_str
 from pydantic import BaseModel, create_model, field_validator
 from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
@@ -214,6 +213,7 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
                     django_field=django_field,
                     related_django_model_name=related_django_model_name,
                     related_schema=related_schema,
+                    field_type_registry=field_type_registry,
                 )
                 pydantic_fields[related_django_model_name] = (field_type, field_info)
             except ValueError as e:
@@ -263,9 +263,18 @@ def _get_django_field(
             field_name=field_name,
         )
     except FieldDoesNotExist as e:
+        available_fields = django_model._meta.get_fields(  # noqa: SLF001
+            include_hidden=True, include_parents=True
+        )
+        available_field_names = [
+            field.name for field in available_fields if field.name != field_name
+        ]
+
         msg = (
             f"The fields definition includes field '{field_name}' which "
-            f"is not found in the Django model '{django_model.__name__}'."
+            f"is not found in the Django model '{django_model.__name__}'. "
+            f"The available fields are: "
+            f"{', '.join(available_field_names) if available_field_names else 'None'}."
         )
         raise ValueError(msg) from e
 
@@ -349,7 +358,9 @@ def _determine_field_type(
     | property,
     related_django_model_name: str,
     related_schema: type[BaseModel],
+    field_type_registry: FieldTypeRegistry,
 ) -> tuple[Any, FieldInfo]:  # pyright: ignore [reportExplicitAny]
+    """Determine the field type and create a FieldInfo for related models."""
     default: PydanticUndefined | None = PydanticUndefined  # type: ignore[valid-type]
     field_type: Any  # noqa: F821  # pyright: ignore [reportExplicitAny]
 
@@ -374,13 +385,9 @@ def _determine_field_type(
         )
         raise TypeError(msg)
 
-    target_field = django_field
-    title = None
-    description = None
-    if verbose_name := getattr(target_field, "verbose_name", None):
-        title = force_str(verbose_name)
-    if help_text := getattr(target_field, "help_text", None):
-        description = force_str(help_text)
+    type_handler = field_type_registry.get_handler(django_field)
+    title = type_handler.title
+    description = type_handler.description
 
     return (
         field_type,
