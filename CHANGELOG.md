@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.4.4 (2025-06-05)
+
+### Bug Fixes
+
+- Jsonfield validation should accept python object
+  ([#93](https://github.com/NextGenContributions/django2pydantic/pull/93),
+  [`d6dc908`](https://github.com/NextGenContributions/django2pydantic/commit/d6dc9088913b97d5dea4ce4a4d3d2bde6beffd21))
+
+
 ## v0.4.3 (2025-06-03)
 
 ### Bug Fixes
