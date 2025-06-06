@@ -24,6 +24,7 @@ Similar libraries:
   - The reverse relations of the above (ManyToOneRel, OneToOneRel, ManyToManyRel)
 - Supports defining nested relations
 - Provides as complete OpenAPI schema details as possible
+- Support for [SchemaField](https://pypi.org/project/django-pydantic-field/)
 
 # How to use
 

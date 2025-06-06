@@ -39,3 +39,7 @@ field_type_registry.register(handlers.OneToOneFieldHandler)
 field_type_registry.register(handlers.OneToOneRelHandler)
 field_type_registry.register(handlers.ManyToManyFieldHandler)
 field_type_registry.register(handlers.ManyToManyRelHandler)
+field_type_registry.register_if_module_installed(
+    "django_pydantic_field.v2.fields.PydanticSchemaField",
+    "django2pydantic.handlers.contrib.django_pydantic_field.schema_field.SchemaFieldHandler",
+)
