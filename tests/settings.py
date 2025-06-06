@@ -2,6 +2,10 @@
 
 from typing import Any
 
+import django_stubs_ext
+
+django_stubs_ext.monkeypatch()
+
 ALLOWED_HOSTS = ["*"]
 DEBUG_PROPAGATE_EXCEPTIONS = True
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
