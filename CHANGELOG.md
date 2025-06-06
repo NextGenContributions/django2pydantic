@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.5.0 (2025-06-06)
+
+### Features
+
+- Schemafield + optional contrib 3rd party handlers
+  ([#95](https://github.com/NextGenContributions/django2pydantic/pull/95),
+  [`b8bffe7`](https://github.com/NextGenContributions/django2pydantic/commit/b8bffe70bd07deb6a3e20c15b8dad99a003748f2))
+
+
 ## v0.4.4 (2025-06-05)
 
 ### Bug Fixes
