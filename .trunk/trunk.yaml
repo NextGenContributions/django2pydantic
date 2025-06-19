@@ -41,7 +41,7 @@ lint:
     - pylint
     - pyright
     - basedpyright
-    - renovate@40.59.4
+    - renovate@40.60.3
     - ruff
     - shellcheck@0.10.0
     - shfmt@3.6.0
