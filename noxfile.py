@@ -21,7 +21,7 @@ def tests(session: nox.Session, django_version: str) -> None:
 def lint_with_flake8(session: nox.Session) -> None:
     """Lint the codebase with flake8."""
     session.install("flake8")
-    _= session.run("flake8")
+    _ = session.run("flake8")
 
 
 @nox.session
@@ -49,7 +49,7 @@ def type_check_with_mypy(session: nox.Session) -> None:
 def type_check_with_pyright(session: nox.Session) -> None:
     """Type-check the codebase with pyright."""
     session.install("pyright")
-    _ =session.run("pyright")
+    _ = session.run("pyright")
 
 
 @nox.session
