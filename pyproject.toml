@@ -1,9 +1,9 @@
 [project]
 name = "django2pydantic"
-version = "0.5.0"
+version = "0.5.1"
 description = "Converting Django models to Pydantic models"
 readme = "README.md"
-requires-python = "==3.12.*"
+requires-python = ">=3.12"
 authors = [{ name = "Jukka Hassinen", email = "jukka.hassinen@gmail.com" }]
 license = "MIT"
 keywords = ["django", "pydantic", "models", "schema", "converter"]
@@ -13,7 +13,11 @@ classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Environment :: Console",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
     "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
     "Framework :: Pydantic :: 2",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
@@ -21,7 +25,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-dependencies = ["django>=5.1.3", "pydantic>=2.9.2", "django-stubs-ext>=5.1.1"]
+dependencies = [
+    "django>=4.2",
+    "pydantic[email]>=2.9.2",
+    "django-stubs-ext<=5.2.0", # django-stubs-ext 5.2.1 fails tests with Django 5.1
+    "beartype>=0.21.0",
+]
 
 
 [project.urls]
@@ -42,27 +51,20 @@ only-include = ["django2pydantic"]
 
 [dependency-groups]
 dev = [
+    {include-group = "tests"},
     "basedpyright>=1.21.0",
-    "beartype>=0.19.0",
     "debugpy>=1.8.8",
-    "django-ninja>=1.3.0",
     "django-stubs[compatible-mypy]>=5.1.1",
-    "email-validator>=2.2.0",
-    "hypothesis>=6.118.0",
     "import-linter>=2.1",
     "ipykernel>=6.29.5",
     "isort>=5.13.2",
     "mypy>=1.13.0",
-    "ninja-schema>=0.13.6",
     "nox>=2024.10.9",
     "pre-commit>=4.1.0",
     "pylint>=3.3.4",
     "pylint-django>=2.6.1",
     "pyre-check>=0.9.23",
     "pyright>=1.1.388",
-    "pytest>=8.3.3",
-    "pytest-cov>=6.0.0",
-    "pytest-django>=4.9.0",
     "pytest-instafail>=0.5.0",
     "pytest-testmon>=2.1.1",
     "pytest-watch>=4.2.0",
@@ -76,8 +78,15 @@ dev = [
     "project-config>=0.9.7",
     "taplo>=0.9.3",
     "nitpick",
-    "django-stubs-ext>=5.1.1",
     "django-pydantic-field>=0.3.12",
+]
+tests = [
+    "django-pydantic-field>=0.3.12",
+    "hypothesis>=6.135.1",
+    "pytest>=8.4.0",
+    "pytest-cov>=6.1.1",
+    "pytest-django>=4.11.1",
+    "pytest-xdist[psutil]>=3.8.0",
 ]
 
 [tool.uv.sources]

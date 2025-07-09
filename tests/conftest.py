@@ -7,8 +7,13 @@ from _pytest.fixtures import SubRequest
 from django import setup
 from django.apps import apps
 from django.conf import settings
+from hypothesis import settings as hypothesis_settings
 
 django_stubs_ext.monkeypatch()
+
+# Disable Hypothesis deadline to avoid issues with long-running tests
+hypothesis_settings.register_profile("no_timing", deadline=None)
+hypothesis_settings.load_profile("no_timing")
 
 
 def pytest_configure(
