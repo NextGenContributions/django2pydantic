@@ -10,9 +10,9 @@ from django.db import models
 from django.db.models import ForeignObjectRel
 from django.db.models.fields.related import RelatedField
 from pydantic import BaseModel
-from pydantic.fields import (  # noqa: WPS450
-    FieldInfo,
-    _FromFieldInfoInputs,  # pyright: ignore[reportPrivateUsage]
+from pydantic.fields import (
+    FieldInfo,  # noqa: WPS450
+    _FieldInfoInputs,  # pyright: ignore[reportPrivateUsage]
 )
 
 
@@ -32,10 +32,10 @@ class InferExcept:
     """
 
     @override
-    def __init__(self, **kwargs: Unpack[_FromFieldInfoInputs]) -> None:
+    def __init__(self, **kwargs: Unpack[_FieldInfoInputs]) -> None:
         """Initialize the InferExcept class."""
         super().__init__()
-        self.args: _FromFieldInfoInputs = kwargs
+        self.args: _FieldInfoInputs = kwargs
 
 
 type ModelFields = (

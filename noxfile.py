@@ -3,6 +3,8 @@
 See: https://nox.thea.codes/en/stable/config.html
 """
 
+from pathlib import Path
+
 import nox
 
 # Allow proper use of different python versions
@@ -14,6 +16,10 @@ nox.options.default_venv_backend = "uv"
 def tests(session: nox.Session, django_version: str) -> None:
     """Run the test suite."""
     session.install(".", f"django=={django_version}", "--group", "tests")
+
+    # a fix so .ipynb tests imports succeed:
+    session.env["PYTHONPATH"] = str(Path(__file__).parent.resolve())
+
     _ = session.run("pytest", "-vv")
 
 

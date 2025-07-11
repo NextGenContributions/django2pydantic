@@ -83,10 +83,12 @@ dev = [
 tests = [
     "django-pydantic-field>=0.3.12",
     "hypothesis>=6.135.1",
+    "nbmake>=1.5.5",
     "pytest>=8.4.0",
     "pytest-cov>=6.1.1",
     "pytest-django>=4.11.1",
     "pytest-xdist[psutil]>=3.8.0",
+    "rich>=13.9.4",
 ]
 
 [tool.uv.sources]
