@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.6.0 (2025-07-16)
+
+### Features
+
+- Make fields optional even if required by the django field (#119)
+  ([#119](https://github.com/NextGenContributions/django2pydantic/pull/119),
+  [`aa0a021`](https://github.com/NextGenContributions/django2pydantic/commit/aa0a021768417c58aa48bf9fb2763df6671b4ee1))
+
+
 ## v0.5.1 (2025-07-09)
 
 ### Bug Fixes
