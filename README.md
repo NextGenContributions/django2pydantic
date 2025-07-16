@@ -28,22 +28,27 @@ Similar libraries:
 
 # How to use
 
-[See usage example here.](examples.ipynb)
+See the following usage examples:
 
+- [Basic usage example](examples/example.ipynb)
+- [Overriding Django field properties by using `InferExcept`](examples/overriding-django-field-properties-with-InferExcept.ipynb)
+- [Making required Django fields optional in Pydantic schema](examples/making-fields-optional-with-InferExcept.ipynb)
 
-# Django fields blank and null
+# Some details
 
-There are some nuances related to the use of `blank` and `null` in Django fields 
+## Django fields blank and null
+
+There are some nuances related to the use of `blank` and `null` in Django fields
 and how they impact the output pydantic types, but generally:
 - If `null=True` the output **type** will be `Optional` (i.e. `str | None`).
-- If `blank=True` the field will be **optional** (with **exceptions**). 
+- If `blank=True` the field will be **optional** (with **exceptions**).
 This is to be more in line with the Django admin/form validation behavior.
 - Whether the field is **required** is determined by the **default** value (can be overridden).
   - If the **default** is `PydanticUndefined`, the field is always **required**.
   - If the **default** is `None` (or `""` in case of string), the field is **optional**.
-- If `null=False` and `blank=True`, the field typically require implementing `clean()` 
-on the model in order to programmatically supply any missing values. In our case, the 
-**required**/**default** value can vary depending on field type in a way that user 
+- If `null=False` and `blank=True`, the field typically requires implementing `clean()`
+on the model in order to programmatically supply any missing values. In our case, the
+**required**/**default** value can vary depending on field type in a way that user
 does not need to concern with implementing `clean()`.
 
 ### String-based fields
