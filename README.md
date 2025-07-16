@@ -46,7 +46,7 @@ This is to be more in line with the Django admin/form validation behavior.
 - Whether the field is **required** is determined by the **default** value (can be overridden).
   - If the **default** is `PydanticUndefined`, the field is always **required**.
   - If the **default** is `None` (or `""` in case of string), the field is **optional**.
-- If `null=False` and `blank=True`, the field typically require implementing `clean()`
+- If `null=False` and `blank=True`, the field typically requires implementing `clean()`
 on the model in order to programmatically supply any missing values. In our case, the
 **required**/**default** value can vary depending on field type in a way that user
 does not need to concern with implementing `clean()`.
