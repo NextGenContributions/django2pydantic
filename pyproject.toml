@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
     "django>=4.2",
     "pydantic[email]>=2.9.2",
-    "django-stubs-ext<=5.2.0", # django-stubs-ext 5.2.1 fails tests with Django 5.1
+    "django-stubs-ext<=5.2.2", # django-stubs-ext 5.2.1 fails tests with Django 5.1
     "beartype>=0.21.0",
 ]
 
