@@ -57,7 +57,6 @@ dev = [
     "django-stubs[compatible-mypy]>=5.1.1",
     "import-linter>=2.1",
     "ipykernel>=6.29.5",
-    "isort>=5.13.2",
     "mypy>=1.13.0",
     "nox>=2024.10.9",
     "pre-commit>=4.1.0",
