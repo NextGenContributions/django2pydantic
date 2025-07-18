@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.6.1 (2025-07-18)
+
+### Bug Fixes
+
+- Update django stubs ext mypy etc (#122)
+  ([#122](https://github.com/NextGenContributions/django2pydantic/pull/122),
+  [`87c240f`](https://github.com/NextGenContributions/django2pydantic/commit/87c240fd3029c6a5611ac7090dc49b7bbbf924fb))
+
+
 ## v0.6.0 (2025-07-16)
 
 ### Features
