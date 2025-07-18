@@ -61,11 +61,6 @@
     "mypy-type-checker.severity": {
         "error": "Information"
     },
-    "isort.check": true,
-    "isort.importStrategy": "fromEnvironment",
-    "isort.severity": {
-        "W": "Information"
-    },
     "pylint.args": [
         "--load-plugins=pylint_django",
         "--django-settings-module=tests.settings"

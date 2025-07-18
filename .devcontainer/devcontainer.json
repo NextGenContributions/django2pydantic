@@ -20,7 +20,6 @@
 				"fb-pyre-check.pyre-vscode",
 				"ms-azuretools.vscode-docker",
 				"github.vscode-github-actions",
-				"ms-python.isort",
 				"ms-toolsai.jupyter",
 				"ms-vscode.makefile-tools"
 			]
