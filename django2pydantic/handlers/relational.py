@@ -2,7 +2,13 @@
 
 from abc import ABC
 from types import UnionType
-from typing import Annotated, Any, Generic, TypeVar, Union, override
+from typing import (
+    Any,
+    Generic,
+    TypeVar,
+    Union,  # pyright: ignore[reportDeprecated]
+    override,
+)
 
 from django.db import models
 from django.db.models.fields.related import RelatedField
@@ -82,7 +88,7 @@ class RelatedFieldHandler(
         self, field: models.Field[GetType, SetType]
     ) -> PydanticConverter[SupportedParentFields]:
         """Return the field type handler."""
-        from django2pydantic.registry import FieldTypeRegistry
+        from django2pydantic.registry import FieldTypeRegistry  # noqa: PLC0415
 
         return FieldTypeRegistry.instance().get_handler(field)
 
@@ -129,7 +135,7 @@ class ForeignKeyHandler(
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]  # type: ignore[return-value]
+        return self.get_pydantic_type_raw()
 
 
 class OneToOneFieldHandler(
@@ -147,7 +153,7 @@ class OneToOneFieldHandler(
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]  # type: ignore[return-value]
+        return self.get_pydantic_type_raw()
 
 
 class ManyToManyFieldHandler(
@@ -178,10 +184,7 @@ class ManyToManyFieldHandler(
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return (
-            list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[misc]
-            | None
-        )
+        return list[self.get_pydantic_type_raw()] | None  # pyre-ignore[16]
 
 
 class ReverseRelatedFieldHandler(
@@ -228,10 +231,7 @@ class ManyToManyRelHandler(ReverseRelatedFieldHandler[models.ManyToManyRel]):
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return (
-            list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[misc]
-            | None
-        )
+        return list[self.get_pydantic_type_raw()] | None  # pyre-ignore[16]
 
 
 class OneToOneRelHandler(ReverseRelatedFieldHandler[models.OneToOneRel]):
@@ -253,7 +253,7 @@ class OneToOneRelHandler(ReverseRelatedFieldHandler[models.OneToOneRel]):
     def get_pydantic_type(
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
-        return Annotated[self.get_pydantic_type_raw() | None, self.get_pydantic_field()]  # type: ignore[return-value,operator]
+        return Union[self.get_pydantic_type_raw(), None]  # noqa: UP007  # pyright: ignore[reportDeprecated]
 
 
 class ManyToOneRelHandler(ReverseRelatedFieldHandler[models.ManyToOneRel]):
@@ -276,7 +276,4 @@ class ManyToOneRelHandler(ReverseRelatedFieldHandler[models.ManyToOneRel]):
         self,
     ) -> UnionType | SupportedPydanticTypes | list[SupportedPydanticTypes]:
         """Return the Pydantic type of the field."""
-        return (
-            list[Annotated[self.get_pydantic_type_raw(), self.get_pydantic_field()]]  # type: ignore[misc]
-            | None
-        )
+        return list[self.get_pydantic_type_raw()] | None  # pyre-ignore[16]

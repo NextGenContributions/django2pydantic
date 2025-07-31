@@ -130,11 +130,19 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
         #             )(validator)
 
         pydantic_field_info: FieldInfo
-        if field_def is Infer:
+        if field_def is Infer or isinstance(field_def, InferExcept):
             type_handler = field_type_registry.get_handler(django_field)
             python_type = type_handler.get_pydantic_type()
             pydantic_field_info = type_handler.get_pydantic_field()
-            pydantic_fields[field_name] = (python_type, pydantic_field_info)
+
+            if isinstance(field_def, InferExcept):
+                # Create a field info with the values used from the original field and from InferExcept
+
+                for key, value in field_def.args.items():
+                    if key == "annotation":
+                        python_type = value  # noqa: WPS220
+                    else:
+                        setattr(pydantic_field_info, key, value)  # noqa: WPS220
 
             if type(django_field) in {  # noqa: WPS516
                 ForeignKey,
@@ -149,16 +157,10 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
                     mode="wrap",
                 )(BaseMixins.validate_relation)
 
-        elif isinstance(field_def, InferExcept):
-            type_handler = field_type_registry.get_handler(django_field)
-            python_type = type_handler.get_pydantic_type()
-            pydantic_field_info = type_handler.get_pydantic_field()
-
-            # Override the field values
-            for detail_key, detail_value in field_def.args.items():
-                setattr(pydantic_field_info, detail_key, detail_value)
-
-            pydantic_fields[field_name] = (python_type, pydantic_field_info)
+            pydantic_fields[field_name] = (  # pyre-ignore[6]
+                python_type,
+                pydantic_field_info,
+            )
 
         # If the extracted fields is a type[pydantic.BaseModel]:
         elif isinstance(field_def, type) and issubclass(field_def, BaseModel):
