@@ -11,8 +11,7 @@ django.setup()
 from enum import Enum
 from typing import Annotated
 from pydantic import BaseModel, Field
-from pydantic._internal._generate_schema import GetJsonSchemaFunction
-from pydantic.json_schema import JsonSchemaValue
+from pydantic.json_schema import JsonSchemaValue, GenerateJsonSchema
 from pydantic_core import core_schema
 import json
 
@@ -25,11 +24,15 @@ class TestEnum(str, Enum):
 
     @classmethod
     def __get_pydantic_json_schema__(
-        cls, core_schema: core_schema.CoreSchema, handler: GetJsonSchemaFunction
+        cls, core_schema: core_schema.CoreSchema, handler: GenerateJsonSchema
     ) -> JsonSchemaValue:
         """Add custom x-enumDescriptions to the enum schema."""
         json_schema = handler(core_schema)
-        json_schema["x-enumDescriptions"] = ["Choice A", "Choice B", "Choice C"]
+        json_schema["x-enumDescriptions"] = {
+            "a": "Choice A",
+            "b": "Choice B", 
+            "c": "Choice C"
+        }
         return json_schema
 
 
