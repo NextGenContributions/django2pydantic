@@ -30,8 +30,8 @@ class TestEnum(str, Enum):
         json_schema = handler(core_schema)
         json_schema["x-enumDescriptions"] = {
             "a": "Choice A",
-            "b": "Choice B", 
-            "c": "Choice C"
+            "b": "Choice B",
+            "c": "Choice C",
         }
         return json_schema
 
