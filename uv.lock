@@ -899,15 +899,15 @@ wheels = [
 
 [[package]]
 name = "hypothesis"
-version = "6.136.8"
+version = "6.137.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e1/7c/f3393509a4868b026df3460b5536a95c597ee3ac83394dc3472bc91b60e7/hypothesis-6.136.8.tar.gz", hash = "sha256:3c784eb48350f67b2aaee2af6d9d94cbae47ee00cf5e209bf778603c621652f1", size = 459283, upload-time = "2025-08-04T01:47:26.947Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/65/92/70f29b04e4d7acf7f9a0c3dd52619853715ad9ae092a8e5d89bc7bdc39ec/hypothesis-6.137.1.tar.gz", hash = "sha256:b086e644456da79ad460fdaf8fbf90a41a661e8a4076232dd4ea64cfbc0d0529", size = 460593, upload-time = "2025-08-05T06:31:46.777Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ee/f5/ddd57ee3856d8d66cd2871895721c0bb12b3a6d67bca1552df6bc94a5be6/hypothesis-6.136.8-py3-none-any.whl", hash = "sha256:4fbb93248d630d05dab06c79b18af4c67726c2286ed9249d78c7ffebd013bb9f", size = 526122, upload-time = "2025-08-04T01:47:23.4Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/13/92753f97f70f3584a70ccbd2a678878ea43d5880c4e009664c3fe9fe7e50/hypothesis-6.137.1-py3-none-any.whl", hash = "sha256:7cbda6a98ed4d32aad31a5fc5bff5e119b9275fe2579a7b08863cba313a4b9be", size = 527566, upload-time = "2025-08-05T06:31:43.323Z" },
 ]
 
 [[package]]
@@ -995,7 +995,7 @@ wheels = [
 
 [[package]]
 name = "ipykernel"
-version = "6.30.0"
+version = "6.30.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "appnope", marker = "sys_platform == 'darwin'" },
@@ -1012,9 +1012,9 @@ dependencies = [
     { name = "tornado" },
     { name = "traitlets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/38/27/9e6e30ed92f2ac53d29f70b09da8b2dc456e256148e289678fa0e825f46a/ipykernel-6.30.0.tar.gz", hash = "sha256:b7b808ddb2d261aae2df3a26ff3ff810046e6de3dfbc6f7de8c98ea0a6cb632c", size = 165125, upload-time = "2025-07-21T10:36:09.259Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/76/11082e338e0daadc89c8ff866185de11daf67d181901038f9e139d109761/ipykernel-6.30.1.tar.gz", hash = "sha256:6abb270161896402e76b91394fcdce5d1be5d45f456671e5080572f8505be39b", size = 166260, upload-time = "2025-08-04T15:47:35.018Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1f/3d/00813c3d9b46e3dcd88bd4530e0a3c63c0509e5d8c9eff34723ea243ab04/ipykernel-6.30.0-py3-none-any.whl", hash = "sha256:fd2936e55c4a1c2ee8b1e5fa6a372b8eecc0ab1338750dee76f48fa5cca1301e", size = 117264, upload-time = "2025-07-21T10:36:06.854Z" },
+    { url = "https://files.pythonhosted.org/packages/fc/c7/b445faca8deb954fe536abebff4ece5b097b923de482b26e78448c89d1dd/ipykernel-6.30.1-py3-none-any.whl", hash = "sha256:aa6b9fb93dca949069d8b85b6c79b2518e32ac583ae9c7d37c51d119e18b3fb4", size = 117484, upload-time = "2025-08-04T15:47:32.622Z" },
 ]
 
 [[package]]
