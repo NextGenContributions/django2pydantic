@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.7.0 (2025-08-06)
+
+### Features
+
+- InferredField helper + InferExcept for related fields (#131)
+  ([#131](https://github.com/NextGenContributions/django2pydantic/pull/131),
+  [`2d2ef19`](https://github.com/NextGenContributions/django2pydantic/commit/2d2ef194fa84448c298be25e8503f042b469952f))
+
+
 ## v0.6.1 (2025-07-18)
 
 ### Bug Fixes
