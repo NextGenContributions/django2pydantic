@@ -1,6 +1,6 @@
 version: "0.1"
 cli:
-  version: 1.24.0
+  version: 1.25.0
 plugins:
   sources:
     - id: trunk
@@ -23,7 +23,7 @@ lint:
   enabled:
     - actionlint@1.7.7
     - bandit@1.8.6
-    - checkov@3.2.458
+    - checkov@3.2.461
     - codespell@2.4.1
     # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
@@ -41,7 +41,7 @@ lint:
     - pylint
     - pyright
     - basedpyright
-    - renovate@41.56.0
+    - renovate@41.63.0
     - ruff
     - shellcheck@0.10.0
     - shfmt@3.6.0
