@@ -33,7 +33,7 @@ lint:
     - gitleaks@8.28.0
     - hadolint@2.12.1-beta
     - markdown-link-check@3.13.7
-    - markdown-table-prettify@3.6.0
+    - markdown-table-prettify@3.7.0
     - markdownlint-cli2@0.18.1
     - mypy
     - osv-scanner@2.2.2
@@ -41,7 +41,7 @@ lint:
     - pylint
     - pyright
     - basedpyright
-    - renovate@41.90.1
+    - renovate@41.91.3
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
