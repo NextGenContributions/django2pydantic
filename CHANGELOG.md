@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.7.1 (2025-10-08)
+
+### Bug Fixes
+
+- Test runs with nox should respect uv.lock deps (#214)
+  ([#214](https://github.com/NextGenContributions/django2pydantic/pull/214),
+  [`0a63293`](https://github.com/NextGenContributions/django2pydantic/commit/0a63293a04df9e5b7a74a6897e8fad326f9f8cb2))
+
+
 ## v0.7.0 (2025-08-06)
 
 ### Features
