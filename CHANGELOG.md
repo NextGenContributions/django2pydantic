@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.7.2 (2025-10-14)
+
+### Bug Fixes
+
+- **#221**: Support for pydantic 2.12.x (#222)
+  ([#222](https://github.com/NextGenContributions/django2pydantic/pull/222),
+  [`f60b259`](https://github.com/NextGenContributions/django2pydantic/commit/f60b259a6586b6b06029eb5650245d67bfbda808))
+
+
 ## v0.7.1 (2025-10-08)
 
 ### Bug Fixes
