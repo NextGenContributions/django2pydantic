@@ -8,6 +8,7 @@ from django.db.models import Field
 
 from django2pydantic.defaults import field_type_registry
 from django2pydantic.types import InferExcept
+from django2pydantic.utils import override_type_and_meta
 
 if TYPE_CHECKING:
     from django.db.models.fields import (
@@ -61,7 +62,7 @@ class InferredField:  # pylint: disable=too-few-public-methods
             ...
         ```
         """
-        field, override = (
+        field, overrides = (
             (django_model_field[0].field, django_model_field[1])
             if isinstance(django_model_field, tuple)
             else (django_model_field.field, None)
@@ -69,14 +70,10 @@ class InferredField:  # pylint: disable=too-few-public-methods
 
         type_handler = field_type_registry.get_handler(field)  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType, reportAttributeAccessIssue]
 
-        pydantic_type = type_handler.get_pydantic_type()
-        pydantic_field_info = type_handler.get_pydantic_field()
-
-        if override:
-            for detail_key, detail_value in override.args.items():
-                if detail_key == "annotation":
-                    pydantic_type = detail_value
-                else:
-                    setattr(pydantic_field_info, detail_key, detail_value)
+        pydantic_type, pydantic_field_info = override_type_and_meta(
+            pydantic_type=type_handler.get_pydantic_type(),
+            field_info=type_handler.get_pydantic_field(),
+            overrides=overrides,
+        )
 
         return Annotated[pydantic_type, pydantic_field_info]  # pyre-ignore[6]

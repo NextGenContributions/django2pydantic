@@ -33,6 +33,7 @@ from django2pydantic.types import (
     SetType,
     TDjangoModel,
 )
+from django2pydantic.utils import override_type_and_meta
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -136,13 +137,11 @@ def create_pydantic_model(  # noqa: C901, PLR0912, PLR0915, WPS210, WPS231 # NOS
             pydantic_field_info = type_handler.get_pydantic_field()
 
             if isinstance(field_def, InferExcept):
-                # Create a field info with the values used from the original field and from InferExcept
-
-                for key, value in field_def.args.items():
-                    if key == "annotation":
-                        python_type = value  # noqa: WPS220
-                    else:
-                        setattr(pydantic_field_info, key, value)  # noqa: WPS220
+                python_type, pydantic_field_info = override_type_and_meta(
+                    pydantic_type=python_type,
+                    field_info=pydantic_field_info,
+                    overrides=field_def,
+                )
 
             if type(django_field) in {  # noqa: WPS516
                 ForeignKey,
