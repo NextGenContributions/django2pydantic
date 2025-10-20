@@ -907,16 +907,25 @@ wheels = [
 ]
 
 [[package]]
+name = "humanize"
+version = "4.14.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b6/43/50033d25ad96a7f3845f40999b4778f753c3901a11808a584fed7c00d9f5/humanize-4.14.0.tar.gz", hash = "sha256:2fa092705ea640d605c435b1ca82b2866a1b601cdf96f076d70b79a855eba90d", size = 82939, upload-time = "2025-10-15T13:04:51.214Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c3/5b/9512c5fb6c8218332b530f13500c6ff5f3ce3342f35e0dd7be9ac3856fd3/humanize-4.14.0-py3-none-any.whl", hash = "sha256:d57701248d040ad456092820e6fde56c930f17749956ac47f4f655c0c547bfff", size = 132092, upload-time = "2025-10-15T13:04:49.404Z" },
+]
+
+[[package]]
 name = "hypothesis"
-version = "6.140.3"
+version = "6.142.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/18/7f/946343e32881b56adc0eba64e428ad2f85251f9ef16e3e4ec1b6ab80199b/hypothesis-6.140.3.tar.gz", hash = "sha256:4f4a09bf77af21e0cc3dffed1ea639812dc75d38f81308ec9fb0e33f8557b0cb", size = 466925, upload-time = "2025-10-04T22:29:44.499Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/de/13/a4f29624db4d88811d6c4b7708769180004b26f5a2ee6e8a2e8c605da5da/hypothesis-6.142.1.tar.gz", hash = "sha256:3179cb08756562c526aaf4a9871ebbff83d2d75c03896ed0bc9c1d14097a930c", size = 465849, upload-time = "2025-10-16T21:05:51.694Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/2a/0553ac2a8af432df92f2ffc05ca97e7ed64e00c97a371b019ae2690de325/hypothesis-6.140.3-py3-none-any.whl", hash = "sha256:a2cfff51641a58a56081f5c90ae1da6ccf3d043404f411805f7f0e0d75742d0e", size = 534534, upload-time = "2025-10-04T22:29:40.635Z" },
+    { url = "https://files.pythonhosted.org/packages/55/16/2c8023ea706dd3ef155b1ffe531cd7672271cd9c70fbbbafba614b218679/hypothesis-6.142.1-py3-none-any.whl", hash = "sha256:95a7d38fcc58e697e3020665adcb951c630cdbc8065e4b4474949e486b06bd6d", size = 533271, upload-time = "2025-10-16T21:05:48.174Z" },
 ]
 
 [[package]]
@@ -1546,19 +1555,20 @@ wheels = [
 
 [[package]]
 name = "nox"
-version = "2025.5.1"
+version = "2025.10.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "argcomplete" },
     { name = "attrs" },
     { name = "colorlog" },
     { name = "dependency-groups" },
+    { name = "humanize" },
     { name = "packaging" },
     { name = "virtualenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b4/80/47712208c410defec169992e57c179f0f4d92f5dd17ba8daca50a8077e23/nox-2025.5.1.tar.gz", hash = "sha256:2a571dfa7a58acc726521ac3cd8184455ebcdcbf26401c7b737b5bc6701427b2", size = 4023334, upload-time = "2025-05-01T16:35:48.056Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3d/3e/16440c5a2c1e867a862479cf7d11d05d0e0f2bb133de3921cb3ed6e37e57/nox-2025.10.16.tar.gz", hash = "sha256:fca1e7504384dbc91dddef3fec45d04572f23c882a87241e2c793b77fe1c9259", size = 4030246, upload-time = "2025-10-17T01:53:07.458Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/be/7b423b02b09eb856beffe76fe8c4121c99852db74dd12a422dcb72d1134e/nox-2025.5.1-py3-none-any.whl", hash = "sha256:56abd55cf37ff523c254fcec4d152ed51e5fe80e2ab8317221d8b828ac970a31", size = 71753, upload-time = "2025-05-01T16:35:46.037Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/68/f4a9cd43dcd6cf9138e0fb39b3b8f17a82b121e8c26499d864e64c329cd0/nox-2025.10.16-py3-none-any.whl", hash = "sha256:b4ef28709d5fb0d964ccc987c8863f76ed860700fabd04ad557252df3562a7e5", size = 74405, upload-time = "2025-10-17T01:53:05.792Z" },
 ]
 
 [[package]]
