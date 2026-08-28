@@ -2,19 +2,22 @@
 
 import uuid
 from string import printable
-from typing import Any
+from typing import Any, final
 
 import pytest
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from hypothesis import given
 from hypothesis import strategies as st
+from pydantic import BaseModel
+from pydantic_core import PydanticUndefined
 
+from django2pydantic import InferredField
 from django2pydantic.schema import BaseSchema, SchemaConfig
-from django2pydantic.types import Infer
+from django2pydantic.types import Infer, InferExcept
 from tests.utils import debug_json, get_openapi_schema_from_field
 
-FieldClass = type[models.Field[Any, Any]]
+FieldClass = type[models.Field[Any, Any]]  # pyright: ignore[reportExplicitAny]
 
 AutoFields: list[FieldClass] = [models.AutoField, models.BigAutoField]
 
@@ -252,3 +255,77 @@ def test_schema_subclassing_works() -> None:
 
     openapi_schema = SchemaB.model_json_schema()
     assert openapi_schema["properties"]["name"]["type"] == "string"
+
+
+def test_field_metadata_can_be_overridden_using_infer_except() -> None:
+    """Test that field can be made optional by using default value None."""
+    description_verbose = "Description of the item"
+
+    @final
+    class ModelA(models.Model):
+        id = models.AutoField[int, int](primary_key=True)
+        name = models.CharField[str, str](max_length=100, verbose_name="something....")
+
+    # "name" metadata derived from the model
+    @final
+    class SchemaA(BaseSchema[ModelA]):
+        config = SchemaConfig(
+            model=ModelA,
+            fields={
+                "id": Infer,
+                "name": Infer,
+            },
+        )
+
+    assert SchemaA.model_fields["name"].default is PydanticUndefined
+    assert SchemaA.model_fields["name"].is_required()
+
+    # "name" metadata overridden with InferExcept
+    @final
+    class SchemaB(BaseSchema[ModelA]):
+        config = SchemaConfig(
+            model=ModelA,
+            fields={
+                "id": Infer,
+                "name": InferExcept(default=None, description=description_verbose),
+            },
+        )
+
+    assert SchemaB.model_fields["name"].default is None
+    assert not SchemaB.model_fields["name"].is_required()
+    assert SchemaB.model_fields["name"].description == description_verbose
+
+
+def test_inferred_field_metadata_can_be_overridden_with_infer_except() -> None:
+    """Test that inferred field metadata can be overridden with InferExcept."""
+    description_verbose = "Description of the item"
+
+    @final
+    class SomeModel(models.Model):
+        id = models.AutoField(primary_key=True, null=False)  # Required field here
+        details = models.TextField(verbose_name="something....")
+
+        @final
+        class Meta:
+            app_label = "tests"
+
+    # "details" metadata derived from the model
+    class SchemaA(BaseModel):
+        id: InferredField[SomeModel.id]
+        details: InferredField[SomeModel.details]
+
+    assert SchemaA.model_fields["details"].default is PydanticUndefined
+    assert SchemaA.model_fields["details"].is_required()
+    assert SchemaA.model_fields["details"].description == "something...."
+
+    # "details" metadata overridden with InferExcept
+    class SchemaB(BaseModel):
+        id: InferredField[SomeModel.id]
+        details: InferredField[
+            SomeModel.details,
+            InferExcept(default=None, description=description_verbose),
+        ]
+
+    assert SchemaB.model_fields["details"].default is None
+    assert not SchemaB.model_fields["details"].is_required()
+    assert SchemaB.model_fields["details"].description == description_verbose

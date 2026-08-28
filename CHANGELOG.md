@@ -1,6 +1,60 @@
 # CHANGELOG
 
 
+## v0.8.0 (2026-08-28)
+
+### Features
+
+- Add labels to renovate's PR (#247)
+  ([#247](https://github.com/NextGenContributions/django2pydantic/pull/247),
+  [`6b8ea7c`](https://github.com/NextGenContributions/django2pydantic/commit/6b8ea7caed810feddfc7b2e060444249d2bbdf15))
+
+
+## v0.7.2 (2025-10-14)
+
+### Bug Fixes
+
+- **#221**: Support for pydantic 2.12.x (#222)
+  ([#222](https://github.com/NextGenContributions/django2pydantic/pull/222),
+  [`f60b259`](https://github.com/NextGenContributions/django2pydantic/commit/f60b259a6586b6b06029eb5650245d67bfbda808))
+
+
+## v0.7.1 (2025-10-08)
+
+### Bug Fixes
+
+- Test runs with nox should respect uv.lock deps (#214)
+  ([#214](https://github.com/NextGenContributions/django2pydantic/pull/214),
+  [`0a63293`](https://github.com/NextGenContributions/django2pydantic/commit/0a63293a04df9e5b7a74a6897e8fad326f9f8cb2))
+
+
+## v0.7.0 (2025-08-06)
+
+### Features
+
+- InferredField helper + InferExcept for related fields (#131)
+  ([#131](https://github.com/NextGenContributions/django2pydantic/pull/131),
+  [`2d2ef19`](https://github.com/NextGenContributions/django2pydantic/commit/2d2ef194fa84448c298be25e8503f042b469952f))
+
+
+## v0.6.1 (2025-07-18)
+
+### Bug Fixes
+
+- Update django stubs ext mypy etc (#122)
+  ([#122](https://github.com/NextGenContributions/django2pydantic/pull/122),
+  [`87c240f`](https://github.com/NextGenContributions/django2pydantic/commit/87c240fd3029c6a5611ac7090dc49b7bbbf924fb))
+
+
+## v0.6.0 (2025-07-16)
+
+### Features
+
+- Make fields optional even if required by the django field (#119)
+  ([#119](https://github.com/NextGenContributions/django2pydantic/pull/119),
+  [`aa0a021`](https://github.com/NextGenContributions/django2pydantic/commit/aa0a021768417c58aa48bf9fb2763df6671b4ee1))
+
+
 ## v0.5.1 (2025-07-09)
 
 ### Bug Fixes

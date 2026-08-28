@@ -11,6 +11,7 @@ from collections.abc import Sequence
 from typing import Any
 
 import pytest
+from annotated_types import MinLen
 from django.db import models
 from pydantic_core import PydanticUndefined
 
@@ -60,11 +61,9 @@ def generate_string_field_test_cases() -> Sequence[tuple[Any, bool, Any, int | N
     return test_cases
 
 
-def generate_non_string_field_test_cases() -> (
-    Sequence[
-        tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
-    ]
-):
+def generate_non_string_field_test_cases() -> Sequence[
+    tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
+]:
     """Generate test cases for number-based Django fields.
 
     Returns:
@@ -126,11 +125,9 @@ def generate_non_string_field_test_cases() -> (
     return test_cases
 
 
-def generate_relational_field_test_cases() -> (
-    Sequence[
-        tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
-    ]
-):
+def generate_relational_field_test_cases() -> Sequence[
+    tuple[Any, bool, Any, int | None]  # pyright: ignore [reportExplicitAny]
+]:
     """Generate test cases for relational Django fields.
 
     Returns:
@@ -214,12 +211,23 @@ def test_fields(
     field_type, field_info = get_pydantic_type_and_fieldinfo(field)
     assert field_info.is_required() == expected_is_required
     assert field_info.default == expected_default
-    assert field_info._attributes_set.get("min_length") == expected_min_length  # noqa: SLF001  # pyright: ignore [reportPrivateUsage]
+
+    # 'min_length' metadata can't be reliably obtained from FieldInfo, here we use
+    # different methods to get the value, which is subject to change in future pydantic
+    minlen_meta = next((i for i in field_info.metadata if isinstance(i, MinLen)), None)
+    min_length = (
+        minlen_meta.min_length
+        if minlen_meta
+        else field_info._attributes_set.get("min_length")  # noqa: SLF001  # pyright: ignore [reportPrivateUsage]
+    )
+    assert min_length == expected_min_length
+
+    # nullability
     is_nullable = type_is_nullable(field_type)
     expected_nullable = True if type(field) is models.ManyToManyField else field.null
-    assert (
-        is_nullable == expected_nullable
-    ), f"Expected Optional: {expected_nullable}, got: {is_nullable}"
+    assert is_nullable == expected_nullable, (
+        f"Expected Optional: {expected_nullable}, got: {is_nullable}"
+    )
 
     # Assert OpenAPI schema
     openapi_schema = get_openapi_schema_from_field(field)
@@ -237,6 +245,6 @@ def test_fields(
         not_null_type.get("minLength") == expected_min_length
     )
     has_null = has_null_type(openapi_schema["properties"][field.name])
-    assert (
-        has_null == expected_nullable
-    ), f"Expected Optional: {expected_nullable}, got: {has_null}"
+    assert has_null == expected_nullable, (
+        f"Expected Optional: {expected_nullable}, got: {has_null}"
+    )
