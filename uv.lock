@@ -485,30 +485,30 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "5.2.7"
+version = "6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b1/96/bd84e2bb997994de8bcda47ae4560991084e86536541d7214393880f01a8/django-5.2.7.tar.gz", hash = "sha256:e0f6f12e2551b1716a95a63a1366ca91bbcd7be059862c1b18f989b1da356cdd", size = 10865812, upload-time = "2025-10-01T14:22:12.081Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e2/42/6cb20996733984c1f6661daeda3877990836c76c633c6c8879d39f7120eb/django-6.1.tar.gz", hash = "sha256:86a2aacd59b817e4d6ac2ebfe22356c58f66f7b24e503f71b7c2fead677ee48b", size = 11223034, upload-time = "2026-08-05T19:21:53.789Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/ef/81f3372b5dd35d8d354321155d1a38894b2b766f576d0abffac4d8ae78d9/django-5.2.7-py3-none-any.whl", hash = "sha256:59a13a6515f787dec9d97a0438cd2efac78c8aca1c80025244b0fe507fe0754b", size = 8307145, upload-time = "2025-10-01T14:22:49.476Z" },
+    { url = "https://files.pythonhosted.org/packages/91/9c/ce847620134cfab903e75690c498af73b46abbede2912ea89bd76d5c1e76/django-6.1-py3-none-any.whl", hash = "sha256:6c132cd980c9392b06807d4ca52d72530d631dc65a85d9dacede00a780cefbbe", size = 8417399, upload-time = "2026-08-05T19:21:47.285Z" },
 ]
 
 [[package]]
 name = "django-pydantic-field"
-version = "0.3.13"
+version = "0.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "pydantic" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/72/0e/3159417d00fed9ee9e88e209928cfae4ad2fa359164b1026a886e57c9bcb/django_pydantic_field-0.3.13.tar.gz", hash = "sha256:a189383bc4b8924ddcb5aaaebc76085b874b8b087089e36c8925ed7e782147c6", size = 38503, upload-time = "2025-07-06T18:37:19.758Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/42/3d/d2390f1383eb60b25c7b68b3493af566831b0db540e47ed85a395727bae2/django_pydantic_field-0.5.4.tar.gz", hash = "sha256:3c884299ea777e8221e4c0ff222e078960ba3576a3b6970636629524e5d6cf39", size = 22013, upload-time = "2026-02-22T13:47:30.633Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/23/33/7a10172fee2527f9ff4a67526299387228ab47fd83e605e324477365a4c1/django_pydantic_field-0.3.13-py3-none-any.whl", hash = "sha256:105f9e1ad8cb9aef66d801bc4cffb96822c7f8eba4ae6d6a96b964796c902ab2", size = 42477, upload-time = "2025-07-06T18:37:17.955Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/88/1acbef013f172f9f03836d3c03639ae5604a46e9f1a921c6e623e60f8594/django_pydantic_field-0.5.4-py3-none-any.whl", hash = "sha256:5c080b5f0ea17ae11b5305d649778a87437c61a403894933337fe3e295f627a9", size = 36963, upload-time = "2026-02-22T13:47:29.613Z" },
 ]
 
 [[package]]
