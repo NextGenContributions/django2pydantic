@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.8.0 (2026-08-28)
+
+### Features
+
+- Add labels to renovate's PR (#247)
+  ([#247](https://github.com/NextGenContributions/django2pydantic/pull/247),
+  [`6b8ea7c`](https://github.com/NextGenContributions/django2pydantic/commit/6b8ea7caed810feddfc7b2e060444249d2bbdf15))
+
+
 ## v0.7.2 (2025-10-14)
 
 ### Bug Fixes
