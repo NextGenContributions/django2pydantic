@@ -8,6 +8,8 @@ on:
 jobs:
   trunk-upgrade:
     uses: NextGenContributions/cicd-pipeline/.github/workflows/trunk-auto-upgrade.yml@main
+    secrets:
+      BOT_PR_PRIVATE_KEY : ${{ secrets.BOT_PR_PRIVATE_KEY }}
     permissions:
       contents: write
       pull-requests: write
