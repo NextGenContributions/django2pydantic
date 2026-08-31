@@ -3002,15 +3002,6 @@ wheels = [
 ]
 
 [[package]]
-name = "setuptools"
-version = "83.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/34/26/f5d29e25ffdb535afef2d35cdb55b325298f96debd670da4c325e08d70f4/setuptools-83.0.0.tar.gz", hash = "sha256:025bccbbf0fa05b6192bc64ae1e7b16e001fd6d6d4d5de03c97b1c1ade523bef", size = 1154254, upload-time = "2026-07-04T15:31:22.699Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl", hash = "sha256:29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3", size = 1008090, upload-time = "2026-07-04T15:31:20.885Z" },
-]
-
-[[package]]
 name = "shellingham"
 version = "1.5.4"
 source = { registry = "https://pypi.org/simple" }
@@ -3404,16 +3395,16 @@ wheels = [
 
 [[package]]
 name = "wemake-python-styleguide"
-version = "1.4.0"
+version = "1.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
     { name = "flake8" },
     { name = "pygments" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b8/08/c0776aa654dc43cb390e8ee13f597e7241495f30b454b7534ee482ece5b5/wemake_python_styleguide-1.4.0.tar.gz", hash = "sha256:0964cf40ac4d3f1c89dd79aee4b6edba9a1806fb395836c73e746fe287dbae3e", size = 153955, upload-time = "2025-08-25T10:15:08.56Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/23/23e9550889f0a1e29f0ae766a173e60b815f510157036db04922c3a183f1/wemake_python_styleguide-1.8.0.tar.gz", hash = "sha256:fa71e7e202d1d913eedc36290160c196bdf815ab5694d202a181be3d1a9dcf9e", size = 162380, upload-time = "2026-08-22T07:38:31.371Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9b/58/98c4aa00e3de8e45726029799d8facbdcd75347b2f48b285857577e8efd8/wemake_python_styleguide-1.4.0-py3-none-any.whl", hash = "sha256:c0727475a20a1b7d59f1d806040e84768bdb0935d1147023453aa44c14b65c95", size = 215985, upload-time = "2025-08-25T10:15:06.713Z" },
+    { url = "https://files.pythonhosted.org/packages/81/da/5381d92d81f668eabeb9515b5f8e67e3c74ad3bb0192f2651f6793a1713a/wemake_python_styleguide-1.8.0-py3-none-any.whl", hash = "sha256:9e9319f348170ec97bb7d6c5ab9455b2eabdf66974963a747a70d4d3c281566c", size = 226742, upload-time = "2026-08-22T07:38:32.684Z" },
 ]
 
 [[package]]
