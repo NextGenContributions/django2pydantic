@@ -2449,14 +2449,14 @@ wheels = [
 
 [[package]]
 name = "pytest-django"
-version = "4.11.1"
+version = "4.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b1/fb/55d580352db26eb3d59ad50c64321ddfe228d3d8ac107db05387a2fadf3a/pytest_django-4.11.1.tar.gz", hash = "sha256:a949141a1ee103cb0e7a20f1451d355f83f5e4a5d07bdd4dcfdd1fd0ff227991", size = 86202, upload-time = "2025-04-03T18:56:09.338Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/44/f6/3851312120c2bf2f19cafff931e75059aad1ba670703cd751e2fde9bc942/pytest_django-4.14.0.tar.gz", hash = "sha256:26787dd3f422cfbab8f55b80a776e2edea7a11092cb74e960bef1312515708ef", size = 94700, upload-time = "2026-08-10T14:13:08.319Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/be/ac/bd0608d229ec808e51a21044f3f2f27b9a37e7a0ebaca7247882e67876af/pytest_django-4.11.1-py3-none-any.whl", hash = "sha256:1b63773f648aa3d8541000c26929c1ea63934be1cfa674c76436966d73fe6a10", size = 25281, upload-time = "2025-04-03T18:56:07.678Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/03/850bffad2b581c440ca51c039d74504d5a422c94bda0bdb8a8ba5068d48b/pytest_django-4.14.0-py3-none-any.whl", hash = "sha256:c533b08d89cc675efcd5398eea270b34547e35f9a3608e2c9748dd88428ea187", size = 27067, upload-time = "2026-08-10T14:13:06.998Z" },
 ]
 
 [[package]]
@@ -2999,15 +2999,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/77/a1/d273d52c8822d784e5831e0553baf7e108cc1142959809aa8e74cb2fb24c/semgrep-1.170.1-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-musllinux_1_2_aarch64.whl", hash = "sha256:806770abd6deacd4cc8801c53e518f1a96ec048637ae8942531f399a7c63c4a6", size = 78504207, upload-time = "2026-07-21T22:45:09.372Z" },
     { url = "https://files.pythonhosted.org/packages/1b/66/021193287e9d83ec7c5a14005e8f0e9af71fdc64b3feb568bfbb009c8550/semgrep-1.170.1-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-musllinux_1_2_x86_64.whl", hash = "sha256:87bd071c2db49964843fa02d5ac81fc00b1906f40b6213fa9f52c1437af1dd94", size = 75994828, upload-time = "2026-07-21T22:45:15.256Z" },
     { url = "https://files.pythonhosted.org/packages/f4/34/b3d95f3c867c528d7ad3d233e408a763071e900a4361d6ddf7b3f61f69be/semgrep-1.170.1-cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314-none-win_amd64.whl", hash = "sha256:cf4abb974ca51076def7ea728319495e829e667579afd68f8afdf55fbfcce92e", size = 57266447, upload-time = "2026-07-21T22:45:20.676Z" },
-]
-
-[[package]]
-name = "setuptools"
-version = "83.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/34/26/f5d29e25ffdb535afef2d35cdb55b325298f96debd670da4c325e08d70f4/setuptools-83.0.0.tar.gz", hash = "sha256:025bccbbf0fa05b6192bc64ae1e7b16e001fd6d6d4d5de03c97b1c1ade523bef", size = 1154254, upload-time = "2026-07-04T15:31:22.699Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/5d/40/e1e72872c6354b306daef1703549e8e83b4d43cfea356311bf722a043752/setuptools-83.0.0-py3-none-any.whl", hash = "sha256:29b23c360f22f414dc7336bb39178cc7bcbf6021ed2733cde173f09dba19abb3", size = 1008090, upload-time = "2026-07-04T15:31:20.885Z" },
 ]
 
 [[package]]
