@@ -3,9 +3,9 @@ revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.15' and platform_python_implementation != 'PyPy'",
+    "python_full_version >= '3.15' and platform_python_implementation == 'PyPy'",
     "python_full_version == '3.14.*' and platform_python_implementation != 'PyPy'",
     "python_full_version == '3.13.*' and platform_python_implementation != 'PyPy'",
-    "python_full_version >= '3.15' and platform_python_implementation == 'PyPy'",
     "python_full_version >= '3.13' and python_full_version < '3.15' and platform_python_implementation == 'PyPy'",
     "python_full_version < '3.13'",
 ]
@@ -716,16 +716,16 @@ wheels = [
 
 [[package]]
 name = "django-pydantic-field"
-version = "0.3.13"
+version = "0.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "pydantic" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/72/0e/3159417d00fed9ee9e88e209928cfae4ad2fa359164b1026a886e57c9bcb/django_pydantic_field-0.3.13.tar.gz", hash = "sha256:a189383bc4b8924ddcb5aaaebc76085b874b8b087089e36c8925ed7e782147c6", size = 38503, upload-time = "2025-07-06T18:37:19.758Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/42/3d/d2390f1383eb60b25c7b68b3493af566831b0db540e47ed85a395727bae2/django_pydantic_field-0.5.4.tar.gz", hash = "sha256:3c884299ea777e8221e4c0ff222e078960ba3576a3b6970636629524e5d6cf39", size = 22013, upload-time = "2026-02-22T13:47:30.633Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/23/33/7a10172fee2527f9ff4a67526299387228ab47fd83e605e324477365a4c1/django_pydantic_field-0.3.13-py3-none-any.whl", hash = "sha256:105f9e1ad8cb9aef66d801bc4cffb96822c7f8eba4ae6d6a96b964796c902ab2", size = 42477, upload-time = "2025-07-06T18:37:17.955Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/88/1acbef013f172f9f03836d3c03639ae5604a46e9f1a921c6e623e60f8594/django_pydantic_field-0.5.4-py3-none-any.whl", hash = "sha256:5c080b5f0ea17ae11b5305d649778a87437c61a403894933337fe3e295f627a9", size = 36963, upload-time = "2026-02-22T13:47:29.613Z" },
 ]
 
 [[package]]
