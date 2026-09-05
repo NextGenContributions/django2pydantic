@@ -27,7 +27,7 @@ lint:
     - codespell@2.4.3
     # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
-    - djlint@1.45.0
+    - djlint@1.45.2
     - flake8
     - git-diff-check
     - gitleaks@8.30.1
@@ -41,7 +41,7 @@ lint:
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.61.6
+    - renovate@44.65.2
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
