@@ -36,12 +36,12 @@ lint:
     - markdown-table-prettify@4.1.0
     - markdownlint-cli2@0.23.2
     - mypy
-    - osv-scanner@2.5.1
+    - osv-scanner@2.6.0
     - prettier@3.9.6
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.82.5
+    - renovate@44.83.2
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
