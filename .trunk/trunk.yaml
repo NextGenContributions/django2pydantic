@@ -37,17 +37,17 @@ lint:
     - markdownlint-cli2@0.23.3
     - mypy
     - osv-scanner@2.6.0
-    - prettier@3.9.8
+    - prettier@3.9.9
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.108.2
+    - renovate@44.111.4
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
     - taplo@0.10.0
     - trivy@0.74.0
-    - trufflehog@3.97.6
+    - trufflehog@3.97.8
     - vale@3.22.0
     - yamllint@1.38.0
   ignore:
