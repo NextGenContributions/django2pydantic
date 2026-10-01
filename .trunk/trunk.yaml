@@ -23,11 +23,11 @@ lint:
   enabled:
     - actionlint@1.7.12
     - bandit@1.9.4
-    - checkov@3.3.20
+    - checkov@3.3.21
     - codespell@2.4.3
     # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
-    - djlint@1.46.3
+    - djlint@1.46.4
     - flake8
     - git-diff-check
     - gitleaks@8.30.1
@@ -41,7 +41,7 @@ lint:
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.121.4
+    - renovate@44.126.1
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
