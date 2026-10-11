@@ -37,11 +37,11 @@ lint:
     - markdownlint-cli2@0.23.3
     - mypy
     - osv-scanner@2.6.0
-    - prettier@3.9.9
+    - prettier@3.9.10
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.149.1
+    - renovate@44.149.3
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
