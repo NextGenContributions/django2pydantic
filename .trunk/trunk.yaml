@@ -41,13 +41,13 @@ lint:
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.181.1
+    - renovate@44.181.5
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
     - taplo@0.10.0
     - trivy@0.76.1
-    - trufflehog@3.99.4
+    - trufflehog@3.99.7
     - vale@3.25.1
     - yamllint@1.38.0
   ignore:
