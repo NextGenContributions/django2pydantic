@@ -27,7 +27,7 @@ lint:
     - codespell@2.4.3
     # Temporarily disabled until we have better solution for unknown words
     # - cspell@8.17.5
-    - djlint@1.50.0
+    - djlint@1.50.1
     - flake8
     - git-diff-check
     - gitleaks@8.30.1
