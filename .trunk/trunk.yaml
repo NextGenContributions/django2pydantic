@@ -34,14 +34,14 @@ lint:
     - hadolint@2.15.1
     - markdown-link-check@3.15.0
     - markdown-table-prettify@4.1.0
-    - markdownlint-cli2@0.24.1
+    - markdownlint-cli2@0.24.2
     - mypy
     - osv-scanner@2.7.1
     - prettier@3.10.1
     - pylint
     - pyright
     - basedpyright
-    - renovate@44.256.0
+    - renovate@44.257.6
     - ruff
     - shellcheck@0.11.0
     - shfmt@3.6.0
